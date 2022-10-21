@@ -1,5 +1,5 @@
 import datetime
-
+from django.contrib.auth.models import UserManager
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from datetime import datetime
@@ -7,24 +7,20 @@ from datetime import datetime
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
-    email = models.CharField(db_index=True, max_length=255,unique=True)
+    email = models.EmailField(db_index=True, max_length=254,unique=True)
+    username = models.CharField(db_index=True, max_length=255,unique=True)
     password = models.CharField(db_index=True, max_length=255)
-    firstName = models.CharField(db_index=True, max_length=255)
-    lastName = models.CharField(db_index=True, max_length=255)
-    birthDate = models.DateField(db_index=True)
-    isDeleted = models.BooleanField(default=False)
+    firstName = models.CharField(db_index=True, max_length=255,blank=True)
+    lastName = models.CharField(db_index=True, max_length=255, blank=True)
+    birthDate = models.DateField(db_index=True,blank=True,null=True)
+    is_staff = models.BooleanField(default=False,blank=True)
+    isDeleted = models.BooleanField(default=False,blank=True)
     creationDate = models.DateTimeField(auto_now_add=True)
-    role_id = models.ForeignKey('Role', on_delete=models.PROTECT())
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    objects = UserManager()
     class Meta:
         db_table = "Users"
-
-class Role(models.Model):
-    id = models.AutoField(primary_key=True)
-    Name = models.CharField(db_index=True, max_length=255,unique=True)
-
-    class Meta:
-        db_table = "Roles"
-
 
 
 
