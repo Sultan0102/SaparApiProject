@@ -3,6 +3,8 @@ import App from './App.vue'
 import header from '@/components/App-Header'
 import footer from '@/components/App-Footer'
 import router from '../router/router'
+import axious from 'axios'
+import VueAxios from 'vue-axios'
 // temporary global css
 import "./assets/css/main.css"
 
@@ -13,6 +15,7 @@ saparApp.component('App-Footer', footer);
 
 // middleware
 saparApp
-.use(router);
+.use(router)
+.use(VueAxios, axious);
 
 saparApp.mount('#app');
