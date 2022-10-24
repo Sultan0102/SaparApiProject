@@ -19,6 +19,7 @@
 
 
 <script>
+
 export default {
     data() {
         return {
@@ -33,14 +34,12 @@ export default {
             
             let result = null;
 
-            await this.axios.get("https://randomuser.me/api/").then((response) => {
+            await this.axios.get("https://randomuser.me/api/").then( (response) => {
                 result = response;
             });
 
             this.user.name = result.data.results[0].name.first;
             this.user.lastName = result.data.results[0].name.last;
-            console.log(result.data.results[0].name)
-            return result;
         }
     },
     async mounted() {
