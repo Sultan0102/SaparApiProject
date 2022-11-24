@@ -1,5 +1,5 @@
 export default {
-    BASE_URL: 'http://localhost',
-    PORT: '5000',
+    API_BASE_URL: 'http://localhost',
+    PORT: '8000',
 
 }
