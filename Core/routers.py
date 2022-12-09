@@ -1,7 +1,7 @@
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import SimpleRouter, DefaultRouter
 from Core.authorization.views import UserViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
-
+from Core.tickets.views import RouteViewSet, LocationViewSet, PostTicketViewSet
 
 routes = SimpleRouter()
 
@@ -12,7 +12,6 @@ routes.register(r'auth/refresh', RefreshViewSet, basename='auth-refresh')
 
 # USER
 routes.register(r'user', UserViewSet, basename='user')
-
 
 urlpatterns = [
     *routes.urls

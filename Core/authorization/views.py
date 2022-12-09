@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+
 from Core.authorization.serializers import UserSerializer
 from Core.authorization.models import User
 from rest_framework import viewsets
@@ -11,7 +13,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
-
+from django.core.mail import send_mail
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
     serializer_class = UserSerializer
@@ -77,3 +79,29 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+def forgot_password(request):
+    email = request.POST.get('email')
+    verify = User.objects.filter(email=email).first()
+    if verify:
+        link = f"http://127.0.0.1:8000/change-password/{verify.id}/"
+        send_mail(
+            'Verify Account',
+            'Please Verify your account',
+            'saparServicePass@yandex.ru',
+            [email],
+            fail_silently=False,
+            html_message=f'<p>To change password u need to follow this link</p><p>{link}</p>'
+        )
+        return JsonResponse({'bool': True, 'msg': 'Please Check your Email'})
+    else:
+        return JsonResponse({'bool': False, 'msg': 'Invalid Email'})
+def change_password(request,user_id):
+    password=request.POST.get('password')
+    verify = User.objects.filter(id=user_id).first()
+    if verify:
+        verify = User.objects.filter(id=user_id).update(password=password)
+        return JsonResponse({'bool': True, 'msg': 'Password has been changed'})
+    else:
+        return JsonResponse({'bool': False, 'msg': 'Error'})
