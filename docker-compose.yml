@@ -1,0 +1,38 @@
+# Verion of docker-compose to use 
+version: "3"
+
+services:
+
+  client-app:
+    build:
+      context: ./client
+      target: 'develop-stage'
+    ports:
+      - '8080:8080'
+    volumes:
+      - '.:/client/sapar'
+    command: npm run serve
+  django_web_api:
+    build: .
+    # Maps port on the local machine to port on Docker image
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes: 
+    # Copy changes made to the project to your image in real-time.
+      - .:/django_web_api
+    # Handles the command used to run the project in the Docker container.
+    command: python manage.py runserver 0.0.0.0:8000
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "SaparAPI"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "sultan123"
+volumes:
+  postgres_data:
