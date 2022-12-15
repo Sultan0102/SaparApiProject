@@ -5,6 +5,7 @@ import LoginForgotPassword from '@/components/App-LoginForgotPassword';
 import LoginEmailCode from '@/components/App-LoginEmailCode';
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
+import Tickets from '@/components/App-Tickets';
 import store from '@/store';
 
 
@@ -49,6 +50,12 @@ const routes = [
     name: "Profile",
     meta: { requiresAuth: true },
   },
+  { 
+    path: "/tickets", 
+    component: Tickets, 
+    name: "Tickets",
+    meta: { requiresAuth: true },
+  }
 ]
 
 
