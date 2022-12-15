@@ -4,10 +4,13 @@
             <form class="text-center mt-5" @submit.prevent="submit">
                 <h2 class="pt-3">Welcome to SAPAR</h2>
                 <div class="mb-3">
-                <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com">
+                <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" placeholder="email@example.com">
                 </div>
                 <div class="mb-3">
-                <input v-model="form.username" type="username" class="form-control text-center" id="username" aria-describedby="usernameHelp" placeholder="Vasia">
+                <input v-model="form.username" type="firstname" class="form-control text-center" id="firstname" placeholder="Vasia">
+                </div>
+                <div class="mb-3">
+                <input v-model="form.username" type="lastname" class="form-control text-center" id="lastname" placeholder="Pupkin">
                 </div>
                 <div class="mb-3">
                 <input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">

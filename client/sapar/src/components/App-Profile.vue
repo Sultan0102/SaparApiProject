@@ -6,15 +6,20 @@
                     <form class="text-center">
                         <h2 class="pt-3">Profile information</h2>
                         <div class="pb-3">
-                        <input type="email" class=" form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com" disabled readonly>
+                        <input type="email" class=" form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
                         </div>
                         <div class="pb-3">
-                        <input type="username" class="form-control text-center" id="username" aria-describedby="usernameHelp" placeholder="Vasia" disabled readonly>
+                        <input type="firstname" class="form-control text-center" id="firstname" placeholder="Vasia" :disabled="editMode" :readonly="editMode">
                         </div>
                         <div class="pb-3">
-                        <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" disabled readonly>
+                        <input type="lastname" class="form-control text-center" id="lastname" placeholder="Pupkin" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <button type="submit" class="btn btn-primary mb-3">Edit</button>
+                        <div class="pb-3">
+                        <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" :disabled="editMode" :readonly="editMode">
+                        </div>
+
+                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">Edit</button>
+                        <button v-else @click="changeMode()" type="submit" class="btn btn-primary mb-3">Submit</button>
                         <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">Log out</button>
                     </form>
                 </div>
@@ -40,6 +45,11 @@
 import store from "@/store/index"
 
 export default {
+    data() {
+        return {
+            editMode: null
+        }
+    },
 	computed : {
       isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
     },
@@ -47,7 +57,15 @@ export default {
       async logout (){
         await this.$store.dispatch('LogOut')
         this.$router.push('/login')
-      }
+      },
+      changeMode() {
+		if (this.editMode == null){
+            this.editMode = true
+        }
+        else{
+            this.editMode = null
+        }
+	  }
     }
 }
 </script>
@@ -66,5 +84,8 @@ p{
 }
 .list-group-item{
     border: none !important;
+}
+.form-control[readonly]{
+    opacity: 0.7 !important;
 }
 </style>
