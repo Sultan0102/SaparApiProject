@@ -87,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'SaparAPI',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': '1320',
         'HOST': 'localhost',
         'PORT': '5432',
     }

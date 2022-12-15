@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container">
-            <form class="text-center" @submit.prevent="submit">
-                <h1 class="">Welcome back</h1>
+            <form class="text-center mt-5" @submit.prevent="submit">
+                <h2 class="pt-3">Welcome to SAPAR</h2>
                 <div class="mb-3">
                 <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com">
                 </div>
@@ -12,9 +12,14 @@
                 <div class="mb-3">
                 <input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">
                 </div>
-                <button type="submit" class="btn btn-primary mb-3">Sign in</button>
+                <button type="submit" class="btn btn-primary mb-3">Sign up</button>
             </form>
-            <p v-if="showError" id="error">Error during registration</p>
+            <div class="mt-3 text-center">
+            <router-link to="/login"><button type="submit" class="btn btn-primary">Have account? Sign in!</button></router-link>
+            </div>
+            <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
+                    <p id="error" class="pt-3">Error during registration</p>
+            </div>
         </div>
     </div>
 </template>
@@ -50,3 +55,16 @@ export default {
 
 </script>
 
+<style scoped>
+p{
+    color:#1C5E3C;
+    padding-bottom: 0px !important;
+}
+.alert{
+    margin: auto;
+    width: 50%;
+}
+form{
+	width: 50%;
+}
+</style>

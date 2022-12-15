@@ -1,8 +1,10 @@
 import { createRouter, createWebHashHistory} from 'vue-router';
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
+import LoginForgotPassword from '@/components/App-LoginForgotPassword';
+import LoginEmailCode from '@/components/App-LoginEmailCode';
 import Registration from '@/components/App-Registration';
-import About from '@/components/App-About';
+import Profile from '@/components/App-Profile';
 import store from '@/store';
 
 
@@ -24,15 +26,27 @@ const routes = [
     meta: { guest: true },
   },
   { 
+    path: "/forgot-password", 
+    component: LoginForgotPassword, 
+    name: "LoginForgotPassword",
+    meta: { guest: true },
+  },
+  { 
+    path: "/email-code", 
+    component: LoginEmailCode, 
+    name: "LoginEmailCode",
+    meta: { guest: true },
+  },
+  { 
     path: "/register", 
     component: Registration, 
     name: "Registration",
     meta: { guest: true },
   },
   { 
-    path: "/about", 
-    component: About, 
-    name: "About",
+    path: "/profile", 
+    component: Profile, 
+    name: "Profile",
     meta: { requiresAuth: true },
   },
 ]

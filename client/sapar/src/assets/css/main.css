@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+
 
 body {
-	font-family: 'Raleway', sans-serif !important;
 	-webkit-font-smoothing: antialiased;
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
+	font-family: 'Montserrat', sans-serif !important;
 }
 .head{
 	font-weight: 400;
 	font-size: 40px;
-	background-color: #538050;
+	background-color: #1C5E3C;
 }
-.nav-link{
+.nav-item{
 	color: #ECECEC !important;
 }
 .text-decoration-underline{
@@ -23,12 +25,12 @@ body {
   	filter: invert(100%);
 }
 .bottom-border {
-  	border-bottom: 1px solid #538050;
+  	border-bottom: 1px solid #1C5E3C;
 }
 footer {
 	font-weight: 400;
 	font-size: 40px;
-	background-color: #538050;
+	background-color: #1C5E3C;
 	color: #ECECEC !important;
 }
 .center-item{
@@ -41,17 +43,24 @@ a{
 form{
 	margin: auto;
 	background-color: #FFFFFF;
-	width: 50%;
 }
-.form-control{
+.form-control,
+.form-control-plaintext
+{
 	border: none !important;
 	border-bottom: 1px solid #ECECEC !important;
+	background-color: #FFF !important;
 	width: 80% !important;
 	margin: auto;
 }
 .btn-primary{
 	border-radius: 0 !important;
-	background-color: #538050 !important;
-	border-color: #538050 !important;
+	background-color: #1C5E3C !important;
+	border-color: #1C5E3C !important;
 	width: 30% !important;
+}
+form{
+    border-color: #1C5E3C !important;
+	border-left-style: solid;
+    border-left-width: 50px;
 }
