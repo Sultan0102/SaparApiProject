@@ -2,8 +2,11 @@ from Core.authorization.models import User
 from rest_framework import serializers
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'email', 'password', 'firstName', 'lastName', 'birthDate', 'isDeleted']
-        read_only_field = ['isDeleted', 'creationDate', 'is_staff']
+class UserUpdateSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    email = serializers.CharField(max_length=250)
+    firstName = serializers.CharField(max_length=250)
+    lastName = serializers.CharField(max_length=250)
+        
+        
+    

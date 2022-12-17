@@ -7,10 +7,10 @@
                 <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" placeholder="email@example.com">
                 </div>
                 <div class="mb-3">
-                <input v-model="form.username" type="firstname" class="form-control text-center" id="firstname" placeholder="Vasia">
+                <input v-model="form.firstName" type="firstname" class="form-control text-center" id="firstname" placeholder="Vasia">
                 </div>
                 <div class="mb-3">
-                <input v-model="form.username" type="lastname" class="form-control text-center" id="lastname" placeholder="Pupkin">
+                <input v-model="form.lastName" type="lastname" class="form-control text-center" id="lastname" placeholder="Pupkin">
                 </div>
                 <div class="mb-3">
                 <input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">
@@ -36,8 +36,10 @@ export default {
         return {
             form: {
                 email: "",
-                username: "",
+                firstName: "",
+                lastName: "",
                 password: "",
+                username: ""
             },
             showError: false
         }
@@ -46,10 +48,12 @@ export default {
         ...mapActions(["Register"]),
         async submit() {
             try {
+                this.form.username = this.form.email;
                 await this.Register(this.form);
                 this.$router.push("/home");
                 this.showError = false;
             } catch(error) {
+                console.log(error)
                 this.showError = true;
             }
         }
