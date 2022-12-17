@@ -14,6 +14,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from django.core.mail import send_mail
+from rest_framework.exceptions import ValidationError
+
+
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
     serializer_class = UserSerializer
@@ -51,20 +54,33 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        refresh = RefreshToken.for_user(user)
-        res = {
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
-        }
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            res = {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            }
 
-        return Response({
-            "user": serializer.data,
-            "refresh": res["refresh"],
-            "token": res["access"]
-        }, status=status.HTTP_201_CREATED)
+            return Response({
+                "user": serializer.data,
+                "refresh": res["refresh"],
+                "token": res["access"]
+            }, status=status.HTTP_201_CREATED)
+        
+        except ValidationError as e:
+            return Response(
+                data={
+                    "data": serializer.errors
+                }, 
+                status=status.HTTP_403_FORBIDDEN
+                )
 
+        except Exception as e:
+            return Response({
+                "message": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR);
 
 class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
     permission_classes = (AllowAny,)
