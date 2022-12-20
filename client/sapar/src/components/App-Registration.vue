@@ -47,15 +47,18 @@ export default {
     methods: {
         ...mapActions(["Register"]),
         async submit() {
-            try {
-                this.form.username = this.form.email;
-                await this.Register(this.form);
-                this.$router.push("/home");
-                this.showError = false;
-            } catch(error) {
-                console.log(error)
-                this.showError = true;
-            }
+            const user = new FormData();
+            user.append('email', this.form.email);
+            user.append('username', this.form.username);
+            user.append('password', this.form.password);
+            this.Register(user).then(
+                () => {
+                    this.$router.push('/home')
+                },
+                (error) => {
+                    this.showError = true;
+                }
+            )
         }
     }
 }

@@ -40,17 +40,20 @@ export default {
     methods: {
         ...mapActions(['LogIn']),
         async submit() {
-            const User = new FormData();
-            User.append("email", this.form.email);
-            User.append("password", this.form.password);
-            try {
-                await this.LogIn(User);
-                console.log("Success action")
-                this.$router.push("/home");
-                this.showError = false;
-            } catch(error) {
-                this.showError = true;
-            }
+            const user = new FormData();
+            user.append("email", this.form.email);
+            user.append("password", this.form.password);
+            this.LogIn(user).then(
+                ()=> {
+                    // success
+                    this.showError = false;
+                    this.$router.push('/home')    
+                },
+                (error) => {
+                    console.log(error)
+                    this.showError = true;
+                }
+            )
         }
 
     }

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import AuthService from '@/services/AuthService';
 
 const state = {
     user: null,
@@ -10,22 +11,41 @@ const getters = {
 };
 
 const actions = {
-    async Register({dispatch}, form) {
-        await axios.post('api/auth/register/', form);
+    async Register({dispatch}, userForm) {
+        let user = {
+            email: userForm.get('email'),
+            username: userForm.get('username'),
+            password: userForm.get('password')
+        }
+        return AuthService.register(user).then(
+            response => {
+                let loginUserform = new FormData();
+                loginUserform.append('email', userForm.getItem('email'));
+                loginUserform.append('password', userForm.getItem('password'));
 
-        let UserForm = new FormData();
-        UserForm.append('email', form.email);
-        UserForm.append('password', form.password);
-        UserForm.append('firstName', form.firstName);
-        UserForm.append('lastName', form.lastName);
+                dispatch('LogIn', loginUserform)
 
-        await dispatch('LogIn', UserForm);
+                return Promise.resolve(userForm.getItem('email'));
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        );
     },
 
-    async LogIn({commit}, User) {
-        await axios.post('api/auth/login/', User)
-        await commit('setUser', User.get('email'))
+    LogIn({commit}, userForm) {
+        return AuthService.login(userForm.get('email'), userForm.get('password')).then(
+            (responseData)=> {
+            console.log(responseData.user)
+            commit('setUser', responseData.user)
+            return Promise.resolve()
+        },
+        error => {
+            console.log(error)
+            return Promise.reject(error)
+        });
     },
+
     async LogOut({commit}){
         let user = null
         commit('LogOut', user)
@@ -33,11 +53,12 @@ const actions = {
 };
 
 const mutations = {
-    setUser(state, email){
-        state.user = email
+    setUser(state, user){
+        state.user = user
     },
     LogOut(state){
         state.user = null
+        localStorage.removeItem('access-token')
     },
 };
 
