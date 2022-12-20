@@ -6,20 +6,20 @@
                     <form class="text-center">
                         <h2 class="pt-3">Profile information</h2>
                         <div class="pb-3">
-                        <input type="email" class=" form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
+                            <input type="email" v-model="profile.email" class=" form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
                         </div>
                         <div class="pb-3">
-                        <input type="firstname" class="form-control text-center" id="firstname" placeholder="Vasia" :disabled="editMode" :readonly="editMode">
+                            <input type="firstname" v-model="profile.firstName" class="form-control text-center" id="firstname" placeholder="Vasia" :disabled="editMode" :readonly="editMode">
                         </div>
                         <div class="pb-3">
-                        <input type="lastname" class="form-control text-center" id="lastname" placeholder="Pupkin" :disabled="editMode" :readonly="editMode">
+                            <input type="lastname" v-model="profile.lastName" class="form-control text-center" id="lastname" placeholder="Pupkin" :disabled="editMode" :readonly="editMode">
                         </div>
                         <div class="pb-3">
-                        <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" :disabled="editMode" :readonly="editMode">
+                            <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" :disabled="editMode" :readonly="editMode">
                         </div>
 
                         <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">Edit</button>
-                        <button v-else @click="changeMode()" type="submit" class="btn btn-primary mb-3">Submit</button>
+                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">Submit</button>
                         <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">Log out</button>
                     </form>
                 </div>
@@ -42,11 +42,18 @@
 
 
 <script>
-import store from "@/store/index"
+import { isEmptyStatement } from '@babel/types'
+
+
 
 export default {
     data() {
         return {
+            profile: {
+                email: null,
+                firstName: null,
+                lastName: null
+            },
             editMode: null
         }
     },
@@ -58,6 +65,30 @@ export default {
         await this.$store.dispatch('LogOut')
         this.$router.push('/login')
       },
+
+      submit() {
+        // validate profile and then
+        
+        let user = this.$store.getters.StateUser;
+
+        this.$store.dispatch("UpdateProfileInfo", {
+            id: user.id,
+            firstName: this.profile.firstName,
+            lastName: this.profile.lastName,
+            email: this.profile.email,
+        }).then(
+            (userData)=> {
+                console.log("Profile Update Success!")
+                console.log(userData)
+                this.changeMode();
+            },
+            (error)=> {
+                console.log("Profile Update Error!")
+                console.log(error)
+            }
+        )
+      },
+
       changeMode() {
 		if (this.editMode == null){
             this.editMode = true
@@ -66,6 +97,21 @@ export default {
             this.editMode = null
         }
 	  }
+    },
+    mounted() {
+        let user = this.$store.getters.StateUser;
+        this.$store.dispatch("GetProfileInfo", user.id).then(
+            (userData)=> {
+                this.profile.firstName = userData.firstName;
+                this.profile.lastName = userData.lastName;
+                this.profile.email = userData.email;
+            },
+            (error)=> {
+                console.log(`Error: ${error}`)
+            }
+        )
+        
+        
     }
 }
 </script>
