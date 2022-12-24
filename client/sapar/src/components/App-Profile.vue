@@ -43,7 +43,7 @@
 
 <script>
 import { isEmptyStatement } from '@babel/types'
-
+import EventBus from "../common/EventBus"
 
 
 export default {
@@ -61,8 +61,8 @@ export default {
       isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
     },
 	methods: {
-      async logout (){
-        await this.$store.dispatch('LogOut')
+      logout() {
+        this.$store.dispatch('logout')
         this.$router.push('/login')
       },
 
@@ -99,6 +99,10 @@ export default {
 	  }
     },
     mounted() {
+        EventBus.on("logout", () => {
+            this.logout();
+        });
+
         let user = this.$store.getters.StateUser;
         this.$store.dispatch("GetProfileInfo", user.id).then(
             (userData)=> {
@@ -109,9 +113,10 @@ export default {
             (error)=> {
                 console.log(`Error: ${error}`)
             }
-        )
-        
-        
+        );
+    },
+    beforeMount() {
+        EventBus.remove("logout");
     }
 }
 </script>

@@ -9,10 +9,14 @@ import config from '../configuration/dev.env'
 // temporary global css
 import "./assets/css/main.css"
 import store from './store/index'
+import setupinterceptors from './services/setupinterceptors'
+import Api from "./services/Api"
 
 // axios basic configuration
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL = `${config.API_BASE_URL}:${config.PORT}/`;
+
+// setting up interceptors
+[Api.auth, Api.users, Api.tickets].forEach(axiosInstance => setupinterceptors(store, axiosInstance))
 
 
 const saparApp = createApp(App);

@@ -1,9 +1,11 @@
-import axios from 'axios'
 import AuthService from '@/services/AuthService';
 
-const state = {
-    user: null,
-};
+const user = JSON.parse(localStorage.getItem('user'));
+const initialState = user
+  ? { status: { loggedIn: true }, user }
+  : { status: { loggedIn: false }, user: null };
+
+const state = initialState
 
 const getters = {
     isAuthenticated: state => !!state.user,
@@ -11,54 +13,63 @@ const getters = {
 };
 
 const actions = {
-    async Register({dispatch}, userForm) {
-        let user = {
-            email: userForm.get('email'),
-            username: userForm.get('username'),
-            password: userForm.get('password')
-        }
+    async register({ commit }, user) {
         return AuthService.register(user).then(
             response => {
-                let loginUserform = new FormData();
-                loginUserform.append('email', userForm.getItem('email'));
-                loginUserform.append('password', userForm.getItem('password'));
-
-                dispatch('LogIn', loginUserform)
-
+                commit('registerSuccess')
                 return Promise.resolve(userForm.getItem('email'));
             },
             error => {
+                commit('registerFailure')
                 return Promise.reject(error);
             }
         );
     },
 
-    LogIn({commit}, userForm) {
-        return AuthService.login(userForm.get('email'), userForm.get('password')).then(
+    login({commit}, user) {
+        return AuthService.login(user.email, user.password).then(
             (responseData)=> {
-            console.log(responseData.user)
-            commit('setUser', responseData.user)
+            commit('loginSuccess', responseData.user)
             return Promise.resolve()
         },
         error => {
-            console.log(error)
+            commit('loginFailure');
             return Promise.reject(error)
         });
     },
 
-    async LogOut({commit}){
-        let user = null
-        commit('LogOut', user)
+    logout({commit}){
+        AuthService.logout();
+        commit('logout')
+    },
+
+    refreshToken({ commit }, accessToken) {
+        commit('refreshToken', accessToken)
     }
 };
 
 const mutations = {
-    setUser(state, user){
-        state.user = user
+    loginSuccess(state, user) {
+        state.status.loggedIn = true;
+        state.user = user;
     },
-    LogOut(state){
-        state.user = null
-        localStorage.removeItem('access-token')
+    loginFailure(state) {
+        state.status.loggedIn = false;
+        state.user = null;
+    },
+    logout(state) {
+        state.status.loggedIn = false;
+        state.user = null;
+    },
+    registerSuccess(state) {
+        state.status.loggedIn = false;
+    },
+    registerFailure(state) {
+        state.status.loggedIn = false;
+    },
+    refreshToken(state, accessToken) {
+        state.status.loggedIn = true
+        state.user = { ...state.user, accessToken: accessToken }  
     },
 };
 
