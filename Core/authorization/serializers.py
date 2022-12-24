@@ -17,9 +17,13 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
-        data['user'] = UserSerializer(self.user).data
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
+        data['user'] = {
+            'id': str(UserSerializer(self.user).data['id']),
+            'email': str(UserSerializer(self.user).data['email']),
+            'roles': 'notImplementedYet',
+            'accessToken': str(refresh.access_token),
+            'refreshToken': str(refresh),
+        }
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)

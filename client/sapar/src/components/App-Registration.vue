@@ -45,13 +45,15 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["Register"]),
+        ...mapActions(["register"]),
         async submit() {
-            const user = new FormData();
-            user.append('email', this.form.email);
-            user.append('username', this.form.username);
-            user.append('password', this.form.password);
-            this.Register(user).then(
+            const user = {
+                email: this.form.email,
+                password: this.form.passowrd,
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+            }
+            this.register(user).then(
                 () => {
                     this.$router.push('/home')
                 },

@@ -38,12 +38,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['LogIn']),
+        ...mapActions(['login']),
         async submit() {
-            const user = new FormData();
-            user.append("email", this.form.email);
-            user.append("password", this.form.password);
-            this.LogIn(user).then(
+            const user = {
+                email: this.form.email,
+                password: this.form.password
+            };
+            this.login(user).then(
                 ()=> {
                     // success
                     this.showError = false;
