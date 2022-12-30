@@ -103,7 +103,7 @@ export default {
             this.logout();
         });
 
-        let user = this.$store.getters.StateUser;
+        let user = this.$store.getters.getUser;
         this.$store.dispatch("GetProfileInfo", user.id).then(
             (userData)=> {
                 this.profile.firstName = userData.firstName;
