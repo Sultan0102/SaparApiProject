@@ -39,7 +39,7 @@
 							</ul>
 						</span>-->
 						<span v-if="isLoggedIn">
-							<router-link to="/profile"><li class="nav-item px-4" >Hello, {{getUseremail()}}<i class="bi bi-person-circle ms-3"></i></li></router-link>
+							<router-link to="/profile"><li class="nav-item px-4" >Hello, {{ getUserEmail() }}<i class="bi bi-person-circle ms-3"></i></li></router-link>
 						</span>
 						<span v-else>
 							<ul class="nav">
@@ -54,17 +54,18 @@
 </template>
 
 <script>
-import store from "@/store/index"
+import { mapGetters } from "vuex";
 
 export default {
 	computed : {
       isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
     },
 	methods: {
-	  getUseremail() {
-		let userEmail = this.$store.state.StateUser
+	...mapGetters(['StateUser']),
+	  getUserEmail() {
+		let email = this.$store.getters.getUser.email;
 
-		return userEmail;
+		return email;
 	  }
     }
 }

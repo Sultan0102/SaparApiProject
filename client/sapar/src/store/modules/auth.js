@@ -8,8 +8,8 @@ const initialState = user
 const state = initialState
 
 const getters = {
-    isAuthenticated: state => !!state.user,
-    StateUser: state => state.user,
+    isAuthenticated: state => !!state.status.loggedIn,
+    getUser: state => state.user,
 };
 
 const actions = {
