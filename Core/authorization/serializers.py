@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-
+from Core.exceptions import EmailAlreadyExistsException
 from Core.authorization.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import update_last_login
@@ -39,9 +39,14 @@ class RegisterSerializer(UserSerializer):
         model = User
         fields = ('__all__')
 
-    def create(self, validated_data):
+    def save(self):
         try:
-            user = User.objects.get(email=validated_data['email'])
+            user = User.objects.get(email=self.validated_data['email'])
         except ObjectDoesNotExist:
-            user = User.objects.create_user(**validated_data)
-        return user
+            user = None
+        
+        if user:
+            raise EmailAlreadyExistsException("User with given email already exists!")
+        
+        return User.objects.create_user(**self.validated_data)
+        
