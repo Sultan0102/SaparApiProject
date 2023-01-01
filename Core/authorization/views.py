@@ -1,6 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
 from Core.authorization.serializers import UserSerializer
 from Core.authorization.models import User
 from rest_framework import viewsets
@@ -16,6 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from django.core.mail import send_mail
 from rest_framework.exceptions import ValidationError
+from Core.exceptions import EmailAlreadyExistsException
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -70,6 +69,14 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
                 "token": res["access"]
             }, status=status.HTTP_201_CREATED)
         
+        except EmailAlreadyExistsException as e:
+            return Response(
+                data={
+                    "message": str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         except ValidationError as e:
             return Response(
                 data={
@@ -82,6 +89,7 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
             return Response({
                 "message": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR);
+
 
 class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
     permission_classes = (AllowAny,)
@@ -98,7 +106,7 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-@csrf_exempt
+
 def forgot_password(request):
     email = request.POST.get('email')
     verify = User.objects.filter(email=email).first()

@@ -4,9 +4,9 @@ from django.contrib import admin
 
 from .models import *
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id','email','username','firstName', 'lastName', 'birthDate', 'is_staff','isDeleted','creationDate')
+    list_display = ('id','email','firstName', 'lastName', 'birthDate', 'is_staff','isDeleted','creationDate')
     list_display_links = ('id','email')
-    search_fields = ('email','username')
+    search_fields = ('email',)
     list_filter = ('isDeleted',)
 
 admin.site.register(User,UserAdmin)
