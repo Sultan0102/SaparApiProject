@@ -46,7 +46,7 @@ class RegisterSerializer(UserSerializer):
             user = None
         
         if user:
-            raise EmailAlreadyExistsException("User with given email already exists!")
+            raise EmailAlreadyExistsException()
         
         return User.objects.create_user(**self.validated_data)
         
