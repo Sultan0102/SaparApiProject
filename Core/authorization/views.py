@@ -14,7 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from django.core.mail import send_mail
 from rest_framework.exceptions import ValidationError
-from Core.exceptions import EmailAlreadyExistsException
+from Core.exceptions import EmailAlreadyExistsException, ValidationAPIException
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -53,42 +53,22 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            raise ValidationAPIException(serializer.errors)
 
-        try:
-            serializer.is_valid(raise_exception=True)
-            user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-            res = {
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            }
+        user = serializer.save()
+        refresh = RefreshToken.for_user(user)
+        res = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
-            return Response({
-                "user": serializer.data,
-                "refresh": res["refresh"],
-                "token": res["access"]
-            }, status=status.HTTP_201_CREATED)
+        return Response({
+            "user": serializer.data,
+            "refresh": res["refresh"],
+            "token": res["access"]
+        }, status=status.HTTP_201_CREATED)
         
-        except EmailAlreadyExistsException as e:
-            return Response(
-                data={
-                    "message": str(e)
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        except ValidationError as e:
-            return Response(
-                data={
-                    "data": serializer.errors
-                }, 
-                status=status.HTTP_403_FORBIDDEN
-                )
-
-        except Exception as e:
-            return Response({
-                "message": str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR);
 
 
 class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
@@ -123,6 +103,8 @@ def forgot_password(request):
         return JsonResponse({'bool': True, 'msg': 'Please Check your Email'})
     else:
         return JsonResponse({'bool': False, 'msg': 'Invalid Email'})
+
+
 def change_password(request,user_id):
     password=request.POST.get('password')
     verify = User.objects.filter(id=user_id).first()
