@@ -15,6 +15,7 @@
             </div>
         </div>
     </div>
+    <p>{{ $t('hello') }}</p>
 </template>
 
 

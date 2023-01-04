@@ -11,6 +11,7 @@ import "./assets/css/main.css"
 import store from './store/index'
 import setupinterceptors from './services/setupinterceptors'
 import Api from "./services/Api"
+import i18n from './i18n'
 
 // axios basic configuration
 // axios.defaults.withCredentials = true
@@ -26,6 +27,7 @@ saparApp.component('TheFooter', footer);
 
 // middleware
 saparApp
+.use(i18n)
 .use(store)
 .use(router)
 .use(VueAxios, axios);

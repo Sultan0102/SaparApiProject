@@ -28,7 +28,10 @@
 						</li>
 					</ul>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-1">
+					<LocaleSwitcher />
+				</div>
+				<div class="col-md-3">
 					<div class="nav justify-content-end">
 						<!--<span v-if="isLoggedIn">
 							<a @click="logout"><li class="nav-item px-4" >Hello, {{getUseremail()}}<i class="bi bi-person-circle ms-3"></i></li></a>
@@ -55,19 +58,20 @@
 
 <script>
 import { mapGetters } from "vuex";
+import LocaleSwitcher from "./LocaleSwitcher.vue";
 
 export default {
-	computed : {
-      isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+    computed: {
+        isLoggedIn: function () { return this.$store.getters.isAuthenticated; }
     },
-	methods: {
-	...mapGetters(['StateUser']),
-	  getUserEmail() {
-		let email = this.$store.getters.getUser.email;
-
-		return email;
-	  }
-    }
+    methods: {
+        ...mapGetters(["StateUser"]),
+        getUserEmail() {
+            let email = this.$store.getters.getUser.email;
+            return email;
+        }
+    },
+    components: { LocaleSwitcher }
 }
 </script>
 <style scoped>
