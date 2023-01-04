@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve --mode development --host 0.0.0.0 --port 8080",
-    "prod": "vue-cli-service serve --mode production --host 0.0.0.0 --port 8080 --https true",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dev": "vue-cli-service serve --mode development --host 0.0.0.0 --port 8080",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
+    "prod": "vue-cli-service serve --mode production --host 0.0.0.0 --port 8080 --https true"
   },
   "dependencies": {
     "axios": "^1.1.3",
@@ -22,10 +23,12 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@intlify/vue-i18n-loader": "^3.0.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.7.1"
+    "eslint-plugin-vue": "^8.7.1",
+    "vue-cli-plugin-i18n": "~2.3.1"
   },
   "browserslist": [
     "> 1%",
