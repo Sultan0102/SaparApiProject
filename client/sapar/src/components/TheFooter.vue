@@ -1,5 +1,5 @@
 <template>
-<footer class="footer fixed-bottom py-3">
+<footer class="footer mt-auto py-3">
 	<div class="container-fluid">
 		<div class="container">
 			<div class="row align-items-center text-center">

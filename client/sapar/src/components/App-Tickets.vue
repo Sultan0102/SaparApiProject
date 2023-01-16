@@ -1,37 +1,98 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container">
-            <div>
-            <!-- Using modifiers -->
-            <b-button v-b-toggle.collapse-2 class="m-1">Toggle Collapse</b-button>
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                    <th scope="col">Route</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Departure Time</th>
+                    <th scope="col">Arrival Time</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            <!-- Using value -->
-            <b-button v-b-toggle="'collapse-2'" class="m-1">Toggle Collapse</b-button>
+                        <tr type="button" data-bs-toggle="collapse" data-bs-target="#bus1">
+                            <th scope="row">AB4958</th>
+                            <td>Almaty</td>
+                            <td>Taraz</td>
+                            <td>10:40pm</td>
+                            <td>05:30pm</td>
+                            
+                        </tr>   
+                        <td colspan="5" class="collapse" id="bus1">
+                            <div class="collapse" id="bus1">
+                                    <ul class="list-group list-group-horizontal-sm">
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                    </ul>
+                                    <ul class="list-group list-group-horizontal-sm">
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                        <li class="list-group-item">1</li>
+                                    </ul>
+                                    
+                            </div>
+                        </td>
 
-            <!-- Element to collapse -->
-            <b-collapse id="collapse-2">
-                <b-card>I am collapsible content!</b-card>
-            </b-collapse>
-            </div>
-            <p>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Button with data-bs-target
-            </button>
-            </p>
-            <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-            </div>
-            </div>
+
+                </tbody>
+            </table>
+
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                    <th scope="col">Route</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Departure Time</th>
+                    <th scope="col">Arrival Time</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <th scope="row">AB4958</th>
+                        <td>Almaty</td>
+                        <td>Taraz</td>
+                        <td>10:40pm</td>
+                        <td>05:30pm</td>
+                        <td><button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#bus2">v</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="collapse" id="bus2">
+                            <div class="collapse" id="bus2">
+                                <div class="card card-body">
+                                    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
         </div>
     </div>
-
+    
 </template>
 
 <script>
 
 </script>
 
-<style scoped>
-
+<style scoped>  
+th{
+    padding-bottom: 1rem !important;
+}
+collapse{
+    padding: none !important;
+}
 </style>

@@ -57,10 +57,22 @@ form{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
-	width: 30% !important;
 }
 form{
     border-color: #1C5E3C !important;
 	border-left-style: solid;
     border-left-width: 50px;
+}
+
+:root {
+	--bs-primary: #1C5E3C !important;
+  }
+
+
+textarea {
+	resize: none;
+}  
+button{
+	width: 200px;
+	color: #FFF !important;
 }

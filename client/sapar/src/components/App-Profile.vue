@@ -1,8 +1,8 @@
 <template>
     <div id="profile" class="container-fluid">
         <div class="container">
-            <div class="row align-items-center text-center pt-5">
-                <div class="col-md-5 mx-auto">
+            <div class="row align-items-center text-center">
+                <div class="col-md-5 mx-auto pt-5">
                     <form class="text-center">
                         <h2 class="pt-3">Profile information</h2>
                         <div class="pb-3">
@@ -17,13 +17,12 @@
                         <div class="pb-3">
                         <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" :disabled="editMode" :readonly="editMode">
                         </div>
-
                         <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">Edit</button>
                         <button v-else @click="changeMode()" type="submit" class="btn btn-primary mb-3">Submit</button>
                         <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">Log out</button>
                     </form>
                 </div>
-                <div class="col-md-5 mx-auto">
+                <div class="col-md-5 mx-auto pt-5">
                     <div class="order-history">
                         <h2 class="mt-2">Order History</h2>
                         <div class="list-group text-center">
@@ -47,7 +46,7 @@ import store from "@/store/index"
 export default {
     data() {
         return {
-            editMode: null
+            editMode: true
         }
     },
 	computed : {
