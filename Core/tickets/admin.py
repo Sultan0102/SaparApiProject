@@ -10,6 +10,10 @@ class RouteAdmin(admin.ModelAdmin):
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('id','coordinates','name')
 
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('id','value')
+
 admin.site.register(PostTicket,PostAdmin)
 admin.site.register(Route,RouteAdmin)
 admin.site.register(Location,LocationAdmin)
+admin.site.register(ResourceCode,ResourceAdmin)

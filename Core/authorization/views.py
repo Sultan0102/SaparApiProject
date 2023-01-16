@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from Core.authorization.serializers import UserSerializer
 from Core.authorization.models import User
@@ -80,7 +81,7 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-
+@csrf_exempt
 def forgot_password(request):
     email = request.POST.get('email')
     verify = User.objects.filter(email=email).first()
