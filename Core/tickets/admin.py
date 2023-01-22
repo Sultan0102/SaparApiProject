@@ -8,7 +8,7 @@ class RouteAdmin(admin.ModelAdmin):
     list_display = ('id','destination','source','duration','distance')
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('id','coordinates','name')
+    list_display = ('id','coordinates','nameCode')
 
 class ResourceAdmin(admin.ModelAdmin):
     list_display = ('id','value')
