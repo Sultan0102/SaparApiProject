@@ -2,15 +2,15 @@
     <div class="container-fluid py-5">
         <div class="container">
             <form class="text-center mt-5" @submit.prevent="submit">
-                <h2 class="pt-3">Enter the code</h2>    
+                <h2 class="pt-3">{{ $t('Enter the code') }}</h2>    
                 <div class="mb-3">
                 <!--<input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">-->
                 <input class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
                 </div>
-                <button type="submit" class="btn btn-primary mb-3">Sign in</button> <br/>
+                <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button> <br/>
             </form>
             <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
-                    <p id="error" class="pt-3">Username or Password is incorrect</p>
+                    <p id="error" class="pt-3">{{ $t('Username or Password is incorrect') }}</p>
             </div>
         </div>
     </div>

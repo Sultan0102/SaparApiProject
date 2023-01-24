@@ -1,12 +1,12 @@
 <template>
-    <div class="container-fluid head">
+    <div class="container-fluid head fixed-top">
 		<div class="container">
 			<div class="row align-items-center">
-				<div class="col-md-8">
-					<ul class="nav">
-						<li class="nav-item me-4">
+				<div class="col-md-7 ">
+					<ul class="nav ">
+						<li class="nav-item">
 							<router-link to="/home" class="nav-link ">
-								<svg xmlns="http://www.w3.org/2000/svg" width="150" height="40" viewBox="0 0 154.515 58.753">
+								<svg xmlns="http://www.w3.org/2000/svg" width="120" height="32" viewBox="0 0 154.515 58.753">
 								<g id="Сгруппировать_4" data-name="Сгруппировать 4" transform="translate(-21.985 -155.247)">
 									<text id="APAR" transform="translate(52 203)" fill="#ebebeb" font-size="50" font-family="TrebuchetMS-Bold, Trebuchet MS" font-weight="700"><tspan x="0" y="0">APAR</tspan></text>
 									<g id="Сгруппировать_2" data-name="Сгруппировать 2">
@@ -17,64 +17,60 @@
 								</svg>
 							</router-link>
 						</li>
-						<li class="nav-item">
-							<router-link to="/tickets"><a class="nav-link mx-4" href="#">Tickets</a></router-link>
+						<li class="nav-item nav-link">
+							<router-link to="/tickets">{{ $t('Tickets') }}</router-link>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link mx-4" href="#">Tours</a>
+						<li class="nav-item nav-link">
+							<a href="#">{{ $t('Tours') }}</a>
 						</li>
-						<li class="nav-item">
-							<router-link to="/about"><a class="nav-link ms-4">About us</a></router-link>
+						<li class="nav-item nav-link">
+							<router-link to="/about">{{ $t('About us') }}</router-link>
 						</li>
 					</ul>
 				</div>
+
 				<div class="col-md-4">
-					<div class="nav justify-content-end">
-						<!--<span v-if="isLoggedIn">
-							<a @click="logout"><li class="nav-item px-4" >Hello, {{getUseremail()}}<i class="bi bi-person-circle ms-3"></i></li></a>
-						</span>
-						<span v-else>
-							<ul class="nav">
-								<router-link to="/login"><li class="nav-item px-4"><i class="bi bi-person-circle"></i></li></router-link>
-							</ul>
-						</span>-->
+					<div class="nav d-flex justify-content-end">
 						<span v-if="isLoggedIn">
-							<router-link to="/profile"><li class="nav-item px-4" >Hello, {{getUseremail()}}<i class="bi bi-person-circle ms-3"></i></li></router-link>
+							<router-link to="/profile"><li class="nav-item ps-4" >{{ $t('hello') }} {{ getUserEmail() }}<i class="bi bi-person-circle ms-3"></i></li></router-link>
 						</span>
 						<span v-else>
 							<ul class="nav">
-								<router-link to="/login"><li class="nav-item px-4"><i class="bi bi-person-circle"></i></li></router-link>
+								<router-link to="/login"><li class="nav-item ps-4"><i class="bi bi-person-circle"></i></li></router-link>
 							</ul>
 						</span>
 					</div>
 				</div>
+
+				<div class="col-md-1">
+					<LocaleSwitcher />
+				</div>
+
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import store from "@/store/index"
+import { mapGetters } from "vuex";
+import LocaleSwitcher from "./LocaleSwitcher.vue";
 
 export default {
-	computed : {
-      isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+    computed: {
+        isLoggedIn: function () { return this.$store.getters.isAuthenticated; }
     },
-	methods: {
-      async logout (){
-        await this.$store.dispatch('LogOut')
-        this.$router.push('/login')
-      },
-	  getUseremail() {
-		let userEmail = this.$store.state.StateUser
-
-		return userEmail;
-	  }
-    }
+    methods: {
+        ...mapGetters(["StateUser"]),
+        getUserEmail() {
+            let email = this.$store.getters.getUser.email;
+            return email;
+        }
+    },
+    components: { LocaleSwitcher }
 }
 </script>
-<style scoped>
+<style scoped>	
 li{
-	font-size: 28px;
+	font-size: 22px;
 }
 </style>

@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-
+from Core.exceptions import EmailAlreadyExistsException
 from Core.authorization.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import update_last_login
@@ -17,9 +17,13 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
-        data['user'] = UserSerializer(self.user).data
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
+        data['user'] = {
+            'id': str(UserSerializer(self.user).data['id']),
+            'email': str(UserSerializer(self.user).data['email']),
+            'roles': 'notImplementedYet',
+            'accessToken': str(refresh.access_token),
+            'refreshToken': str(refresh),
+        }
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -35,9 +39,14 @@ class RegisterSerializer(UserSerializer):
         model = User
         fields = ('__all__')
 
-    def create(self, validated_data):
+    def save(self):
         try:
-            user = User.objects.get(email=validated_data['email'])
+            user = User.objects.get(email=self.validated_data['email'])
         except ObjectDoesNotExist:
-            user = User.objects.create_user(**validated_data)
-        return user
+            user = None
+        
+        if user:
+            raise EmailAlreadyExistsException()
+        
+        return User.objects.create_user(**self.validated_data)
+        

@@ -1,43 +1,75 @@
-import axios from 'axios'
+import AuthService from '@/services/AuthService';
 
-const state = {
-    user: null,
-};
+const user = JSON.parse(localStorage.getItem('user'));
+const initialState = user
+  ? { status: { loggedIn: true }, user }
+  : { status: { loggedIn: false }, user: null };
+
+const state = initialState
 
 const getters = {
-    isAuthenticated: state => !!state.user,
-    StateUser: state => state.user,
+    isAuthenticated: state => !!state.status.loggedIn,
+    getUser: state => state.user,
 };
 
 const actions = {
-    async Register({dispatch}, form) {
-        await axios.post('api/auth/register/', form);
-
-        let UserForm = new FormData();
-        UserForm.append('email', form.email);
-        UserForm.append('password', form.password);
-        UserForm.append('firstName', form.firstName);
-        UserForm.append('lastName', form.lastName);
-
-        await dispatch('LogIn', UserForm);
+    async register({ commit }, user) {
+        return AuthService.register(user).then(
+            response => {
+                commit('registerSuccess')
+                return Promise.resolve(userForm.getItem('email'));
+            },
+            error => {
+                commit('registerFailure')
+                return Promise.reject(error);
+            }
+        );
     },
 
-    async LogIn({commit}, User) {
-        await axios.post('api/auth/login/', User)
-        await commit('setUser', User.get('email'))
+    login({commit}, user) {
+        return AuthService.login(user.email, user.password).then(
+            (responseData)=> {
+            commit('loginSuccess', responseData.user)
+            return Promise.resolve()
+        },
+        error => {
+            commit('loginFailure');
+            return Promise.reject(error)
+        });
     },
-    async LogOut({commit}){
-        let user = null
-        commit('LogOut', user)
+
+    logout({commit}){
+        AuthService.logout();
+        commit('logout')
+    },
+
+    refreshToken({ commit }, accessToken) {
+        commit('refreshToken', accessToken)
     }
 };
 
 const mutations = {
-    setUser(state, email){
-        state.user = email
+    loginSuccess(state, user) {
+        state.status.loggedIn = true;
+        state.user = user;
     },
-    LogOut(state){
-        state.user = null
+    loginFailure(state) {
+        state.status.loggedIn = false;
+        state.user = null;
+    },
+    logout(state) {
+        state.status.loggedIn = false;
+        state.user = null;
+    },
+    registerSuccess(state) {
+        state.status.loggedIn = false;
+    },
+    registerFailure(state) {
+        state.status.loggedIn = false;
+    },
+    refreshToken(state, accessToken) {
+        state.status.loggedIn = true
+        state.user = { ...state.user, accessToken: accessToken }  
     },
 };
 

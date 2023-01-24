@@ -7,18 +7,28 @@ body {
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
 	font-family: 'Montserrat', sans-serif !important;
+	padding-top: 40px;
 }
 .head{
 	font-weight: 400;
-	font-size: 40px;
+	font-size: 20px;
 	background-color: #1C5E3C;
 }
 .nav-item{
 	color: #ECECEC !important;
 }
 .text-decoration-underline{
-	color: #538050;
+	background-color: #1C5E3C;
 }
+*{
+	color: #1C5E3C;
+}
+i{
+	color: #ECECEC;
+}
+.carousel-dark .carousel-indicators [data-bs-target] {
+	background-color: #1C5E3C;
+  }
 .invert {
   
   	-webkit-filter: invert(100%);
@@ -66,13 +76,20 @@ form{
 
 :root {
 	--bs-primary: #1C5E3C !important;
-  }
-
-
+}
 textarea {
 	resize: none;
 }  
 button{
-	width: 200px;
+	width: 250px;
 	color: #FFF !important;
+}
+*:focus {
+	box-shadow: none !important;
+}
+select{
+	color: #FFF !important;
+	background-color: #1C5E3C !important;
+	border: none !important;
+	font-size: 22px !important;
 }

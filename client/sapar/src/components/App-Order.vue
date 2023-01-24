@@ -2,19 +2,19 @@
     <div class="container-fluid py-5">
         <div class="container">
             <form class="text-center mt-5">
-                <h2 class="pt-3">Order confirmation</h2>
+                <h2 class="pt-3">{{ $t('Order confirmation') }}</h2>
 
                 <div class="dropdown mt-3">
                     <button class="btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Choose passangers
+                        {{ $t('Choose passangers') }}
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Vasya Pupkin <i class="bi bi-pencil-square"></i></a></li>
                         <li><a class="dropdown-item" href="#">Anatoliy Pupkin <i class="bi bi-pencil-square"></i></a></li>
-                        <li><a class="dropdown-item" href="#">Add a new passenger</a></li>
+                        <li><a class="dropdown-item" href="#">{{ $t('Add a new passenger') }}</a></li>
                     </ul>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 mb-3">Next</button> <br/>
+                <button type="submit" class="btn btn-primary mt-3 mb-3">{{ $t('Next') }}</button> <br/>
             </form>
         </div>
     </div>

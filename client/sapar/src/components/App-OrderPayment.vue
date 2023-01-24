@@ -2,18 +2,18 @@
     <div class="container-fluid py-5">
         <div class="container">
             <form class="text-center mt-5">
-                <h2 class="pt-3">Checkout Details</h2>
+                <h2 class="pt-3">{{ $t('Checkout Details') }}</h2>
 
                 <div class="dropdown mt-3">
                     <button class="btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Payment Method
+                        {{ $t('Payment Method') }}
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Kaspi</a></li>
                         <li><a class="dropdown-item" href="#">Halyk</a></li>
                     </ul>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 mb-3">Confirm</button> <br/>
+                <button type="submit" class="btn btn-primary mt-3 mb-3">{{ $t('Confirm') }}</button> <br/>
             </form>
         </div>
     </div>

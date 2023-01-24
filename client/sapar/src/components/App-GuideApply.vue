@@ -11,7 +11,7 @@
                     <h5><i class="bi bi-geo-alt"></i> Sayran, Almaty</h5>
                 </div>
                 <div class="col-md-3">
-                    <h4>Available Guides:</h4>
+                    <h4>{{ $t('Available Guides') }}:</h4>
                     <h2><i class="bi bi-person-circle me-2"></i><i class="bi bi-person-circle me-2"></i><i class="bi bi-person-circle me-2"></i><i class="bi bi-person-circle me-2"></i><i class="bi bi-person-circle me-2"></i></h2>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <h5><i class="bi bi-geo-alt"></i> Sayran, Almaty</h5>
                 </div>
                 <div class="col-md-3">
-                    <h4>Available Guides:</h4>
+                    <h4>{{ $t('Available Guides') }}:</h4>
                     <h2><i class="bi bi-person-circle me-2"></i>+</h2>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     <h5><i class="bi bi-geo-alt"></i> Sayran, Almaty</h5>
                 </div>
                 <div class="col-md-3">
-                    <h4>Available Guides:</h4>
+                    <h4>{{ $t('Available Guides') }}:</h4>
                     <h2><i class="bi bi-person-circle me-2"></i><i class="bi bi-person-circle me-2"></i></h2>
                 </div>
             </div>

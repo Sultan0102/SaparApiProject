@@ -1,14 +1,12 @@
-import datetime
-from django.contrib.auth.models import UserManager
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from datetime import datetime
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import UserManager
+from Core.authorization.managers import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(db_index=True, max_length=254,unique=True)
-    username = models.CharField(db_index=True, max_length=255,unique=True)
     password = models.CharField(db_index=True, max_length=255)
     firstName = models.CharField(db_index=True, max_length=255,blank=True)
     lastName = models.CharField(db_index=True, max_length=255, blank=True)
@@ -16,12 +14,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False,blank=True)
     isDeleted = models.BooleanField(default=False,blank=True)
     creationDate = models.DateTimeField(auto_now_add=True)
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-    objects = UserManager()
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
+
     class Meta:
         db_table = "Users"
+    
 
-
-
-
+    def __str__(self):
+        return self.email

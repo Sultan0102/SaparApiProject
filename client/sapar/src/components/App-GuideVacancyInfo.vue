@@ -17,16 +17,16 @@
                     </svg>
                 </div>
                 <div class="col-md-5">
-                    <h2 class="mb-3">A guide we are looking for:</h2>
+                    <h2 class="mb-3">{{ $t('A guide we are looking for') }}:</h2>
                     <ul>
-                        <li>Has good communication skills</li>
-                        <li>Is good at conflict resolutions</li>
-                        <li>Has history-related background</li>
-                        <li>Is passionate about history</li>
+                        <li>{{ $t('Has good communication skills') }}</li>
+                        <li>{{ $t('Is good at conflict resolutions') }}</li>
+                        <li>{{ $t('Has history-related background') }}</li>
+                        <li>{{ $t('Is passionate about history') }}</li>
                     </ul>
                     <div class="text-center mt-5">
-                        <h2>Sounds just like you?</h2>
-                        <button type="submit" class="btn btn-primary">Send</button>
+                        <h2>{{ $t('Sounds just like you') }}?</h2>
+                        <button type="submit" class="btn btn-primary">{{ $t('Send') }}</button>
                     </div>
                 </div>
             </div>

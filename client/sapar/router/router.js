@@ -83,8 +83,7 @@ const routes = [
   {
     path: "/about", 
     component: About, 
-    name: "About",
-    meta: { requiresAuth: true },
+    name: "About"
   },
   {
     path: "/guide-apply", 
