@@ -48,7 +48,7 @@ p{
     width: 50%;
 }
 form{
-	width: 50%;
+	max-width: 600px;
 }
 .btn-secondary {
     color:#6c757d !important;

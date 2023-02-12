@@ -1,6 +1,41 @@
 <template>
-    <div class="container-fluid py-5">
+        <div class="banner-home text-center position-relative container-fluid">
+            <div class="container">
+                <div class="position-absolute bottom-0 mb-5">
+                    <h1 class="white mb-3">We connect people<br>to their dreams</h1>
+                    <router-link to="/login" v-if="!isLoggedIn"><span class="border px-2 py-1 ms-4">{{ $t('Sign in') }}</span></router-link>
+                </div>
+            </div>
+        </div>
+    <div class="container-fluid my-5">
         <div class="container">
+            <h1 class="mb-5 text-center">90% of people using Sapar report higher satisfaction level from traveling activities</h1>
+            <div class="row align-items-center mb-5">
+                <div class="col-md-6 text-center">
+                    <img src="../assets/Buy-tickets.svg" class="w-50">
+                </div>
+                <div class="col-md-6 text-center">
+                    <h3 class="text-center">Buy tickets to your favorite destinations within seconds!</h3>
+                </div>
+
+            </div>
+            <div class="row align-items-center mb-5 swap-container">
+                <div class="col-md-6 text-center">
+                    <h3 class="text-center">If you are a guide, we suggest extensive collaborative tools</h3>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="../assets/If-you-are-guide.svg" class="w-50">
+                </div>
+            </div>
+            <div class="row align-items-center mb-5">
+                <div class="col-md-6 text-center">
+                    <img src="../assets/Buy-tickets.svg" class="w-50">
+                </div>
+                <div class="col-md-6 text-center">
+                    <h3 class="my-auto text-center">If you are a local tourism-based business, we offer you beneficial opportunities</h3>
+                </div>
+
+            </div>
             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -12,14 +47,14 @@
                     <div class="carousel-item active" data-bs-interval="10000">
                         <div class="row ms-3 me-3 border-top">
                                 <div class="col-md-6 text-center">
-                                    <img src="../assets/Kolsai-Lakes.jpg" class="p-2 img-fluid">
+                                    <img src="../assets/Kolsai-Lakes.jpg" class="my-3 img-fluid">
                                 </div>
-                                <div class="col-md-6 my-auto">
+                                <div class="col-md-6 my-auto text-center">
                                     <div>
-                                    <h1 class="">Almaty Kolsai Lake</h1>
-                                    <p>2 December</p>
-                                    <p>6:00 am</p>
-                                    <p>Sayran</p>
+                                    <h2 class="mb-0 mb-md-3">Almaty Kolsai Lake</h2>
+                                    <h6 class="mb-0 mb-md-3" >2 December</h6>
+                                    <h6 class="mb-0 mb-md-3">6:00 am</h6>
+                                    <h6 class="mb-0 mb-md-3">Sayran</h6>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary mb-3 ">{{ $t('Sign up') }}</button>
                                     </div>
@@ -30,7 +65,7 @@
                     <div class="carousel-item" data-bs-interval="10000">
                         <div class="row ms-3 me-3 border-top">
                                 <div class="col-md-6 text-center">
-                                    <img src="../assets/Kolsai-Lakes.jpg" width="80%" class="p-2 img-fluid">
+                                    <img src="../assets/Kolsai-Lakes.jpg" class="my-3 img-fluid">
                                 </div>
                                 <div class="col-md-6 text-center my-auto">
                                     <div>
@@ -46,7 +81,7 @@
                     <div class="carousel-item" data-bs-interval="10000">
                         <div class="row ms-3 me-3 border-top">
                                 <div class="col-md-6 text-center">
-                                    <img src="https://www.journalofnomads.com/wp-content/uploads/2017/10/Kolsai-Lakes-1.jpg" width="80%" class="p-2 img-fluid">
+                                    <img src="https://www.journalofnomads.com/wp-content/uploads/2017/10/Kolsai-Lakes-1.jpg" class="my-3 img-fluid">
                                 </div>
                                 <div class="col-md-6 text-center my-auto">
                                     <div>
@@ -73,14 +108,18 @@
             
 
         </div>
-    </div>
-    
+</div>
+
+
 </template>
 
 
 <script>
 
 export default {
+    computed: {
+        isLoggedIn: function () { return this.$store.getters.isAuthenticated; }
+    },
     data() {
         return {
             user: {
@@ -110,6 +149,13 @@ export default {
 </script>
 
 <style scoped>
+
+@media (max-width: 767px) {
+  .swap-container {
+    flex-direction: column-reverse !important;
+  }
+}
+
 img{
     width: 80%;
 }
@@ -118,5 +164,18 @@ img{
 }
 .carousel-control-next, .carousel-control-prev {
   width: 5% !important;
+}
+.banner-home{
+    background-image: url("../assets/Background.png");
+    min-height: 100vh !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.white{
+    color: #FFF !important;
+}
+span{
+    font-size: 22px;
 }
 </style>

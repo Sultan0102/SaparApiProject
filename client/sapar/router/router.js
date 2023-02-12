@@ -6,6 +6,7 @@ import LoginEmailCode from '@/components/App-LoginEmailCode';
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
+import Tickets2 from '@/components/App-Tickets2';
 import Order from '@/components/App-Order';
 import OrderPassengerInformation from '@/components/App-OrderPassengerInformation';
 import OrderPayment  from '@/components/App-OrderPayment';
@@ -20,7 +21,7 @@ const routes = [
     path: "/", 
     component: Home, 
     name: "Home"
-  },
+  }, 
   { 
     path: "/home", 
     component: Home, 
@@ -60,6 +61,12 @@ const routes = [
     path: "/tickets", 
     component: Tickets, 
     name: "Tickets",
+    meta: { requiresAuth: true },
+  },
+  { 
+    path: "/tickets2", 
+    component: Tickets2, 
+    name: "Tickets2",
     meta: { requiresAuth: true },
   },
   { 

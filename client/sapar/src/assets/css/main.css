@@ -1,27 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 
-
-
 body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
 	font-family: 'Montserrat', sans-serif !important;
-	padding-top: 40px;
 }
 .head{
 	font-weight: 400;
 	font-size: 20px;
 	background-color: #1C5E3C;
 }
-.nav-item{
-	color: #ECECEC !important;
+.navbar{
+	background-color: #1C5E3C !important;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.nav-link{
+	padding: .3rem 0rem;
 }
 .text-decoration-underline{
 	background-color: #1C5E3C;
 }
-*{
-	color: #1C5E3C;
+h1,h2,h3,h4,h5,h6,p,a{
+	color: #1C5E3C !important;
 }
 i{
 	color: #ECECEC;
@@ -81,7 +83,6 @@ textarea {
 	resize: none;
 }  
 button{
-	width: 250px;
 	color: #FFF !important;
 }
 *:focus {
@@ -92,4 +93,8 @@ select{
 	background-color: #1C5E3C !important;
 	border: none !important;
 	font-size: 22px !important;
+}
+.border{
+	border-radius: 10px;
+	border-width: 2px !important;
 }

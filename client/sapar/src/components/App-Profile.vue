@@ -1,5 +1,5 @@
 <template>
-    <div id="profile" class="container-fluid">
+    <div id="profile" class="container-fluid mt-5">
         <div class="container">
             <div class="row align-items-center text-center">
                 <div class="col-md-5 mx-auto pt-5">
@@ -19,7 +19,7 @@
                         </div>
                         <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button>
                         <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button>
-                        <button @click="logout" type="submit" class="btn btn-primary mb-3">{{ $t('Log out') }}</button>
+                        <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">{{ $t('Log out') }}</button>
                     </form>
                 </div>
                 <div class="col-md-5 mx-auto pt-5">

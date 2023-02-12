@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid py-5">
+    <div class="container-fluid py-5 mt-5">
         <div class="container">
             <h2 class="text-center">{{ $t('SAPAR IN NUMBERS') }}:</h2>
             <div class="row align-items-center border-top mt-2 pt-4">
@@ -22,21 +22,14 @@
                     <img src="../assets/Experience.png" class="img-fluid ">
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1202.309" height="460.885" viewBox="0 0 1202.309 460.885">
-                            <line id="Линия_49" data-name="Линия 49" x2="717" transform="translate(484.809 170.992)" fill="none" stroke="#1c5e3c" stroke-linecap="round" stroke-width="1"/>
-                            <path id="Вычитание_1" data-name="Вычитание 1" d="M24268.229-4398.094h0a172.483,172.483,0,0,1-49.709-23.888,174.13,174.13,0,0,1-39.336-37.759,172.763,172.763,0,0,1-25.869-48.537A173.2,173.2,0,0,1,24144-4564.5a174.864,174.864,0,0,1,3.523-34.966,172.637,172.637,0,0,1,10.111-32.569,173.437,173.437,0,0,1,16-29.471,174.648,174.648,0,0,1,21.184-25.678,174.658,174.658,0,0,1,25.678-21.187,173.532,173.532,0,0,1,29.471-16,172.622,172.622,0,0,1,32.566-10.109A174.791,174.791,0,0,1,24317.5-4738a174.791,174.791,0,0,1,34.967,3.525,172.624,172.624,0,0,1,32.568,10.109,173.617,173.617,0,0,1,29.471,16,174.658,174.658,0,0,1,25.678,21.187,174.562,174.562,0,0,1,21.186,25.678,173.351,173.351,0,0,1,16,29.471,172.637,172.637,0,0,1,10.111,32.569A174.864,174.864,0,0,1,24491-4564.5a173.2,173.2,0,0,1-9.234,55.994,172.761,172.761,0,0,1-25.666,48.389,174.172,174.172,0,0,1-39.045,37.73,172.536,172.536,0,0,1-49.367,24.019L24318-4564Z" transform="matrix(0.438, -0.899, 0.899, 0.438, -6325.546, 24089.369)" fill="#1c5e3c"/>
-                            <line id="Линия_46" data-name="Линия 46" x2="90" y2="42" transform="translate(394.809 312.992)" fill="none" stroke="#1c5e3c" stroke-linecap="round" stroke-width="1"/>
-                         <line id="Линия_47" data-name="Линия 47" x2="378" transform="translate(484.809 354.992)" fill="none" stroke="#1c5e3c" stroke-linecap="round" stroke-width="1"/>
-                            <line id="Линия_48" data-name="Линия 48" y1="42" x2="115" transform="translate(369.809 170.992)" fill="none" stroke="#1c5e3c" stroke-linecap="round" stroke-width="1"/>
-                            <path id="Пересечение_1" data-name="Пересечение 1" d="M24268.229-4398.094,24318-4564l49.686,165.634a173.507,173.507,0,0,1-50.189,7.37A173.578,173.578,0,0,1,24268.229-4398.094Z" transform="matrix(0.438, -0.899, 0.899, 0.438, -6300.546, 24101.369)" fill="#57896f"/>
-                        </svg>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>{{ $t('89% of our customers returned to us again') }}</h3>
-                        <br><br><br><br><br><br>
+                    <div class="col-md-6 text-center">
+                        <h3 class="my-3">{{ $t('89% of our customers returned to us again') }}</h3>
                         <h3>{{ $t('11% of people did not') }}</h3>
                     </div>
+                    <div class="col-md-6">
+                        <img src="../assets/Cake.svg" class="img-fluid ">
+                    </div>
+
                 </div>
             </div>
             <h2 class="text-center">{{ $t('MORE NUMBERS') }}:</h2>
@@ -64,7 +57,7 @@
                     <p>{{ $t('Workers employed') }}</p>
                 </div>
             </div>
-            <div class="row align-items-center border-top mt-2 pt-4">
+            <div class="row align-items-center mt-2 pt-4">
                 <div class="col-md-6 text-center">
                     <form class="text-center">
                         <h3 class="pt-3">{{ $t('Tell us about your experience') }}!</h3>
@@ -132,5 +125,9 @@ textarea{
     background-repeat: repeat-y;
     background-size: 100% 100%, 100% 100%, 100% 31px;
     line-height: 31px;
+}
+form{
+	max-width: 600px;
+    
 }
 </style>
