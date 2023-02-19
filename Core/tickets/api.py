@@ -36,10 +36,12 @@ class RoutesFilter(filters.FilterSet):
 class TicketFilter(filters.FilterSet):
     source = CharFilterInFilter(field_name='route__source__nameCode__value', lookup_expr='in')
     destination = CharFilterInFilter(field_name='route__destination__nameCode__value', lookup_expr='in')
+    beginDate = filters.DateTimeFilter(field_name='order__schedule__beginDate',lookup_expr='gte')
+    endDate = filters.DateTimeFilter(field_name='order__schedule__endDate',lookup_expr='lte')
 
     class Meta:
         model = PostTicket
-        fields =['route']
+        fields =['route','order']
 
 
 class RouteViewSet(viewsets.ModelViewSet):
@@ -81,7 +83,8 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
     filterset_class = TicketFilter
     serializer_class = DetailPostTicketsSerializer
     queryset = PostTicket.objects.all()
-    ordering_fields = ['cost','id']
+    ordering_fields = ['cost','id','order__schedule__beginDate','order_schedule_endDate']
+
     def retrieve(self, request, *args, **kwargs):
         language_id = kwargs.get('lang_id')
         instance = self.get_object()

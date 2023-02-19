@@ -39,7 +39,23 @@ export default {
     },
     methods: {
         ...mapActions(['login']),
+        ...mapActions(['login']),
         async submit() {
+            const user = {
+                email: this.form.email,
+                password: this.form.password
+            };
+            this.login(user).then(
+                ()=> {
+                    // success
+                    this.showError = false;
+                    this.$router.push('/home')    
+                },
+                (error) => {
+                    console.log(error)
+                    this.showError = true;
+                }
+            )
             const user = {
                 email: this.form.email,
                 password: this.form.password

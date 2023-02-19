@@ -39,10 +39,12 @@ i{
 }
 .bottom-border {
   	border-bottom: 1px solid #1C5E3C;
+  	border-bottom: 1px solid #1C5E3C;
 }
 footer {
 	font-weight: 400;
 	font-size: 40px;
+	background-color: #1C5E3C;
 	background-color: #1C5E3C;
 	color: #ECECEC !important;
 }
@@ -60,8 +62,12 @@ form{
 .form-control,
 .form-control-plaintext
 {
+.form-control,
+.form-control-plaintext
+{
 	border: none !important;
 	border-bottom: 1px solid #ECECEC !important;
+	background-color: #FFF !important;
 	background-color: #FFF !important;
 	width: 80% !important;
 	margin: auto;
