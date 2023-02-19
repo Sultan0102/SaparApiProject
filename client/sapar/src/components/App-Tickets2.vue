@@ -1,52 +1,31 @@
 <template>
-  <div class="bus-layout mt-5">
-    <div class="d-flex flex-row" v-for="row in rows">
-      <div
-        v-for="(seat, index) in row"
-        class="seat"
-        :key="index"
-        :class="{ selected: seat === selectedSeat }"
-        @click="selectSeat(seat)"
-      >
-        {{ seat }}
-      </div>
-    </div>
+  <div>
+    <p>Source: {{ source }}</p>
+    <p>Destination: {{ destination }}</p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      seats: [
-        "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11",
-        "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11",
-        // ...
-      ],
-      selectedSeat: null,
-      rows: []
+      ticketData: null,
+      source: null,
+      destination: null,
     };
   },
   mounted() {
-    this.rows = this.seats.reduce((acc, cur, index) => {
-      const rowIndex = Math.floor(index / 11);
-      if (!acc[rowIndex]) acc[rowIndex] = [];
-      acc[rowIndex].push(cur);
-      return acc;
-    }, []);
-  },
-  methods: {
-    selectSeat(seat) {
-      this.selectedSeat = seat;
-    }
+    axios.get('http://127.0.0.1:8000/api/post_ticket/3/1')
+      .then(response => {
+        this.ticketData = response.data;
+        this.source = response.data.route.source.nameCode.value;
+        this.destination = response.data.route.destination.nameCode.value;
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
-};
-</script>
-
-<style scoped>
-.selected{
-  background-color: #57896F;
-  color: #FFF !important;
-  cursor: pointer;
 }
-</style>
+</script>

@@ -30,8 +30,6 @@ class AuthService {
             firstName: user.firstName,
             lastName: user.lastName,
             password: user.password,
-            
-            username: user.email,
         });
     }
 }

@@ -5,6 +5,7 @@ body {
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
 	font-family: 'Montserrat', sans-serif !important;
+	margin-top: 150px;
 }
 .head{
 	font-weight: 400;
@@ -69,6 +70,7 @@ form{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
+	min-width: 100px;
 }
 form{
     border-color: #1C5E3C !important;

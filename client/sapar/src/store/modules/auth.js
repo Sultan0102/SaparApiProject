@@ -17,7 +17,7 @@ const actions = {
         return AuthService.register(user).then(
             response => {
                 commit('registerSuccess')
-                return Promise.resolve(userForm.getItem('email'));
+                return Promise.resolve();
             },
             error => {
                 commit('registerFailure')

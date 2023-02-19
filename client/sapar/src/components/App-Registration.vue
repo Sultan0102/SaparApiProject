@@ -38,8 +38,7 @@ export default {
                 email: "",
                 firstName: "",
                 lastName: "",
-                password: "",
-                username: ""
+                password: ""
             },
             showError: false
         }
@@ -49,7 +48,7 @@ export default {
         async submit() {
             const user = {
                 email: this.form.email,
-                password: this.form.passowrd,
+                password: this.form.password,
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
             }
