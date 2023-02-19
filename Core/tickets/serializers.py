@@ -39,7 +39,7 @@ class PostTicketsSerializer(serializers.ModelSerializer):
 class DetailPostTicketsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostTicket
-        fields = ['id','route','cost','status','created','updated','person']
+        fields = ['id','route','cost','status','created','updated','person','order']
         read_only_field = ['created','updated']
 
     def __init__(self,*args,**kwargs):

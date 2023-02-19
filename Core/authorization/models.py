@@ -7,7 +7,6 @@ from Core.authorization.managers import CustomUserManager
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(db_index=True, max_length=254,unique=True)
-    username = models.CharField(db_index=True, max_length=255)
     password = models.CharField(db_index=True, max_length=255)
     firstName = models.CharField(db_index=True, max_length=255,blank=True)
     lastName = models.CharField(db_index=True, max_length=255, blank=True)
