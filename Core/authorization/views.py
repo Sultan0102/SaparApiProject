@@ -14,7 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from django.core.mail import send_mail
 from rest_framework.exceptions import ValidationError
-from Core.exceptions import EmailAlreadyExistsException, ValidationAPIException
+from Core.exceptions import ValidationAPIException
 
 
 class UserViewSet(viewsets.ModelViewSet):

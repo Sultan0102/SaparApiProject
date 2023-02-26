@@ -88,6 +88,7 @@ export default{
             }
         },
         occupySeat(ticket){
+            debugger;
             if (ticket.ticketStatus == 1 && this.ticketsSum < 5) {
                 ticket.ticketStatus = 3
                 this.ticketsSum++
@@ -100,6 +101,7 @@ export default{
                 console.log(ticket.ticketStatus)
             }
             console.log(this.ticketsSum)
+            console.log(this.tickets.filter(t => t.ticketStatus == 3))
         },
         getTickets(){
             TicketService.retreive().then(data => {
@@ -108,6 +110,9 @@ export default{
         }
     },
     mounted(){
+        console.log("Current Lang")
+        console.log(this.$i18n.locale)
+        
     }
 }
 </script>
