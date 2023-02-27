@@ -47,8 +47,9 @@ export default {
             this.login(user).then(
                 ()=> {
                     // success
+                    debugger;
                     this.showError = false;
-                    this.$router.push('/home')    
+                    this.$router.push({name: "VerificationCode", params: {email: this.form.email}})    
                 },
                 (error) => {
                     console.log(error)

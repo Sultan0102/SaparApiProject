@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory} from 'vue-router';
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
 import LoginForgotPassword from '@/components/App-LoginForgotPassword';
-import LoginEmailCode from '@/components/App-LoginEmailCode';
+import VerificationCode from '@/components/VerificationCode';
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
@@ -41,9 +41,10 @@ const routes = [
   },
   { 
     path: "/email-code", 
-    component: LoginEmailCode, 
-    name: "LoginEmailCode",
-    meta: { guest: true },
+    component: VerificationCode, 
+    name: "VerificationCode",
+    props: true,
+    // meta: { guest: true },
   },
   { 
     path: "/register", 

@@ -4,8 +4,7 @@
             <form class="text-center mt-5" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Enter the code') }}</h2>    
                 <div class="mb-3">
-                <!--<input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">-->
-                <input class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
+                <input v-model="verificationCode" class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
                 </div>
                 <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button> <br/>
             </form>
@@ -21,29 +20,17 @@ import { mapActions } from "vuex";
 
 export default {
     components: {},
+    props:['email'],
     data() {
         return {
-            form: {
-                email: "",
-                password: "",
-            },
+            verificationCode: "",
             showError: false
         }
     },
     methods: {
-        ...mapActions(['LogIn']),
         async submit() {
-            const User = new FormData();
-            User.append("email", this.form.email);
-            User.append("password", this.form.password);
-            try {
-                await this.LogIn(User);
-                console.log("Success action")
-                this.$router.push("/home");
-                this.showError = false;
-            } catch(error) {
-                this.showError = true;
-            }
+            console.log(this.email)
+            console.log(this.verificationCode)
         }
 
     }
