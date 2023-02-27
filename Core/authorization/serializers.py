@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from Core.exceptions import EmailAlreadyExistsException, InvalidPasswordException
+from Core.exceptions import EmailAlreadyExistsException, InvalidPasswordException, InvalidVerificationCodeException, UserIsNotVerifiedException
 from Core.authorization.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import update_last_login
@@ -12,18 +12,27 @@ from Core import validators
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'password', 'firstName', 'lastName', 'birthDate', 'isDeleted', 'role']
-        read_only_field = ['isDeleted', 'creationDate', 'is_staff']
+        fields = ['id', 'email', 'password', 'firstName', 'lastName', 'birthDate', 'isDeleted', 'role', 'isVerified']
+        read_only_field = ['isDeleted', 'creationDate', 'is_staff', 'isVerified']
 
 class LoginSerializer(TokenObtainPairSerializer):
 
+    def validate_isVerified(self, value):
+        return value
+
     def validate(self, attrs):
-        print(attrs)
         data = super().validate(attrs)
+        
+        serialized_user = UserSerializer(self.user)
+        print(serialized_user)
+        
+        if serialized_user.data['isVerified'] == False:
+            raise UserIsNotVerifiedException()
+
         data['user'] = {
-            'id': str(UserSerializer(self.user).data['id']),
-            'email': str(UserSerializer(self.user).data['email']),
-            'role': str(UserSerializer(self.user).data['role']),
+            'id': str(serialized_user.data['id']),
+            'email': serialized_user.data['email'],
+            'role': str(serialized_user.data['role']),
         }
 
         if api_settings.UPDATE_LAST_LOGIN:
@@ -71,4 +80,16 @@ class RegisterSerializer(UserSerializer):
         
         
         return User.objects.create_user(**self.validated_data)
+
+class VerifyUserSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, max_length=128)
+    verificationCode = serializers.CharField(max_length=4, min_length=4, required=True)
+
+    def validate_verificationCode(self, value):
+        if validators.validate_verificationCode(value):
+            return value
+        else:
+            raise InvalidVerificationCodeException()
+
+    
         

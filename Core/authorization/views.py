@@ -1,5 +1,8 @@
+from Core.authorization.serializers import UserSerializer, VerifyUserSerializer
+from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, ValidationAPIException, FailedToSendEmailException
 from django.http import JsonResponse
-from Core.authorization.serializers import UserSerializer
+from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
 from Core.authorization.models import User
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -12,9 +15,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
-from django.core.mail import send_mail
 from rest_framework.exceptions import ValidationError
-from Core.exceptions import ValidationAPIException
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -57,17 +58,19 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
             raise ValidationAPIException(serializer.errors)
 
         user = serializer.save()
-        refresh = RefreshToken.for_user(user)
-        res = {
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
-        }
-
-        return Response({
-            "user": serializer.data,
-            "refresh": res["refresh"],
-            "token": res["access"]
-        }, status=status.HTTP_201_CREATED)
+        
+        try:
+            send_mail(
+                subject="Account Verification",
+                html_message=f"<h2>Your Verification Code: {user.verificationCode}</h2>",
+                from_email="saparServicePass@yandex.ru",
+                receipient_list=[user.email],
+                fail_silently=False
+            )
+        except:
+            raise FailedToSendEmailException()
+            
+        return Response(status=status.HTTP_201_CREATED)
         
 
 
@@ -85,6 +88,31 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
             # raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class VerifyViewSet(viewsets.ViewSet):
+    permission_classes = (AllowAny,)
+    http_method_names = ['post']
+
+    def create(self, request):
+        try:
+            serializer = VerifyUserSerializer(data=request.data)
+            
+            serializer.is_valid(raise_exception=True)
+            
+            user = User.objects.get(email=serializer.validated_data['email'])
+            if user.verificationCode != serializer.validated_data['verificationCode']:
+                raise InvalidVerificationCodeException();
+        
+            user.isVerified = True;
+            user.verificationCode = '';
+            user.save();
+
+            return Response("Successfully verified", status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist as e:
+            """Do something"""
+            raise EmailNotFoundException();
 
 
 def forgot_password(request):
@@ -113,3 +141,5 @@ def change_password(request,user_id):
         return JsonResponse({'bool': True, 'msg': 'Password has been changed'})
     else:
         return JsonResponse({'bool': False, 'msg': 'Error'})
+
+    
