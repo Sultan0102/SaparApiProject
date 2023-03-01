@@ -56,3 +56,11 @@ class EmailNotFoundException(ValidationAPIException):
     default_code = "email_not_found"
     default_detail = "Given email does not exist!"
     
+class InvalidTokenException(APIException):
+    status_code = 401
+    default_code = "invalid_token"
+    default_detail = "Token is invalid or expired!"
+
+class RefreshTokenInvalidException(InvalidTokenException):
+    default_code = "refresh_token_invalid"
+    default_detail = "Refresh token is invalid or expired!"

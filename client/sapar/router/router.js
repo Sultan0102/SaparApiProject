@@ -1,8 +1,10 @@
-import { createRouter, createWebHashHistory} from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
 import LoginForgotPassword from '@/components/App-LoginForgotPassword';
 import VerificationCode from '@/components/VerificationCode';
+import PageNotFound from '@/components/PageNotFound';
+import PageForbidden from "@/components/PageForbidden"
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
@@ -19,8 +21,11 @@ import store from '@/store';
 const routes = [
   { 
     path: "/", 
-    component: Home, 
-    name: "Home"
+    redirect: '/home'
+  }, 
+  { 
+    path: "", 
+    redirect: '/home'
   }, 
   { 
     path: "/home", 
@@ -104,12 +109,18 @@ const routes = [
     component: GuideVacancyInfo, 
     name: "GuideVacancyInfo",
     meta: { requiresAuth: true },
-  }
+  },
+  { path: "/:pathMatch(.*)*", component: PageNotFound },
+  {
+    path: "/forbidden", 
+    component: PageForbidden, 
+    name: "Forbidden"
+  },
 ]
 
 
 const vueRouter = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 })
 
@@ -140,6 +151,7 @@ vueRouter.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 
 

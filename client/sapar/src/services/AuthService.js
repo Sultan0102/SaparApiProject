@@ -13,14 +13,16 @@ class AuthService {
         }).then(function (response) {
             if(response.data.user) {
                 TokenService.setUser(response.data.user)
+                TokenService.updateLocalAccessToken(response.data.access)
+                TokenService.updateLocalRefreshToken(response.data.refresh)
             }
             return response.data
         });
     }
 
     logout() {
-        router.push('/home')
         TokenService.removeUser();
+        TokenService.removeTokens();
     }
 
     register(user) {

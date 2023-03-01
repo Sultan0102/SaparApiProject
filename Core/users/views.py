@@ -12,7 +12,7 @@ from rest_framework.response import Response
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'delete', 'put']
     serializer_class = UserUpdateSerializer
-    permission_classes = (IsAuthenticated, IsAdmin)
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         if self.request.user.is_superuser:

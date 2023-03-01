@@ -1,13 +1,13 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container">
-            <form class="text-center mt-3" @submit.prevent="submit">
+            <form id="login-form" class="text-center mt-3" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Welcome back') }}</h2>
                 <div class="mb-3">
-                <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com">
+                <input v-model="form.email" type="email" class="form-control text-center" id="email" aria-describedby="emailHelp" placeholder="email@example.com">
                 </div>
                 <div class="mb-3">
-                <input v-model="form.password" type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********">
+                <input v-model="form.password" type="password" class="form-control text-center" id="password" placeholder="**********">
                 </div>
                 <router-link to="/forgot-password"><p>{{ $t('Forgot password') }}?</p></router-link>
                 <button type="submit" class="btn btn-primary mb-3">Sign in</button> <br/>
@@ -17,6 +17,7 @@
             </div>
             <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
                     <p id="error" class="pt-3">{{ $t('Username or Password is incorrect') }}</p>
+                    <p id="error2" class="pt-3">{{ errorMessage }}</p>
             </div>
         </div>
     </div>
@@ -34,7 +35,8 @@ export default {
                 email: "",
                 password: "",
             },
-            showError: false
+            showError: false,
+            errorMessage: ''
         }
     },
     methods: {
@@ -44,20 +46,68 @@ export default {
                 email: this.form.email,
                 password: this.form.password
             };
+            var form = $("#login-form");
+            
+            if(!form.valid()) {
+                var validateResult = form.validate();
+                var errorMessages = '';
+
+                validateResult.errorList.forEach(function (error) {
+                    errorMessages += error.message + '<br />';
+                });
+                this.$notify({
+                    type: 'error',
+                    text: errorMessages
+                })
+                return;
+            }
+
             this.login(user).then(
                 ()=> {
-                    // success
-                    debugger;
                     this.showError = false;
-                    this.$router.push({name: "VerificationCode", params: {email: this.form.email}})    
+                    // this.$router.push({name: "VerificationCode", params: {email: this.form.email}})    
+                    this.$router.push("/")
                 },
                 (error) => {
-                    console.log(error)
+                    if (error.response.status == 400) {
+                        var errorCode = this.$t(error.response.data.error_code)
+                        var errorMessage = this.$t(errorCode)
+                        this.$notify({
+                            type: 'error',
+                            title: "Validation Error",
+                            text: errorMessage,
+                        })
+                    }
+                    
                     this.showError = true;
                 }
             )
-        }
-
+        },
+        enableValidation() {
+            var loginForm = $("#login-form");
+            loginForm.validate({
+                rules: {
+                    email: {
+                        required: true
+                    },
+                    password: {
+                        required: true
+                    }
+                },
+                messages: {
+                    email: {
+                        required: "Email field is required!",
+                    },
+                    password: {
+                        required: "Password field is required"
+                    }
+                }
+            })
+        },
+        
+    },
+    mounted() {
+        this.enableValidation();
     }
 }
 </script>
@@ -75,4 +125,5 @@ a{
 form{
 	max-width: 600px;
 }
+
 </style>

@@ -1,5 +1,5 @@
 from Core.authorization.serializers import UserSerializer, VerifyUserSerializer
-from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, ValidationAPIException, FailedToSendEmailException
+from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, ValidationAPIException, FailedToSendEmailException, RefreshTokenInvalidException
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,18 +17,6 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from rest_framework.exceptions import ValidationError
 
-
-class UserViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get']
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['updated']
-    ordering = ['-updated']
-
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return User.objects.all()
 
 
 class LoginViewSet(ModelViewSet, TokenObtainPairView):
@@ -84,7 +72,8 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
-            return Response(data=e.args[0], status=status.HTTP_403_FORBIDDEN)
+            raise RefreshTokenInvalidException()
+            # return Response(data=e.args[0], status=status.HTTP_401_UNAUTHORIZED)
             # raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
