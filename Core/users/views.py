@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from Core.users.serializers import UserUpdateSerializer
-from Core.authorization.models import User
+from Core.authorization.models import IsAdmin, IsGuide, User
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
@@ -12,7 +12,7 @@ from rest_framework.response import Response
 class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'delete', 'put']
     serializer_class = UserUpdateSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
         if self.request.user.is_superuser:

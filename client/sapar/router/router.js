@@ -1,20 +1,32 @@
-import { createRouter, createWebHashHistory} from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
 import LoginForgotPassword from '@/components/App-LoginForgotPassword';
-import LoginEmailCode from '@/components/App-LoginEmailCode';
+import VerificationCode from '@/components/VerificationCode';
+import PageNotFound from '@/components/PageNotFound';
+import PageForbidden from "@/components/PageForbidden"
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
+import Tickets2 from '@/components/App-Tickets2';
+import Order from '@/components/App-Order';
+import OrderPassengerInformation from '@/components/App-OrderPassengerInformation';
+import OrderPayment  from '@/components/App-OrderPayment';
+import About from '@/components/App-About';
+import GuideApply from '@/components/App-GuideApply';
+import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
 import store from '@/store';
 
 
 const routes = [
   { 
     path: "/", 
-    component: Home, 
-    name: "Home"
-  },
+    redirect: '/home'
+  }, 
+  { 
+    path: "", 
+    redirect: '/home'
+  }, 
   { 
     path: "/home", 
     component: Home, 
@@ -34,9 +46,10 @@ const routes = [
   },
   { 
     path: "/email-code", 
-    component: LoginEmailCode, 
-    name: "LoginEmailCode",
-    meta: { guest: true },
+    component: VerificationCode, 
+    name: "VerificationCode",
+    props: true,
+    // meta: { guest: true },
   },
   { 
     path: "/register", 
@@ -55,12 +68,59 @@ const routes = [
     component: Tickets, 
     name: "Tickets",
     meta: { requiresAuth: true },
-  }
+  },
+  { 
+    path: "/tickets2", 
+    component: Tickets2, 
+    name: "Tickets2",
+    meta: { requiresAuth: true },
+  },
+  { 
+    path: "/order", 
+    component: Order, 
+    name: "Order",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/order-passenger-information", 
+    component: OrderPassengerInformation, 
+    name: "OrderPassengerInformation",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/order-payment", 
+    component: OrderPayment, 
+    name: "OrderPayment",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/about", 
+    component: About, 
+    name: "About"
+  },
+  {
+    path: "/guide-apply", 
+    component: GuideApply, 
+    name: "GuideApply",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/guide-vacancy-info", 
+    component: GuideVacancyInfo, 
+    name: "GuideVacancyInfo",
+    meta: { requiresAuth: true },
+  },
+  { path: "/:pathMatch(.*)*", component: PageNotFound },
+  {
+    path: "/forbidden", 
+    component: PageForbidden, 
+    name: "Forbidden"
+  },
 ]
 
 
 const vueRouter = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 })
 
@@ -91,6 +151,7 @@ vueRouter.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 
 

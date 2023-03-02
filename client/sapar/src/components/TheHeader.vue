@@ -1,59 +1,38 @@
 <template>
-    <div class="container-fluid head">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
 		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-md-8">
-					<ul class="nav">
-						<li class="nav-item me-4">
-							<router-link to="/home" class="nav-link ">
-								<svg xmlns="http://www.w3.org/2000/svg" width="150" height="40" viewBox="0 0 154.515 58.753">
-								<g id="Сгруппировать_4" data-name="Сгруппировать 4" transform="translate(-21.985 -155.247)">
-									<text id="APAR" transform="translate(52 203)" fill="#ebebeb" font-size="50" font-family="TrebuchetMS-Bold, Trebuchet MS" font-weight="700"><tspan x="0" y="0">APAR</tspan></text>
-									<g id="Сгруппировать_2" data-name="Сгруппировать 2">
-									<line id="Линия_2" data-name="Линия 2" x2="127" transform="translate(49.5 158.5)" fill="none" stroke="#ebebeb" stroke-width="6.5"/>
-									<path id="Контур_2" data-name="Контур 2" d="M.985,10.84V3.74H14.419q7.155,0,7.155-5a7.084,7.084,0,0,0-1.687-4.468Q18.2-7.852,12.935-10.492a33.407,33.407,0,0,1-7.092-4.343,11.6,11.6,0,0,1-2.812-4.046,13.265,13.265,0,0,1-.984-5.186,11.346,11.346,0,0,1,3.89-8.811,14.358,14.358,0,0,1,9.982-3.5c5.291,0,13.062-.03,13.062-.03l.794,6.473c-4.669.148-7.612-.035-11.138-.035s-5.89.991-6.921,1.981a5.107,5.107,0,0,0-1.547,3.859q0,3.937,8.717,8.186a28.44,28.44,0,0,1,6.624,4.14A12.722,12.722,0,0,1,28.6-7.4,14.279,14.279,0,0,1,29.666-1.79a11.317,11.317,0,0,1-4.39,9.154q-4.39,3.593-11.763,3.593C9.243,10.957,5.588,10.84.985,10.84Z" transform="translate(21 191.653)" fill="#ebebeb"/>
-									</g>
-								</g>
-								</svg>
-							</router-link>
-						</li>
-						<li class="nav-item">
-							<router-link to="/tickets"><a class="nav-link mx-4" href="#">Tickets</a></router-link>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link mx-4" href="#">Tours</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link ms-4" href="#">About us</a>
-						</li>
-					</ul>
-				</div>
-				<div class="col-md-1">
-					<LocaleSwitcher />
-				</div>
-				<div class="col-md-3">
-					<div class="nav justify-content-end">
-						<!--<span v-if="isLoggedIn">
-							<a @click="logout"><li class="nav-item px-4" >Hello, {{getUseremail()}}<i class="bi bi-person-circle ms-3"></i></li></a>
-						</span>
-						<span v-else>
-							<ul class="nav">
-								<router-link to="/login"><li class="nav-item px-4"><i class="bi bi-person-circle"></i></li></router-link>
-							</ul>
-						</span>-->
-						<span v-if="isLoggedIn">
-							<router-link to="/profile"><li class="nav-item px-4" >Hello, {{ getUserEmail() }}<i class="bi bi-person-circle ms-3"></i></li></router-link>
-						</span>
-						<span v-else>
-							<ul class="nav">
-								<router-link to="/login"><li class="nav-item px-4"><i class="bi bi-person-circle"></i></li></router-link>
-							</ul>
-						</span>
-					</div>
-				</div>
+			<router-link to="/home" class="nav-link "><a class="navbar-brand" href="#"><img src="../assets/SAPAR.svg" class="w-75"></a></router-link>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse row container" id="navbar">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 col-6">
+					<li class="nav-item">
+						<router-link class="nav-link me-2" aria-current="page" to="/tickets">{{ $t('Tickets') }}</router-link>
+					</li>
+					<li class="nav-item">
+						<router-link class="nav-link me-2" aria-current="page" to="/tickets">{{ $t('Tours') }}</router-link>
+					</li>
+					<li class="nav-item">
+						<router-link class="nav-link me-2" aria-current="page" to="/about">{{ $t('About us') }}</router-link>
+					</li>
+				</ul>
+				<ul class="navbar-nav justify-content-end mb-2 mb-lg-0 col-6">
+					<li class="nav-item" v-if="isLoggedIn">
+						<router-link class="nav-link d-flex justify-content-end" to="/profile">{{ $t('hello') }} {{ getUserEmail() }}<i class="bi bi-person-circle ms-3"></i></router-link>
+					</li>
+					<li class="nav-item" v-else>
+						<router-link class="nav-link d-flex justify-content-end" to="/register"><span class="border p-1 me-2">{{ $t('Sign up') }}</span></router-link>
+					</li>
+					<li class="nav-item my-auto d-flex justify-content-end">
+						<LocaleSwitcher class="nav-link " />
+					</li>
+				</ul>
 			</div>
 		</div>
-	</div>
+	</nav>
+
 </template>
 
 <script>
@@ -74,8 +53,9 @@ export default {
     components: { LocaleSwitcher }
 }
 </script>
-<style scoped>
+<style scoped>	
 li{
-	font-size: 28px;
+	font-size: 22px;
 }
+
 </style>
