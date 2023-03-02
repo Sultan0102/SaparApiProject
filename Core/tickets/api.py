@@ -96,7 +96,6 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
             instance.route.destination.nameCode.value = destination_value.value
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
     def list(self, request, *args, **kwargs):
        queryset = self.filter_queryset(self.get_queryset())
        language_id = kwargs.get('lang_id')

@@ -1,9 +1,9 @@
 <template>
-    <select v-model="$i18n.locale">
+    <select class="" v-model="$i18n.locale">
     <option v-for="(locale, i) in locales" :key="`locale-${i}`" :value="locale">
       {{ locale }}
     </option>
-  </select>
+    </select>
 </template>
 
 
@@ -12,7 +12,7 @@
 export default {
     name: "LocaleSwitcher",
     data() {
-        return { locales: ["ru", "en"] };
+        return { locales: ["ru", "en", "kz"] };
   }
 }
 </script>

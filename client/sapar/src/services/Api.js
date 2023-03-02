@@ -11,6 +11,6 @@ export default {
         baseURL: config.USERS_API_URL,
     }),
     tickets: axios.create({
-
+        baseURL: config.TICKETS_API_URL,
     })
 }

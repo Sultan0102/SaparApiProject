@@ -12,12 +12,13 @@ import store from './store/index'
 import setupinterceptors from './services/setupinterceptors'
 import Api from "./services/Api"
 import i18n from './i18n'
+import Notifications from '@kyvg/vue3-notification'
 
 // axios basic configuration
 // axios.defaults.withCredentials = true
 
 // setting up interceptors
-[Api.auth, Api.users, Api.tickets].forEach(axiosInstance => setupinterceptors(store, axiosInstance))
+[Api.auth, Api.users, Api.tickets].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
 
 
 const saparApp = createApp(App);
@@ -30,6 +31,7 @@ saparApp
 .use(i18n)
 .use(store)
 .use(router)
-.use(VueAxios, axios);
+.use(VueAxios, axios)
+.use(Notifications);
 
 saparApp.mount('#app');

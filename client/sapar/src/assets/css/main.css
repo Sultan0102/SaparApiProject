@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 
-
-
 body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-overflow-scrolling: touch;
@@ -10,15 +8,29 @@ body {
 }
 .head{
 	font-weight: 400;
-	font-size: 40px;
+	font-size: 20px;
 	background-color: #1C5E3C;
 }
-.nav-item{
-	color: #ECECEC !important;
+.navbar{
+	background-color: #1C5E3C !important;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.nav-link{
+	padding: .3rem 0rem;
 }
 .text-decoration-underline{
-	color: #538050;
+	background-color: #1C5E3C;
 }
+h1,h2,h3,h4,h5,h6,p,a{
+	color: #1C5E3C !important;
+}
+i{
+	color: #ECECEC;
+}
+.carousel-dark .carousel-indicators [data-bs-target] {
+	background-color: #1C5E3C;
+  }
 .invert {
   
   	-webkit-filter: invert(100%);
@@ -57,10 +69,33 @@ form{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
-	width: 30% !important;
+	min-width: 100px;
 }
 form{
     border-color: #1C5E3C !important;
 	border-left-style: solid;
     border-left-width: 50px;
+}
+
+:root {
+	--bs-primary: #1C5E3C !important;
+}
+textarea {
+	resize: none;
+}  
+button{
+	color: #FFF !important;
+}
+*:focus {
+	box-shadow: none !important;
+}
+select{
+	color: #FFF !important;
+	background-color: #1C5E3C !important;
+	border: none !important;
+	font-size: 22px !important;
+}
+.border{
+	border-radius: 10px;
+	border-width: 2px !important;
 }

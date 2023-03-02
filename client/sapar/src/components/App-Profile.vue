@@ -1,10 +1,10 @@
 <template>
-    <div id="profile" class="container-fluid">
+    <div id="profile" class="container-fluid mt-5">
         <div class="container">
-            <div class="row align-items-center text-center pt-5">
-                <div class="col-md-5 mx-auto">
+            <div class="row align-items-center text-center">
+                <div class="col-md-5 mx-auto pt-5">
                     <form class="text-center">
-                        <h2 class="pt-3">Profile information</h2>
+                        <h2 class="pt-3">{{ $t('Profile information') }}</h2>
                         <div class="pb-3">
                             <input type="email" v-model="profile.email" class=" form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
                         </div>
@@ -17,20 +17,19 @@
                         <div class="pb-3">
                             <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="**********" :disabled="editMode" :readonly="editMode">
                         </div>
-
-                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">Edit</button>
-                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">Submit</button>
-                        <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">Log out</button>
+                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button>
+                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button>
+                        <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">{{ $t('Log out') }}</button>
                     </form>
                 </div>
-                <div class="col-md-5 mx-auto">
+                <div class="col-md-5 mx-auto pt-5">
                     <div class="order-history">
-                        <h2 class="mt-2">Order History</h2>
+                        <h2 class="mt-2">{{ $t('Order History') }}</h2>
                         <div class="list-group text-center">
                             <div class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</div>
                             <div class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</div>
                             
-                            <button type="button" class="btn btn-primary mx-auto my-3">See more</button>
+                            <button type="button" class="btn btn-primary mx-auto my-3">{{ $t('See more') }}</button>
                         </div>
                     </div>
                 </div>
@@ -42,7 +41,7 @@
 
 
 <script>
-import { isEmptyStatement } from '@babel/types'
+//import { isEmptyStatement } from '@babel/types'
 import EventBus from "../common/EventBus"
 
 
@@ -54,7 +53,7 @@ export default {
                 firstName: null,
                 lastName: null
             },
-            editMode: null
+            editMode: true
         }
     },
 	computed : {
@@ -63,7 +62,7 @@ export default {
 	methods: {
       logout() {
         this.$store.dispatch('logout')
-        this.$router.push('/login')
+        this.$router.push('/home')
       },
 
       submit() {

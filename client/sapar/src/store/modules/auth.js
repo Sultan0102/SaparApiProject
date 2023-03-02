@@ -1,4 +1,5 @@
 import AuthService from '@/services/AuthService';
+import TokenService from '@/services/TokenService';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
@@ -17,7 +18,7 @@ const actions = {
         return AuthService.register(user).then(
             response => {
                 commit('registerSuccess')
-                return Promise.resolve(userForm.getItem('email'));
+                return Promise.resolve();
             },
             error => {
                 commit('registerFailure')
@@ -29,6 +30,7 @@ const actions = {
     login({commit}, user) {
         return AuthService.login(user.email, user.password).then(
             (responseData)=> {
+            debugger;
             commit('loginSuccess', responseData.user)
             return Promise.resolve()
         },

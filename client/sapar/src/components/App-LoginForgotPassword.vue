@@ -2,14 +2,14 @@
     <div class="container-fluid py-5">
         <div class="container">
             <form class="text-center mt-5" @submit.prevent="submit">
-                <h2 class="pt-3">Enter your email</h2>
+                <h2 class="pt-3">{{ $t('Enter your email') }}</h2>
                 <div class="mb-3">
                 <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com">
                 </div>
-                <button type="submit" class="btn btn-primary mb-3">Send me code</button> <br/>
+                <button type="submit" class="btn btn-primary mb-3">{{ $t('Send me code') }}</button> <br/>
             </form>
             <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
-                    <p id="error" class="pt-3">Username or Password is incorrect</p>
+                    <p id="error" class="pt-3">{{ $t('Username or Password is incorrect') }}</p>
             </div>
         </div>
     </div>
@@ -60,6 +60,6 @@ p{
     width: 50%;
 }
 form{
-	width: 50%;
+	max-width: 600px;
 }
 </style>
