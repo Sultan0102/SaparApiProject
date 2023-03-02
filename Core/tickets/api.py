@@ -1,16 +1,17 @@
 import django_filters
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import *
 from .serializers import PostTicketsSerializer, RouteSerializer, LocationSerializer, DetailPostTicketsSerializer, \
-    DetailRouteSerializer, LocationSer
+    DetailRouteSerializer, LocationSer, WriteReviewSerializer, ReadReviewSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthorOrReadOnly
 from ..authorization.models import User
 
 
@@ -108,4 +109,29 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
        serializer = self.get_serializer(queryset, many=True)
        return Response(serializer.data)
 
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+
+    def list(self, request):
+        tour_id = request.data['id']
+        queryset = Review.objects.filter(tour= tour_id)
+        serializer = ReadReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        pass
+
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update", "destroy"):
+            return WriteReviewSerializer
+        return ReadReviewSerializer
+    def get_permissions(self):
+        if self.action in ("create",):
+            self.permission_classes = (permissions.IsAuthenticated,)
+        elif self.action in ("update", "partial_update", "destroy"):
+            self.permission_classes = (IsAuthorOrReadOnly)
+        else:
+            self.permission_classes = (permissions.AllowAny,)
+
+        return super().get_permissions()
 
