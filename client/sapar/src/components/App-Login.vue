@@ -4,10 +4,10 @@
             <form id="login-form" class="text-center mt-3" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Welcome back') }}</h2>
                 <div class="mb-3">
-                <input v-model="form.email" type="email" class="form-control text-center" id="email" aria-describedby="emailHelp" placeholder="email@example.com">
+                <input v-model="form.email" type="email" class="form-control text-center" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com">
                 </div>
                 <div class="mb-3">
-                <input v-model="form.password" type="password" class="form-control text-center" id="password" placeholder="**********">
+                <input v-model="form.password" type="password" class="form-control text-center" id="password" name="password" placeholder="**********">
                 </div>
                 <router-link to="/forgot-password"><p>{{ $t('Forgot password') }}?</p></router-link>
                 <button type="submit" class="btn btn-primary mb-3">Sign in</button> <br/>
@@ -65,19 +65,25 @@ export default {
             this.login(user).then(
                 ()=> {
                     this.showError = false;
-                    // this.$router.push({name: "VerificationCode", params: {email: this.form.email}})    
+                     
                     this.$router.push("/")
                 },
                 (error) => {
-                    if (error.response.status == 400) {
-                        var errorCode = this.$t(error.response.data.error_code)
-                        var errorMessage = this.$t(errorCode)
-                        this.$notify({
-                            type: 'error',
-                            title: "Validation Error",
-                            text: errorMessage,
-                        })
+
+                    if(error.response.data.error_code == 'user_not_verified') {
+                        debugger;
+                        this.$router.push({name: "VerificationCode", params: { email: this.form.email }})      
                     }
+
+                    var errorCode = this.$t(error.response.data.error_code)
+                    var errorMessage = this.$t(errorCode)
+                    this.$notify({
+                        type: 'error',
+                        title: "Error",
+                        text: errorMessage,
+                    })
+                    
+                    
                     
                     this.showError = true;
                 }

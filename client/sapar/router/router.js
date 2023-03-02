@@ -49,7 +49,7 @@ const routes = [
     component: VerificationCode, 
     name: "VerificationCode",
     props: true,
-    // meta: { guest: true },
+    meta: { guest: true },
   },
   { 
     path: "/register", 

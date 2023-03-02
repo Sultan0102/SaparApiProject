@@ -30,7 +30,6 @@ const actions = {
     login({commit}, user) {
         return AuthService.login(user.email, user.password).then(
             (responseData)=> {
-            debugger;
             commit('loginSuccess', responseData.user)
             return Promise.resolve()
         },

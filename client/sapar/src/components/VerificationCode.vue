@@ -5,6 +5,7 @@
                 <h2 class="pt-3">{{ $t('Enter the code') }}</h2>    
                 <div class="mb-3">
                 <input v-model="verificationCode" class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
+                <input :email="this.email" style="display:hidden;" type="text">
                 </div>
                 <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button> <br/>
             </form>
@@ -19,7 +20,6 @@
 import { mapActions } from "vuex";
 
 export default {
-    components: {},
     props:['email'],
     data() {
         return {

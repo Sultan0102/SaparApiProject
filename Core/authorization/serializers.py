@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
-from Core.exceptions import EmailAlreadyExistsException, InvalidPasswordException, InvalidVerificationCodeException, UserIsNotVerifiedException
+from Core.exceptions import BadCredentialsException, EmailAlreadyExistsException, \
+InvalidPasswordException, InvalidVerificationCodeException, UserIsNotVerifiedException
 from Core.authorization.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import update_last_login
@@ -19,12 +20,15 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def validate_isVerified(self, value):
         return value
+    
 
     def validate(self, attrs):
-        data = super().validate(attrs)
+        try:
+            data = super().validate(attrs)
+        except:
+            raise BadCredentialsException();
         
         serialized_user = UserSerializer(self.user)
-        print(serialized_user)
         
         if serialized_user.data['isVerified'] == False:
             raise UserIsNotVerifiedException()
@@ -35,8 +39,6 @@ class LoginSerializer(TokenObtainPairSerializer):
             'role': str(serialized_user.data['role']),
         }
 
-        if api_settings.UPDATE_LAST_LOGIN:
-            update_last_login(None, self.user)
         
         return data
 

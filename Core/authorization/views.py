@@ -1,5 +1,6 @@
 from Core.authorization.serializers import UserSerializer, VerifyUserSerializer
-from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, ValidationAPIException, FailedToSendEmailException, RefreshTokenInvalidException
+from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, \
+ValidationAPIException, FailedToSendEmailException, RefreshTokenInvalidException, InvalidTokenException
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken, AuthenticationFailed
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from rest_framework.exceptions import ValidationError
 
@@ -30,7 +31,7 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
         try:
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
-            raise InvalidToken(e.args[0])
+            raise InvalidTokenException()
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
