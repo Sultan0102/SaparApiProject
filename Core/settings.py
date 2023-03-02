@@ -148,6 +148,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
     'django_filters.rest_framework.DjangoFilterBackend',
 ),
+'DEFAULT_PERMISSION_CLASSES': ( 'Core.tickets.permissions.IsAuthorOrReadOnly',),
 }
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [

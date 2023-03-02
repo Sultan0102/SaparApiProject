@@ -49,3 +49,19 @@ class DetailPostTicketsSerializer(serializers.ModelSerializer):
 class LocationSer(serializers.Serializer):
     id = serializers.IntegerField
     language = serializers.IntegerField
+
+class ReadReviewSerializer(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+
+    def get_author_name(self, review):
+        return f"{review.author.firstName} {review.author.lastName}"
+
+    class Meta:
+        model = Review
+        fields = ('id', 'author_name', 'tour', 'text', 'created_date')
+class WriteReviewSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Review
+        fields = ('id', 'author', 'tour', 'text', 'created_date')

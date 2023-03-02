@@ -123,7 +123,6 @@ class TouristTrip(models.Model):
     deletedDate = models.DateTimeField(db_index=True,null=True)
     guide = models.ForeignKey(User,on_delete=models.ForeignKey, blank=True, related_name="Guide")
     schedule = models.ForeignKey('Schedule',on_delete=models.PROTECT, blank=True)
-
     class Meta:
         db_table = "TouristTrip"
 
@@ -139,5 +138,17 @@ class PostTicket(models.Model):
 
     class Meta:
         db_table = "PostTicket"
+
+class Review(models.Model):
+    id = models.AutoField(primary_key = True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    tour = models.ForeignKey('TouristTrip', on_delete=models.CASCADE)
+    text = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "Review"
+
+
 
 
