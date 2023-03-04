@@ -72,6 +72,9 @@ const mutations = {
         state.status.loggedIn = true
         state.user = { ...state.user, accessToken: accessToken }  
     },
+    updateUserFromLocalStorage() {
+        state.user = JSON.parse(localStorage.getItem('user'));
+    }
 };
 
 export default {

@@ -23,7 +23,7 @@ const setup = (store, router, axiosInstance) => {
     },
     async (err) => {
       const originalConfig = err.config;
-      debugger;
+      
       if (originalConfig.url !== "login/" && err.response) {
         // Access Token was expired
         

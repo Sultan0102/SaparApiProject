@@ -19,6 +19,12 @@ export default {
   }
 }
 
+$.validator.addMethod("pwcheck", function(value) {
+   let re = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_@#\$%\^&\*])(?=.{8,})");
+   
+   return re.test(value)
+});
+
 </script>
 
 <style>

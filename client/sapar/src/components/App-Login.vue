@@ -96,7 +96,8 @@ export default {
                         required: true
                     },
                     password: {
-                        required: true
+                        required: true,
+                        pwcheck: true
                     }
                 },
                 messages: {
@@ -104,7 +105,8 @@ export default {
                         required: "Email field is required!",
                     },
                     password: {
-                        required: "Password field is required"
+                        required: "Password field is required",
+                        pwcheck: "Invalid Password format"
                     }
                 }
             })

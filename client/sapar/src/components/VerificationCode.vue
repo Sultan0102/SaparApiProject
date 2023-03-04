@@ -4,7 +4,7 @@
             <form id="verification-form" class="text-center mt-5" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Enter the code') }}</h2>    
                 <div class="mb-3">
-                <input v-model="verificationCode" name="verificationCode" class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
+                <input v-model="verificationCode" id="verificationCode" name="verificationCode" class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
                 </div>
                 <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button> <br/>
             </form>
@@ -20,20 +20,16 @@ import { mapActions } from "vuex";
 import AuthService from "@/services/AuthService";
 
 export default {
-    name: 'VerificationCode',
-    props: {
-        email: {
-            type: String,
-            required: true
-        }
-    },
+    components: {},
+    props:['email'],
     data() {
         return {
-            verificationCode: ""
+            verificationCode: "",
         }
     },
     methods: {
         async submit() {
+            
             let form = $("#verification-form");
 
             if(!form.valid()) {
@@ -98,5 +94,15 @@ export default {
 </script>
 
 <style scoped>
-
+p{
+    color:#1C5E3C;
+    padding-bottom: 0px !important;
+}
+.alert{
+    margin: auto;
+    width: 50%;
+}
+form{
+	max-width: 600px;
+}
 </style>

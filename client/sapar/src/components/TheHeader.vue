@@ -20,7 +20,7 @@
 				</ul>
 				<ul class="navbar-nav justify-content-end mb-2 mb-lg-0 col-6">
 					<li class="nav-item" v-if="isLoggedIn">
-						<router-link class="nav-link d-flex justify-content-end" to="/profile">{{ $t('hello') }} {{ getUserEmail() }}<i class="bi bi-person-circle ms-3"></i></router-link>
+						<router-link class="nav-link d-flex justify-content-end" to="/profile">{{ $t('hello') }} {{ getUserEmail }}<i class="bi bi-person-circle ms-3"></i></router-link>
 					</li>
 					<li class="nav-item" v-else>
 						<router-link class="nav-link d-flex justify-content-end" to="/register"><span class="border p-1 me-2">{{ $t('Sign up') }}</span></router-link>
@@ -41,14 +41,14 @@ import LocaleSwitcher from "./LocaleSwitcher.vue";
 
 export default {
     computed: {
-        isLoggedIn: function () { return this.$store.getters.isAuthenticated; }
-    },
-    methods: {
-        ...mapGetters(["StateUser"]),
-        getUserEmail() {
+        isLoggedIn: function () { return this.$store.getters.isAuthenticated; },
+		getUserEmail: function() {
             let email = this.$store.getters.getUser.email;
             return email;
         }
+    },
+    methods: {
+        
     },
     components: { LocaleSwitcher }
 }

@@ -5,6 +5,7 @@ import LoginForgotPassword from '@/components/App-LoginForgotPassword';
 import VerificationCode from '@/components/VerificationCode';
 import PageNotFound from '@/components/PageNotFound';
 import PageForbidden from "@/components/PageForbidden"
+import PageServerError from "@/components/PageServerError"
 import Registration from '@/components/App-Registration';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
@@ -115,6 +116,11 @@ const routes = [
     path: "/forbidden", 
     component: PageForbidden, 
     name: "Forbidden"
+  },
+  {
+    path: "/serverError", 
+    component: PageServerError, 
+    name: "PageServerError"
   },
 ]
 

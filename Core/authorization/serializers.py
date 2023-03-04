@@ -56,8 +56,6 @@ class RegisterSerializer(UserSerializer):
         if validators.validate_password(value) == False:
             raise InvalidPasswordException()
         return value
-            
-
 
     def generateOTP(self):
         digits = '0123456789'
