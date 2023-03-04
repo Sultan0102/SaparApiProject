@@ -45,7 +45,7 @@ const routes = [
     meta: { guest: true },
   },
   { 
-    path: "/email-code", 
+    path: "/email-code/:email", 
     component: VerificationCode, 
     name: "VerificationCode",
     props: true,

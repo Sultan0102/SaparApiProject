@@ -71,8 +71,7 @@ export default {
                 (error) => {
 
                     if(error.response.data.error_code == 'user_not_verified') {
-                        debugger;
-                        this.$router.push({name: "VerificationCode", params: { email: this.form.email }})      
+                        this.$router.push({ name: "VerificationCode", params: { email: this.form.email }})      
                     }
 
                     var errorCode = this.$t(error.response.data.error_code)

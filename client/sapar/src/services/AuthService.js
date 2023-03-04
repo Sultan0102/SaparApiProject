@@ -34,6 +34,13 @@ class AuthService {
             password: user.password,
         });
     }
+    
+    verify(email, code) {
+        return Api.auth.post("verify/", {
+            email,
+            verificationCode: code
+        });
+    }
 }
 
 
