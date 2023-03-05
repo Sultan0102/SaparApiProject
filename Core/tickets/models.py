@@ -98,19 +98,13 @@ class Schedule(models.Model):
     class Meta:
         db_table = "Schedule"
 
-class OrderStatus(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, db_index=True)
-
-    class Meta:
-        db_table = "OrderStatus"
-
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
     schedule = models.ForeignKey('Schedule', on_delete=models.PROTECT, blank=True)
-    orderStatus = models.ForeignKey('OrderStatus', on_delete=models.PROTECT,blank=True)
     totalPrice = models.IntegerField(db_index=True,blank=True)
+    creationDate = models.DateTimeField(auto_now_add=True)
+    isPaid = models.BooleanField(db_index=True,blank=True,default=False)
 
     class Meta:
         db_table = "Order"
@@ -124,21 +118,31 @@ class TouristTrip(models.Model):
     deletedDate = models.DateTimeField(db_index=True,null=True)
     guide = models.ForeignKey(User,on_delete=models.ForeignKey, blank=True, related_name="Guide")
     schedule = models.ForeignKey('Schedule',on_delete=models.PROTECT, blank=True)
+    
     class Meta:
         db_table = "TouristTrip"
 
-class PostTicket(models.Model):
+class TicketType(models.Model):
     id = models.AutoField(primary_key=True)
-    route = models.ForeignKey('Route', on_delete=models.PROTECT, blank=True,related_name='routes')
+    name = models.CharField(db_index=True,max_length=255)
+    
+    class Meta:
+        db_table = "TicketType"
+
+class Ticket(models.Model):
+    id = models.AutoField(primary_key=True)
     person = models.ForeignKey('TicketPerson',on_delete=models.PROTECT,blank=True)
     status = models.ForeignKey('TicketStatus', on_delete=models.PROTECT,blank=True)
-    order = models.ForeignKey('Order', on_delete= models.PROTECT,blank=True)
+    schedule = models.ForeignKey('Schedule',on_delete=models.PROTECT,blank=True)
+    type = models.ForeignKey('TicketType',on_delete=models.PROTECT,blank=True)
+    order = models.ForeignKey('Order', on_delete= models.PROTECT,blank=True, null=True)
+    seatNum = models.IntegerField(db_index=True,blank=True)
     cost = models.IntegerField(db_index=True,blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "PostTicket"
+        db_table = "Ticket"
 
 class Review(models.Model):
     id = models.AutoField(primary_key = True)
@@ -149,6 +153,7 @@ class Review(models.Model):
 
     class Meta:
         db_table = "Review"
+
 
 
 

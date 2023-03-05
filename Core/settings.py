@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'Core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'saparapi',
+        'NAME': 'SaparAPI',
         'USER': 'postgres',
-        'PASSWORD': 'anuar123',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -183,7 +183,7 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=15),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 EMAIL_HOST = 'smtp.yandex.ru'

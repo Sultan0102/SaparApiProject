@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import *
-from .models import PostTicket
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -29,22 +28,22 @@ class DetailRouteSerializer(serializers.ModelSerializer):
         self.Meta.depth = 2
 
 
-class PostTicketsSerializer(serializers.ModelSerializer):
+class TicketsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PostTicket
-        fields = ['id','route','cost','status','created','updated','person']
+        model = Ticket
+        fields = ['id','type','schedule','seatNum','cost','status','created','updated','person','order']
         read_only_field = ['created','updated']
 
 
-class DetailPostTicketsSerializer(serializers.ModelSerializer):
+class DetailTicketsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PostTicket
-        fields = ['id','route','cost','status','created','updated','person','order']
+        model = Ticket
+        fields = ['id','type','schedule','seatNum','cost','status','created','updated','person','order']
         read_only_field = ['created','updated']
 
     def __init__(self,*args,**kwargs):
-        super(DetailPostTicketsSerializer, self).__init__(*args,**kwargs)
-        self.Meta.depth = 3
+        super(DetailTicketsSerializer, self).__init__(*args,**kwargs)
+        self.Meta.depth = 4
 
 class LocationSer(serializers.Serializer):
     id = serializers.IntegerField
@@ -65,3 +64,9 @@ class WriteReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('id', 'author', 'tour', 'text', 'created_date')
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Order
+        fields = ('id','user','schedule','totalPrice','creationDate','isPaid')
