@@ -126,73 +126,9 @@ export default{
 </script>
 
 <style scoped>  
-th{
+ th{
     padding-bottom: 1rem !important;
-}
-.bus-head{
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 20px;
-    border-color: #1C5F41;
-    height: 298.8px;
-}
-.bus-seats{
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 20px;
-    max-width: 330px !important;
-    border-color: #1C5F41;
-}
-.list-group-item{
-  border-width: 2px !important;
-  border-color: #1C5E3C;
-  border-radius: 17px !important;
-  width: 46.2px !important;
-  color: #1C5E3C;
-  font-size: 26px;
-  padding: .1rem .1rem !important;
-}
-.availableSeat{
-    background-color: #FFF;
-    cursor: pointer;
-}
-.occupiedSeat{
-    background-color: #D5D4D4;
-    cursor: default;
-}
-.bookedSeat{
-    background-color: #57896F;
-    color: #FFF !important;
-    cursor: pointer;
-}
-.empty-space{
-    opacity: 0;
-    cursor: default;
-    height: 42px;
-}
-.collapse, .collapsing{
-    background-color: #FFF;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-th{
     min-width: 33.3% !important;
 }
-.form-control, .form-control-plaintext{
-    border-bottom: none !important;
-    border-radius: 15px;
-}
-select{
-    background-color:#FFF !important;
-}
-.colour{
-    max-width: 150px;
-    border-width: 2px !important;
-    border-color: #1C5E3C !important;
-    border-radius: 17px !important;
-    border-style: solid !important;
-    cursor: default;
-}
+
 </style>

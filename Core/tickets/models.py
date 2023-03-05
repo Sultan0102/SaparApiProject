@@ -68,6 +68,7 @@ class BusType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(db_index=True, max_length=255)
     capacity = models.IntegerField(db_index=True, blank=True)
+    template = models.TextField(blank=False)
 
     class Meta:
         db_table = "BusType"
@@ -86,7 +87,7 @@ class Schedule(models.Model):
     route = models.ForeignKey('Route',on_delete=models.PROTECT,blank=True)
     bus = models.ForeignKey('Bus',on_delete=models.PROTECT, blank=True)
     driver = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
-    scheduleNumb_guide = models.IntegerField(db_index=True, blank=True)
+    scheduleNumber = models.CharField(db_index=True, blank=True, max_length=6)
     creationDate = models.DateField(auto_now_add=True)
     weekDay = models.IntegerField(db_index=True,blank=True)
     beginDate = models.DateTimeField(db_index=True)
