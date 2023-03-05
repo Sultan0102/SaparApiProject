@@ -5,8 +5,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import *
-from .serializers import PostTicketsSerializer, RouteSerializer, LocationSerializer, DetailPostTicketsSerializer, \
-    DetailRouteSerializer, LocationSer, WriteReviewSerializer, ReadReviewSerializer
+from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, \
+    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
@@ -35,14 +35,14 @@ class RoutesFilter(filters.FilterSet):
 
 
 class TicketFilter(filters.FilterSet):
-    source = CharFilterInFilter(field_name='route__source__nameCode__value', lookup_expr='in')
-    destination = CharFilterInFilter(field_name='route__destination__nameCode__value', lookup_expr='in')
-    beginDate = filters.DateTimeFilter(field_name='order__schedule__beginDate',lookup_expr='gte')
-    endDate = filters.DateTimeFilter(field_name='order__schedule__endDate',lookup_expr='lte')
+    source = CharFilterInFilter(field_name='schedule__route__source__nameCode__value', lookup_expr='in')
+    destination = CharFilterInFilter(field_name='schedule__route__destination__nameCode__value', lookup_expr='in')
+    beginDate = filters.DateTimeFilter(field_name='schedule__beginDate',lookup_expr='gte')
+    endDate = filters.DateTimeFilter(field_name='schedule__endDate',lookup_expr='lte')
 
     class Meta:
-        model = PostTicket
-        fields =['route','order']
+        model = Ticket
+        fields =['schedule','order']
 
 
 class RouteViewSet(viewsets.ModelViewSet):
@@ -75,25 +75,25 @@ class PostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TicketFilter
-    serializer_class = PostTicketsSerializer
-    queryset = PostTicket.objects.all()
+    serializer_class = TicketsSerializer
+    queryset = Ticket.objects.all()
 
 class DetailPostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = TicketFilter
-    serializer_class = DetailPostTicketsSerializer
-    queryset = PostTicket.objects.all()
-    ordering_fields = ['cost','id','order__schedule__beginDate','order_schedule_endDate']
+    serializer_class = DetailTicketsSerializer
+    queryset = Ticket.objects.all()
+    ordering_fields = ['cost','id','schedule__beginDate','schedule__endDate']
 
     def retrieve(self, request, *args, **kwargs):
         language_id = kwargs.get('lang_id')
         instance = self.get_object()
         if language_id is not None:
-            source_value = ResourceValue.objects.get(language_id=language_id, nameCode= instance.route.source.nameCode)
-            destination_value = ResourceValue.objects.get(language_id=language_id, nameCode=instance.route.destination.nameCode)
-            instance.route.source.nameCode.value = source_value.value
-            instance.route.destination.nameCode.value = destination_value.value
+            source_value = ResourceValue.objects.get(language_id=language_id, nameCode= instance.schedule.route.source.nameCode)
+            destination_value = ResourceValue.objects.get(language_id=language_id, nameCode=instance.schedule.route.destination.nameCode)
+            instance.schedule.route.source.nameCode.value = source_value.value
+            instance.schedule.route.destination.nameCode.value = destination_value.value
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
     def list(self, request, *args, **kwargs):
@@ -101,12 +101,24 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
        language_id = kwargs.get('lang_id')
        for instance in queryset:
            if language_id is not None:
-             source_value = ResourceValue.objects.get(language_id=language_id, nameCode=instance.route.source.nameCode)
-             destination_value = ResourceValue.objects.get(language_id=language_id,nameCode=instance.route.destination.nameCode)
-             instance.route.source.nameCode.value = source_value.value
-             instance.route.destination.nameCode.value = destination_value.value
+             source_value = ResourceValue.objects.get(language_id=language_id, nameCode=instance.schedule.route.source.nameCode)
+             destination_value = ResourceValue.objects.get(language_id=language_id,nameCode=instance.schedule.route.destination.nameCode)
+             instance.schedule.route.source.nameCode.value = source_value.value
+             instance.schedule.route.destination.nameCode.value = destination_value.value
        serializer = self.get_serializer(queryset, many=True)
        return Response(serializer.data)
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    def create(self, request):
+        ticket_id = request.data['id']
+        ticket = Ticket.objects.get(id=ticket_id)
+        order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+    # def get_permissions(self):
+    #     if self.action in ("create",):
+    #         self.permission_classes = (permissions.IsAuthenticated,)
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
@@ -133,4 +145,5 @@ class ReviewViewSet(viewsets.ModelViewSet):
             self.permission_classes = (permissions.AllowAny,)
 
         return super().get_permissions()
+
 
