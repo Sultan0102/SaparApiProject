@@ -1,3 +1,5 @@
+import time
+
 import django_filters
 from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import api_view
@@ -114,6 +116,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         ticket_id = request.data['id']
         ticket = Ticket.objects.get(id=ticket_id)
         order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
+        ticket.order = order
+        ticket.save()
         serializer = OrderSerializer(order)
         return Response(serializer.data)
     # def get_permissions(self):
