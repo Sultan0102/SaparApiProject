@@ -1,4 +1,5 @@
 {
+  "SAPAR IN NUMBERS": "SAPAR IN NUMBERS",
   "Bus routes operated": "Bus routes operated",
   "Guided tours operated": "Guided tours operated",
   "Business partners": "Business partners",
@@ -16,10 +17,8 @@
   "Trending Tours": "Trending Tours",
   "Sign up": "Sign up",
   "Route": "Route",
-  "From": "From",
-  "To": "To",
-  "Departure Time": "Departure Time",
-  "Arrival Time": "Arrival Time",
+  "From - To": "From - To",
+  "Departure - Arrival Time": "Departure - Arrival Time",
   "Tickets": "Tickets",
   "Tours": "Tours",
   "About us": "About us",
@@ -59,5 +58,13 @@
   "Dont have account? Sign up!": "Dont have account? Sign up!",
   "Email": "Email",
   "Review": "Review",
+  "We connect people to their dreams":"We connect people to their dreams",
+  "90% of people using Sapar report higher satisfaction level from traveling activities":"90% of people using Sapar report higher satisfaction level from traveling activities",
+  "Buy tickets to your favorite destinations within seconds!":"Buy tickets to your favorite destinations within seconds!",
+  "If you are a guide, we suggest extensive collaborative tools":"If you are a guide, we suggest extensive collaborative tools",
+  "If you are a local tourism-based business, we offer you beneficial opportunities":"If you are a local tourism-based business, we offer you beneficial opportunities",
+  "Access denied": "Access denied",
+  "Page not found": "Page not found",
+  "Internal server error": "Internal server error",
   "hello": "Hello"
 }

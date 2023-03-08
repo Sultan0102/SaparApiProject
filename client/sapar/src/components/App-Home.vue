@@ -1,27 +1,27 @@
 <template>
-        <div class="banner-home text-center position-relative container-fluid">
+        <div class="banner-home position-relative container-fluid">
             <div class="container">
-                <div class="position-absolute bottom-0 mb-5">
-                    <h1 class="white mb-3">We connect people<br>to their dreams</h1>
+                <div class="position-absolute bottom-0 text-center mb-5 ">
+                    <h1 class="white mb-3">{{ $t('We connect people to their dreams') }}</h1>
                     <router-link to="/login" v-if="!isLoggedIn"><span class="border px-2 py-1 ms-4">{{ $t('Sign in') }}</span></router-link>
                 </div>
             </div>
         </div>
     <div class="container-fluid my-5">
         <div class="container">
-            <h1 class="mb-5 text-center">90% of people using Sapar report higher satisfaction level from traveling activities</h1>
+            <h1 class="mb-5 text-center">{{ $t('90% of people using Sapar report higher satisfaction level from traveling activities') }}</h1>
             <div class="row align-items-center mb-5">
                 <div class="col-md-6 text-center">
                     <img src="../assets/Buy-tickets.svg" class="w-50">
                 </div>
                 <div class="col-md-6 text-center">
-                    <h3 class="text-center">Buy tickets to your favorite destinations within seconds!</h3>
+                    <h3 class="text-center">{{ $t('Buy tickets to your favorite destinations within seconds!') }}</h3>
                 </div>
 
             </div>
             <div class="row align-items-center mb-5 swap-container">
                 <div class="col-md-6 text-center">
-                    <h3 class="text-center">If you are a guide, we suggest extensive collaborative tools</h3>
+                    <h3 class="text-center">{{ $t('If you are a guide, we suggest extensive collaborative tools') }}</h3>
                 </div>
                 <div class="col-md-6 text-center">
                     <img src="../assets/If-you-are-guide.svg" class="w-50">
@@ -32,7 +32,7 @@
                     <img src="../assets/Buy-tickets.svg" class="w-50">
                 </div>
                 <div class="col-md-6 text-center">
-                    <h3 class="my-auto text-center">If you are a local tourism-based business, we offer you beneficial opportunities</h3>
+                    <h3 class="my-auto text-center">{{ $t('If you are a local tourism-based business, we offer you beneficial opportunities') }}</h3>
                 </div>
 
             </div>

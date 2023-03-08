@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container">
-            <form class="text-center mt-3" @submit.prevent="submit">
+            <form class="text-center mt-5" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Welcome back') }}</h2>
                 <div class="mb-3">
                 <input v-model="form.email" type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="email@example.com">

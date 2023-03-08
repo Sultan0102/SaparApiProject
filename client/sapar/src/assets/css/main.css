@@ -5,7 +5,6 @@ body {
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
 	font-family: 'Montserrat', sans-serif !important;
-	margin-top: 150px;
 }
 .head{
 	font-weight: 400;
@@ -100,3 +99,20 @@ select{
 	border-radius: 10px;
 	border-width: 2px !important;
 }
+
+/*VueDatePicker*/
+.dp__input{
+	width: 0 !important;
+	padding: 6px 20px !important;
+	border-bottom-right-radius: 15px !important;
+	border-top-right-radius: 15px !important;
+  }
+  .dp__arrow_top{
+	display: none;
+  }
+  .dp__range_end, .dp__range_start, .dp__active_date{
+	background: #1C5E3C !important;
+  }
+  .dp__today{
+	border: 1px solid #1C5E3C !important;
+  }
