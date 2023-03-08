@@ -5,109 +5,150 @@ values
 (3, 'Guide'),
 (4, 'BusinessPerson');
 
-insert into Users(id, email, password, firstName, lastName, birthDate, isdeleted, roleID)
-values
-(1, 'anuar@mail.ru', 'anuar123', 'Anuar', 'Bora', '2001-10-12', 'false', 1),
-(2, 'elvira@mail.ru', 'elvira123', 'Elvira', 'Nuga', '2000-10-12', 'false', 2),
-(3, 'sultan@mail.ru', 'sultan123', 'Sultan', 'Rahma', '2001-10-12', 'false', 3),
-(4, 'jandos@mail.ru', 'jandos123', 'Jandos', 'Bakit', '2001-10-12', 'false', 4);
-
-insert into ResourceCode(id, defaultValue)
-values
-(1, 'Russian'),
-(2, 'Kazakh'),
-(3, 'English'),
-(4, 'Almaty'),
-(5, 'Taraz'),
-(6, 'Pavlodar'),
-(7, 'Astana'),
-(8, 'Shymkent'),
-(9, 'Oskemen'),
-(10, 'Aktobe'),
-(11, 'Single Deck Bus'),
-(12, 'City'),
-(13, 'Tourist Attraction');
+INSERT INTO "Users"(id, "email", "password", "firstName", "lastName", "is_superuser", "is_staff", "isDeleted", "isVerified", "creationDate", "verificationCode")
+	VALUES(1, 'anuar@mail.ru', 'anuar123', 'Anuar', 'Bora', true, true, false, true, '20230101 00:00', '123');
 
 
-insert into Languages(id, nameCodeId, nativeName)
-values
-(1, 1, 'Русский'),
-(2, 2, 'Қазақ'),
-(3, 3, 'English');
 
+	INSERT INTO "TicketStatus"(id,name) 
+	VALUES(1,'Occupied'),
+		  (2,'Booked'),
+		  (3,'Available');
 
-insert into ResourceValues(id, codeId, languageId, value)
-values
-(1, 1, 1, 'Русский'),
-(2, 1, 2, 'Орыс'),
-(3, 1, 3, 'Russian'),
-(4, 2, 1, 'Казахский'),
-(5, 2, 2, 'Қазақ'),
-(6, 2, 3, 'Kazakh'),
-(7, 4, 1, 'Алматы'),
-(8, 4, 2, 'Алматы'),
-(9, 4, 3, 'Almaty'),
-(10, 5, 1, 'Тараз'),
-(11, 5, 2, 'Тараз'),
-(12, 5, 3, 'Taraz'),
-(13, 6, 1, 'Павлодар'),
-(14, 6, 2, 'Павлодар'),
-(15, 6, 3, 'Pavlodar'),
-(16, 7, 1, 'Астана'),
-(17, 7, 2, 'Астана'),
-(18, 7, 3, 'Astana'),
-(19, 8, 1, 'Шымкент'),
-(20, 8, 2, 'Шымкент'),
-(21, 8, 3, 'Shymkent'),
-(22, 9, 1, 'Усть Каменогорск'),
-(20, 9, 2, 'Өскемен'),
-(21, 9, 3, 'Oskemen'),
-(19, 10, 1, 'Актобе'),
-(20, 10, 2, 'Ақтөбе'),
-(21, 10, 3, 'Aktobe'),
-(22, 11, 1, 'Одноэтажный'),
-(23, 11, 2, 'Бір қабатты'),
-(24, 11, 3, 'Single Deck'),
-(25, 12, 1, 'Город'),
-(26, 12, 2, 'Қала'),
-(27, 12, 3, 'City'),
-(28, 13, 1, 'Достопримечательность'),
-(28, 13, 1, 'Туристік Тартымдылық'),
-(28, 13, 1, 'Tourist Attraction');
+	INSERT INTO "PassportNumberType"(id, "typeName", format)
+	VALUES(4,'identification','[0-9]{9}'),
+		  (2,'kz_passport','^([A-Z]{1})([0-9]{8})');
 
-insert into BusType(id, namecodeid, capacity)
-values
-(1, 11, 40);
+	INSERT INTO "ResourceCode"(id, "defaultValue")
+	VALUES(1,'Russian'),
+		  (2,'Kazakh'),
+		  (3,'English'),
+		  (4,'Almaty'),
+		  (5,'Taraz'),
+		  (6,'Shymkent'),
+		  (7,'Pavlodar'),
+		  (8,'Oskemen'),
+		  (9,'Kolsai Lake'),
+		  (10,'Kolsai lakes - located in the northern Tien Shan on the territory of the State National Natural Park "Kolsai Koldery", 
+		   at a distance of about 280 km from Almaty, they are located at an altitude of 1818 m, 2252 and 2850 m above sea level, respectively.
+		   The total zone of the protected regime is 778.8 thousand hectares. The nature around the lake fascinates at first sight.'),
+		  (11,'Kayindy Lake'),
+		  (12,'The Almaty region is known for its picturesque places and one of them is the enchanting lake of incredible beauty - Kaiyndy.
+		  It belongs to the "Kolsai Lakes" system and is its brightest representative. The pond is surrounded by tall fir trees, but its name means
+		  “full of birches”, despite the fact that birch groves are located a few kilometers from Kaiynda.'),
+		  (13,'Big Almaty Lake'),
+		  (14,'Every Almaty resident and guest of our city is obliged to visit BAO. How can one get to know Almaty without knowing the beauty of the surrounding mountains? That is right - no way.
+		       Big Almaty Lake, like Medeu, is located in close proximity to the city center. It is located at an altitude of 2510 meters, which is higher
+		       dam Medeu at 750 meters.'),
+          (15, 'IntercitySchedule'),
+          (16, 'TouristSchedule'),
+		  (17, 'Town'),
+		  (18, 'TouristPlace');
 
-insert into Bus(id, name, bustypeid)
-values
-(1, 'SomeBus1', 1);
+	INSERT INTO "Language"(id,"nativeName","resourcecode_id")
+	VALUES(1,'Русский',1),
+		  (2,'Қазақ',2),
+		  (3,'English',3);
 
-select * from LocationType
-insert into LocationType(id, nameCodeId)
-values
-(1, 12),
-(2, 13);
+	INSERT INTO "ResourceValue"(id,value,"language_id","nameCode_id")
+	VALUES(1,'Русский',1,1),
+		  (2,'Орыс',2,1),
+		  (3,'Russian',3,1),
+		  (4,'Алматы',1,4),
+		  (5,'Алматы',2,4),
+		  (6,'Almaty',3,4),
+		  (7,'Тараз',1,5),
+		  (8,'Тараз',2,5),
+		  (9,'Taraz',3,5),
+		  (10,'Шымкент',1,6),
+		  (11,'Шымкент',2,6),
+		  (12,'Shymkent',3,6),
+		  (13,'Павлодар',1,7),
+		  (14,'Павлодар',2,7),
+		  (15,'Pavlodar',3,7),
+		  (16,'Усть-Каменогорск',1,8),
+		  (17,'Өскемен',2,8),
+		  (18,'Oskemen',3,8),
+		  (19,'Межгородний сеанс',1,15),
+		  (20,'Туристический сеанс',1,16);
 
-insert into Location(id, coordinates, locationTypeId, nameCodeId)
-values
-(1, '43.2220, 76.8512', 1, 4),
-(2, '42.8984, 71.3980', 1, 5),
-(3, '52.2873, 76.9674', 1, 6),
-(4, '51.1605, 71.4704', 1, 7),
-(5, '42.3417, 69.5901', 1, 8),
-(6, '49.9749, 82.6017', 1, 9);
-(7, '50.2839, 57.1670', 1, 10);
+	INSERT INTO "LocationType"(id, "nameCode_id")
+	VALUES (1, 17),
+		   (2, 18);
 
-insert into Route(id, sourceLocationId, destinationLocationId, distance)
-values(1, 1, 2, 1000),
-(2, 2, 1, 2000),
-(3, 1, 3, 3000),
-(4, 3, 1, 4000),
-(5, 4, 3, 5000),
-(6, 2, 4, 6000),
-(7, 4, 1, 7000),
-(8, 7, 2, 8000),
-(9, 3, 7, 7000),
-(10, 5, 1, 9000);
+	INSERT INTO "Location"(id,"coordinates","nameCode_id", "locationType_id")
+	VALUES(1,'43,2567N, 76,9286E',4, 1),
+		  (2,'42,9N, 71,3667E',5, 1),
+		  (3,'42,3N, 69,6E',6, 1),
+		  (4,'52,2833N, 76,9667E',7, 1),
+		  (5,'49,9714N, 82,6059E',8, 1);
 
+	INSERT INTO "Route"(id,"duration","distance","destination_id","source_id")
+	VALUES(1,'03:00','490',1,2),
+		  (2,'26:00','1709',3,4),
+		  (3,'03:00','490',2,1),
+		  (4,'12:00','800',2,5);
+
+	INSERT INTO "TicketType"(id,"name")
+	VALUES(1, 'Bus'),
+		  (2, 'Tour');
+
+	-- INSERT INTO "Ticket"(id,cost,"created","updated","seatNum","person_id","status_id","order_id","schedule_id","type_id")
+	-- VALUES(1,5000,TIMESTAMP'2023-01-16 22:19:27 +06',TIMESTAMP'2023-01-16 22:19:27.669617 +06',1,1,1,1,1,1),
+	--       (2,7000,TIMESTAMP'2023-01-16 22:19:46.19265+06',TIMESTAMP'2023-01-16 22:19:46.19265+06',5,2,2,2,2,1),
+	--       (3,5000,TIMESTAMP'2023-01-16 22:20:00.820616+06',TIMESTAMP'2023-01-16 22:20:00.820616+06',10,3,3,3,3,1),
+	--       (4,6000,TIMESTAMP'2023-01-16 22:20:00.820616+06',TIMESTAMP'2023-01-16 22:20:00.820616+06',22,1,2,2,1,1);
+
+	INSERT INTO "BusType"(id,name,"capacity", template)
+	VALUES(1,'class A',52, '<tr data-bs-toggle="collapse" data-bs-target="#bus3">
+    <th scope="row"><span id="schedule-number">AB4958</span></th>
+    <td><span id="route-source-dest">Almaty - Taraz</span></td>
+    <td><span id="begin-end-date">10:40pm - 05:30pm</span></td>
+</tr>
+                       
+<td colspan="3" class="collapse " id="bus3">
+    <div class="row align-items-center " id="bus3">
+            <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
+                <ul v-for="row in tickets" class="list-group list-group-horizontal">
+                    <li v-for="ticket in row" :key="ticket.id" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap">
+                        <span :id=ticket.id>{{ ticket.seatNumber }}</span>
+                    </li>
+                </ul>  
+            </div>      
+            <div class="col-md-3 mx-auto">
+                    <h6 class="mb-3 py-3 colour mx-auto availableSeat">Available</h6>
+                    <h6 class="mb-3 py-3 colour mx-auto occupiedSeat">Occupied</h6>
+                    <h6 class="mb-3 py-3 colour mx-auto bookedSeat">Booked</h6>
+                    <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
+            </div>        
+    </div>
+</td>');
+
+	INSERT INTO "Bus"(id,name,"type_id")
+	VALUES(1, 'Mercedes', 1),
+	      (2, 'Toyota', 1),
+	      (3, 'BMW', 1);
+
+	INSERT INTO "ScheduleType"(id, "nameCode_id")
+    VALUES(1, 15), (2, 16);
+
+	INSERT INTO "Schedule"(id,"route_id","bus_id","driver_id","scheduleNumber",
+						   "creationDate","weekDay","beginDate","endDate",
+						   "isActive","deleteDate","scheduleType")
+	VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20', 
+		TIMESTAMP'2023-01-17 01:20',true,null,1),
+	      (2,2,2,2,'BX2551','2023-02-15',3,TIMESTAMP'2023-02-09 10:30',
+		TIMESTAMP'2023-02-10 12:30:',true,null,1),
+	      (3,3,3,3,'GH1212','2023-02-16',5,TIMESTAMP'2023-02-25 12:00:00',
+		   TIMESTAMP'2023-02-26 00:00',true,null,2);
+
+    
+
+	-- INSERT INTO "TouristTrip"(id,"titleNameCode_id","descriptionNameCode_id","owner_id","price","deletedDate","guide_id","schedule_id")
+	-- VALUES(1,9,10,1,12000,null,3,1),
+	--       (2,11,12,1,10000,null,3,1),
+	--       (3,13,14,1,9000,null,3,2);
+-- 	INSERT INTO "Order"(id,user_id,"schedule_id",,"totalPrice")
+-- 	VALUES(1,1,1,1,5000),
+-- 	      (2,2,2,3,7000),
+-- 	      (3,1,3,3,5000);

@@ -11,6 +11,7 @@ class PassportNumberType(models.Model):
     format = models.CharField(db_index=True,max_length=255)
     class Meta:
         db_table = "PassportNumberType"
+
 class TicketPerson(models.Model):
     id = models.AutoField(primary_key=True)
     firstName = models.CharField(db_index=True,max_length=255)
@@ -33,7 +34,7 @@ class Route(models.Model):
 
 class ResourceCode(models.Model):
     id = models.AutoField(primary_key=True)
-    value = models.TextField(db_index=True)
+    defaultValue = models.TextField(db_index=True)
 
     class Meta:
         db_table = "ResourceCode"
@@ -56,10 +57,19 @@ class ResourceValue(models.Model):
     class Meta:
         db_table = "ResourceValue"
 
+class LocationType(models.Model):
+    id = models.AutoField(primary_key=True)
+    nameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True)
+
+    class Meta:
+        db_table = "LocationType"
+
 class Location(models.Model):
     id = models.AutoField(primary_key=True)
     coordinates = models.CharField(db_index=True, max_length=255)
     nameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT)
+    type = models.ForeignKey('LocationType',on_delete=models.PROTECT)
+
 
     class Meta:
         db_table = "Location"
@@ -77,7 +87,6 @@ class Bus(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(db_index=True, max_length=255)
     type = models.ForeignKey('BusType', on_delete=models.PROTECT,blank=True)
-    availableCapacity= models.IntegerField(db_index=True, blank=True)
 
     class Meta:
         db_table = "Bus"
@@ -94,9 +103,16 @@ class Schedule(models.Model):
     endDate = models.DateTimeField(db_index=True)
     isActive = models.BooleanField(default=False)
     deleteDate = models.DateTimeField(null=True)
-    scheduleType =models.IntegerField(db_index=True,blank=True)
+    scheduleType =models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
     class Meta:
         db_table = "Schedule"
+
+class ScheduleType(models.Model):
+    id = models.AutoField(primary_key=True)
+    nameCode = models.ForeignKey("ResourceCode", on_delete=models.PROTECT, blank=False)
+
+    class Meta:
+        db_table = "ScheduleType"
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)

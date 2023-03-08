@@ -61,6 +61,10 @@ const setup = (store, router, axiosInstance) => {
           router.push("/forbidden")
         }
 
+        if(err.response.status >= 500) {
+          router.push("/serverError")
+        }
+
         
        return Promise.reject(err); 
       }

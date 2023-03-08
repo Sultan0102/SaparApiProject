@@ -1,8 +1,8 @@
 <template>
 <tr data-bs-toggle="collapse" data-bs-target="#bus3">
-    <th scope="row">AB4958</th>
-    <td>Almaty - Taraz</td>
-    <td>10:40pm</td>
+    <th scope="row"><span id="schedule-number">AB4958</span></th>
+    <td><span id="route-source-dest">Almaty - Taraz</span></td>
+    <td><span id="begin-end-date">10:40pm - 05:30pm</span></td>
 </tr>
                        
 <td colspan="3" class="collapse " id="bus3">
@@ -10,7 +10,7 @@
             <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
                 <ul v-for="row in tickets" class="list-group list-group-horizontal">
                     <li v-for="ticket in row" :key="ticket.id" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap">
-                        <span>{{ ticket.seatNumber }}</span>
+                        <span :id=ticket.id>{{ ticket.seatNumber }}</span>
                     </li>
                 </ul>  
             </div>      
@@ -29,7 +29,22 @@ export default {
     props: ['template'],
     data() {
         return {
-            tickets: [[{ "id": 1, "seatNumber": 1, "ticketStatus": 1 }, { "id": 2, "seatNumber": 2, "ticketStatus": 2 }, { "id": 3, "seatNumber": null, "ticketStatus": 0 }, { "id": 4, "seatNumber": 3, "ticketStatus": 2 }, { "id": 5, "seatNumber": 4, "ticketStatus": 1 }], [{ "id": 6, "seatNumber": 5, "ticketStatus": 1 }, { "id": 7, "seatNumber": 6, "ticketStatus": 2 }, { "id": 8, "seatNumber": null, "ticketStatus": 0 }, { "id": 9, "seatNumber": 7, "ticketStatus": 2 }, { "id": 10, "seatNumber": 8, "ticketStatus": 1 }], [{ "id": 11, "seatNumber": 9, "ticketStatus": 2 }, { "id": 12, "seatNumber": 10, "ticketStatus": 1 }, { "id": 13, "seatNumber": null, "ticketStatus": 0 }, { "id": 14, "seatNumber": 11, "ticketStatus": 1 }, { "id": 15, "seatNumber": 12, "ticketStatus": 2 }], [{ "id": 16, "seatNumber": 13, "ticketStatus": 1 }, { "id": 17, "seatNumber": 14, "ticketStatus": 1 }, { "id": 18, "seatNumber": null, "ticketStatus": 0 }, { "id": 19, "seatNumber": null, "ticketStatus": 0 }, { "id": 20, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 21, "seatNumber": 17, "ticketStatus": 1 }, { "id": 22, "seatNumber": 18, "ticketStatus": 2 }, { "id": 23, "seatNumber": null, "ticketStatus": 0 }, { "id": 24, "seatNumber": 19, "ticketStatus": 1 }, { "id": 25, "seatNumber": 20, "ticketStatus": 1 }], [{ "id": 26, "seatNumber": 21, "ticketStatus": 1 }, { "id": 27, "seatNumber": 22, "ticketStatus": 1 }, { "id": 28, "seatNumber": null, "ticketStatus": 0 }, { "id": 29, "seatNumber": 23, "ticketStatus": 1 }, { "id": 30, "seatNumber": 24, "ticketStatus": 1 }], [{ "id": 31, "seatNumber": 25, "ticketStatus": 1 }, { "id": 32, "seatNumber": 26, "ticketStatus": 1 }, { "id": 33, "seatNumber": null, "ticketStatus": 0 }, { "id": 34, "seatNumber": 27, "ticketStatus": 1 }, { "id": 35, "seatNumber": 28, "ticketStatus": 1 }], [{ "id": 36, "seatNumber": 29, "ticketStatus": 1 }, { "id": 37, "seatNumber": 30, "ticketStatus": 1 }, { "id": 38, "seatNumber": null, "ticketStatus": 0 }, { "id": 39, "seatNumber": null, "ticketStatus": 0 }, { "id": 40, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 41, "seatNumber": 33, "ticketStatus": 1 }, { "id": 42, "seatNumber": 34, "ticketStatus": 2 }, { "id": 43, "seatNumber": null, "ticketStatus": 0 }, { "id": 44, "seatNumber": 35, "ticketStatus": 2 }, { "id": 45, "seatNumber": 36, "ticketStatus": 1 }], [{ "id": 46, "seatNumber": 37, "ticketStatus": 1 }, { "id": 47, "seatNumber": 38, "ticketStatus": 2 }, { "id": 48, "seatNumber": null, "ticketStatus": 0 }, { "id": 49, "seatNumber": 39, "ticketStatus": 2 }, { "id": 50, "seatNumber": 40, "ticketStatus": 1 }], [{ "id": 51, "seatNumber": 41, "ticketStatus": 2 }, { "id": 52, "seatNumber": 42, "ticketStatus": 1 }, { "id": 53, "seatNumber": null, "ticketStatus": 0 }, { "id": 54, "seatNumber": 43, "ticketStatus": 1 }, { "id": 55, "seatNumber": 44, "ticketStatus": 2 }]],
+            tickets: [
+                [{ "id": 1, "seatNumber": 1, "ticketStatus": 1 }, 
+                { "id": 2, "seatNumber": 2, "ticketStatus": 2 },
+                { "id": 3, "seatNumber": null, "ticketStatus": 0 }, 
+                { "id": 4, "seatNumber": 3, "ticketStatus": 2 }, 
+                { "id": 5, "seatNumber": 4, "ticketStatus": 1 }], 
+                [{ "id": 6, "seatNumber": 5, "ticketStatus": 1 }, 
+                { "id": 7, "seatNumber": 6, "ticketStatus": 2 }, 
+                { "id": 8, "seatNumber": null, "ticketStatus": 0 }, 
+                { "id": 9, "seatNumber": 7, "ticketStatus": 2 }, 
+                { "id": 10, "seatNumber": 8, "ticketStatus": 1 }], 
+                [{ "id": 11, "seatNumber": 9, "ticketStatus": 2 }, 
+                { "id": 12, "seatNumber": 10, "ticketStatus": 1 }, 
+                { "id": 13, "seatNumber": null, "ticketStatus": 0 }, 
+                { "id": 14, "seatNumber": 11, "ticketStatus": 1 }, 
+                { "id": 15, "seatNumber": 12, "ticketStatus": 2 }], [{ "id": 16, "seatNumber": 13, "ticketStatus": 1 }, { "id": 17, "seatNumber": 14, "ticketStatus": 1 }, { "id": 18, "seatNumber": null, "ticketStatus": 0 }, { "id": 19, "seatNumber": null, "ticketStatus": 0 }, { "id": 20, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 21, "seatNumber": 17, "ticketStatus": 1 }, { "id": 22, "seatNumber": 18, "ticketStatus": 2 }, { "id": 23, "seatNumber": null, "ticketStatus": 0 }, { "id": 24, "seatNumber": 19, "ticketStatus": 1 }, { "id": 25, "seatNumber": 20, "ticketStatus": 1 }], [{ "id": 26, "seatNumber": 21, "ticketStatus": 1 }, { "id": 27, "seatNumber": 22, "ticketStatus": 1 }, { "id": 28, "seatNumber": null, "ticketStatus": 0 }, { "id": 29, "seatNumber": 23, "ticketStatus": 1 }, { "id": 30, "seatNumber": 24, "ticketStatus": 1 }], [{ "id": 31, "seatNumber": 25, "ticketStatus": 1 }, { "id": 32, "seatNumber": 26, "ticketStatus": 1 }, { "id": 33, "seatNumber": null, "ticketStatus": 0 }, { "id": 34, "seatNumber": 27, "ticketStatus": 1 }, { "id": 35, "seatNumber": 28, "ticketStatus": 1 }], [{ "id": 36, "seatNumber": 29, "ticketStatus": 1 }, { "id": 37, "seatNumber": 30, "ticketStatus": 1 }, { "id": 38, "seatNumber": null, "ticketStatus": 0 }, { "id": 39, "seatNumber": null, "ticketStatus": 0 }, { "id": 40, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 41, "seatNumber": 33, "ticketStatus": 1 }, { "id": 42, "seatNumber": 34, "ticketStatus": 2 }, { "id": 43, "seatNumber": null, "ticketStatus": 0 }, { "id": 44, "seatNumber": 35, "ticketStatus": 2 }, { "id": 45, "seatNumber": 36, "ticketStatus": 1 }], [{ "id": 46, "seatNumber": 37, "ticketStatus": 1 }, { "id": 47, "seatNumber": 38, "ticketStatus": 2 }, { "id": 48, "seatNumber": null, "ticketStatus": 0 }, { "id": 49, "seatNumber": 39, "ticketStatus": 2 }, { "id": 50, "seatNumber": 40, "ticketStatus": 1 }], [{ "id": 51, "seatNumber": 41, "ticketStatus": 2 }, { "id": 52, "seatNumber": 42, "ticketStatus": 1 }, { "id": 53, "seatNumber": null, "ticketStatus": 0 }, { "id": 54, "seatNumber": 43, "ticketStatus": 1 }, { "id": 55, "seatNumber": 44, "ticketStatus": 2 }]],
         }
     },
     methods: {

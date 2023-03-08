@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <h1>NOT FOUND</h1>
-        505 ERROR
+        <h1>Internal Server Error</h1>
+        500 Error
     </div>
 </template>
 
