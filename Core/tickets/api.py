@@ -1,13 +1,14 @@
 import time
-
+from rest_framework import status
 import django_filters
 from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 from .models import *
-from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, \
+from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, ScheduleSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -98,6 +99,7 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
             instance.schedule.route.destination.nameCode.value = destination_value.value
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+    
     def list(self, request, *args, **kwargs):
        queryset = self.filter_queryset(self.get_queryset())
        language_id = kwargs.get('lang_id')
@@ -150,4 +152,38 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
         return super().get_permissions()
 
+
+
+
+class ScheduleFilterSet(filters.FilterSet):
+    class Meta:
+        model = Schedule
+        fields = {
+            'beginDate': ['gt', 'lt', 'exact'],
+            'isActive': ['exact'],
+            'scheduleType': ['exact']
+        }
+
+class ScheduleViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated,]
+    queryset = Schedule.objects.all()
+    
+
+
+    def create(self, request, *args, **kwargs):
+        serializer = ScheduleListSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            
+            fromDate = serializer.validated_data['fromDate']
+            toDate = serializer.validated_data['toDate']
+            lanugage_id = serializer.validated_data['language_id']
+
+            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate), scheduleType__id=serializer.validated_data['scheduleType'])
+            
+            result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
+            
+            return Response(result.data, status=status.HTTP_200_OK)
+        # print(serialized_data)
+
+        return Response('nice', status=status.HTTP_200_OK)
 

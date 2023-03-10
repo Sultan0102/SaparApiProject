@@ -12,5 +12,8 @@ export default {
     }),
     tickets: axios.create({
         baseURL: config.TICKETS_API_URL,
+    }),
+    schedules: axios.create({
+        baseURL: config.SCHEDULES_API_URL,
     })
 }

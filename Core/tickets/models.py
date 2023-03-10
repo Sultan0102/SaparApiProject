@@ -1,5 +1,8 @@
 from django.db import models
 from Core.authorization.models import User
+import datetime
+
+
 class TicketStatus(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(db_index=True,max_length=255)
@@ -28,6 +31,7 @@ class Route(models.Model):
     source = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='source')
     duration = models.CharField(db_index=True,max_length=255)
     distance = models.FloatField()
+    coordinates = models.CharField(max_length=255, default='00, 00N, 000')
 
     class Meta:
         db_table = "Route"
@@ -50,7 +54,7 @@ class Language(models.Model):
 class ResourceValue(models.Model):
     id = models.AutoField(primary_key=True)
     language = models.ForeignKey('Language',on_delete=models.PROTECT,blank=True)
-    nameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True)
+    code = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True)
     value = models.CharField(db_index=True, max_length=255)
     deleteDate = models.DateTimeField
 
@@ -82,6 +86,9 @@ class BusType(models.Model):
 
     class Meta:
         db_table = "BusType"
+    
+    def __str__(self) -> str:
+        return f"Capacity: {self.capacity}, Template: {self.template}"
 
 class Bus(models.Model):
     id = models.AutoField(primary_key=True)
@@ -90,6 +97,7 @@ class Bus(models.Model):
 
     class Meta:
         db_table = "Bus"
+        
 
 class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
@@ -106,6 +114,9 @@ class Schedule(models.Model):
     scheduleType =models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
     class Meta:
         db_table = "Schedule"
+    
+    def __str__(self) -> str:
+        return f"ID: {self.id}, Route: {self.route}, Bus: {self.bus}, Driver: {self.driver}, Schedule Number: {self.scheduleNumber}"
 
 class ScheduleType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -147,15 +158,14 @@ class TicketType(models.Model):
 
 class Ticket(models.Model):
     id = models.AutoField(primary_key=True)
-    person = models.ForeignKey('TicketPerson',on_delete=models.PROTECT,blank=True)
+    person = models.ForeignKey('TicketPerson',on_delete=models.PROTECT,blank=True, null=True)
     status = models.ForeignKey('TicketStatus', on_delete=models.PROTECT,blank=True)
     schedule = models.ForeignKey('Schedule',on_delete=models.PROTECT,blank=True)
     type = models.ForeignKey('TicketType',on_delete=models.PROTECT,blank=True)
     order = models.ForeignKey('Order', on_delete= models.PROTECT,blank=True, null=True)
-    seatNum = models.IntegerField(db_index=True,blank=True)
+    seatNumber = models.IntegerField(db_index=True,blank=True)
     cost = models.IntegerField(db_index=True,blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    creationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "Ticket"
@@ -165,7 +175,7 @@ class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tour = models.ForeignKey('TouristTrip', on_delete=models.CASCADE)
     text = models.TextField()
-    created_date = models.DateTimeField(auto_now_add=True)
+    creationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "Review"

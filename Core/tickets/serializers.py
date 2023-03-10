@@ -70,3 +70,45 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('id','user','schedule','totalPrice','creationDate','isPaid')
+
+class ScheduleListSerializer(serializers.Serializer):
+    fromDate = serializers.DateTimeField()
+    toDate = serializers.DateTimeField()
+    language_id = serializers.IntegerField(min_value=1, max_value=3)
+    scheduleType = serializers.IntegerField(min_value=1)
+
+class ResourceValueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ResourceValue
+        fields = ['id', 'value', 'code', 'language']
+
+class ScheduleRouteSerializer(serializers.ModelSerializer):
+    destinationName = serializers.SerializerMethodField('get_destination_name')
+    sourceName = serializers.SerializerMethodField('get_source_name')
+
+
+    def get_destination_name(self, obj):
+        lang_id = self.context.get('language_id') if self.context.get('language_id') is not None else 1
+
+        name = ResourceValue.objects.filter(code_id = obj.destination.nameCode.id, language_id=lang_id)[0].value
+        return name;
+
+    def get_source_name(self, obj):
+        lang_id = self.context.get('language_id') if self.context.get('language_id') is not None else 1
+        name = ResourceValue.objects.filter(code_id = obj.source.nameCode.id, language_id=lang_id)[0].value
+        return name;
+
+    class Meta:
+        model = Route
+        fields = ['id','destination','source','duration','distance', 'destinationName', 'sourceName']
+        depth=1
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    route = ScheduleRouteSerializer()
+
+    class Meta:
+        model = Schedule
+        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType']
+        read_only_fields = ('language_id', )
+        depth=2

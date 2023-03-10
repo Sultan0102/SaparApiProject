@@ -78,8 +78,6 @@ class RegisterSerializer(UserSerializer):
         self.validated_data['role'] = User.CUSTOMER
         self.validated_data['verificationCode'] = self.generateOTP();
         
-        print("Validated Data: ")
-        print(self.validated_data)
         return User.objects.create_user(**self.validated_data)
 
 class VerifyUserSerializer(serializers.Serializer):
