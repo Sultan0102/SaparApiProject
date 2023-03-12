@@ -104,6 +104,8 @@ class ScheduleRouteSerializer(serializers.ModelSerializer):
         fields = ['id','destination','source','duration','distance', 'destinationName', 'sourceName']
         depth=1
 
+
+
 class ScheduleSerializer(serializers.ModelSerializer):
     route = ScheduleRouteSerializer()
 

@@ -13,54 +13,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-bs-toggle="collapse" data-bs-target="#bus2">
-                        <th scope="row">AB4958</th>
-                        <td>Almaty - Taraz</td>
-                        <td>10:40pm - 05:30pm</td>
-                    </tr>   
-                    <td colspan="3" class="collapse " id="bus2">
-                        <div class="row align-items-center " id="bus2">
-                                    <div class="col-8 p-2 my-5 bus-seats mx-auto">
-                                        <div class="list-group list-group-horizontal flex-wrap">
-                                            <div v-for="ticket in tickets" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center">
-                                                <span>{{ ticket.seatNumber }}</span>
-                                            </div>
-                                        </div>  
-                                    </div>      
-                                    <div class="col-4 mx-auto">
-                                            <h6 class="mb-0 mb-md-3">Available</h6>
-                                            <h6 class="mb-0 mb-md-3">Occupied</h6>
-                                            <h6 class="mb-0 mb-md-3">Booked</h6>
-                                            <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
-                                    </div>        
-                        </div>
-                    </td>
+                    <template v-for="schedule in schedules">
+                        <tr data-bs-toggle="collapse" :data-bs-target="'#'+schedule.scheduleNumber">
+                            <th scope="row"><span id="schedule-number">{{ schedule.scheduleNumber }}</span></th>
+                            <td><span id="route-source-dest">{{ concatenatedSourceAndDestination(schedule) }}</span></td>
+                            <td><span id="begin-end-date">{{ concatenatedBeginDateAndEndDate(schedule) }}</span></td>
+                        </tr> 
+                        <AppBus :schedule="schedule"/>
 
-                    <!-- <tr data-bs-toggle="collapse" data-bs-target="#bus3">
-                        <th scope="row">AB4958</th>
-                        <td>Almaty - Taraz</td>
-                        <td>10:40pm</td>
-                    </tr>
-                                    
-                    <td colspan="3" class="collapse " id="bus3">
-                        <div class="row align-items-center " id="bus3">
-                                <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
-                                    <ul v-for="row in tickets" class="list-group list-group-horizontal">
-                                        <li v-for="ticket in row" :key="ticket.id" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap">
-                                            <span>{{ ticket.seatNumber }}</span>
-                                        </li>
-                                    </ul>  
-                                </div>      
-                                <div class="col-md-3 mx-auto">
-                                        <h6 class="mb-3 py-3 colour mx-auto availableSeat">Available</h6>
-                                        <h6 class="mb-3 py-3 colour mx-auto occupiedSeat">Occupied</h6>
-                                        <h6 class="mb-3 py-3 colour mx-auto bookedSeat">Booked</h6>
-                                        <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
-                                </div>        
-                        </div>
-                    </td> -->
-                    
-                    <AppBus />
+                    </template>
+                                       
                 </tbody>
             </table>
         </div>
@@ -71,6 +33,8 @@
 <script>
 import TicketService from "@/services/TicketService"
 import AppBus from "@/components/App-Bus.vue";
+import ScheduleService from "@/services/ScheduleService";
+
 
 export default{
     name: "Tickets",
@@ -79,14 +43,75 @@ export default{
     },
     data() {
         return {
-            schedules: null
+            schedules: null,
+            filters: {
+                beginDate: new Date(2023,0, 16),
+                endDate: new Date(2023, 1, 11)
+            },
+            locales: {
+                'en': 3,
+                'ru': 1,
+                'kz': 2
+            }
         };
+    },
+    computed: {
+      currentLanguageId: function() {
+        let currentLocale = this.$i18n.locale;
+        let langId = null;
+        switch(currentLocale) {
+            case 'en':
+                langId = 3;
+                break;
+            case 'kz':
+                langId = 2;
+                break;
+            case 'ru':
+                langId = 1;
+                break;
+            default:
+                langId = 1;
+                break;
+        }
+        return langId;
+      },
+      
+      formattedBeginDateString: function() {
+        let beginDate = this.filters.beginDate;
+        return beginDate.toISOString().split('T')[0]
+      },
+      formattedEndDateString: function() {
+        let endDate = this.filters.endDate;
+        return endDate.toISOString().split('T')[0]
+      } 
     },
     methods: {
         
+
+        getSchedules() {
+            let langId = this.currentLanguageId;
+            console.log(`Lang ID: ${langId}`) 
+            console.log(`Dates`)
+            console.log(this.formattedBeginDateString)
+            console.log(this.formattedEndDateString)
+
+            ScheduleService.getSchedules(this.formattedBeginDateString, this.formattedEndDateString, langId, 1).then((schedules)=> {
+                this.schedules = schedules;
+            },
+            (error)=> {
+                 
+            })
+        },
+
+        concatenatedSourceAndDestination: function (schedule) {
+            return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
+        },
+        concatenatedBeginDateAndEndDate: function(schedule) {
+            return schedule.beginDate.split('T')[1] + ' ' + schedule.endDate.split('T')[1]
+      },
     },
     mounted() {
-        
+        this.getSchedules();
     },
     components: { AppBus }
 }

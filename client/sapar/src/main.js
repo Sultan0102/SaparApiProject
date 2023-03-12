@@ -18,7 +18,7 @@ import Notifications from '@kyvg/vue3-notification'
 // axios.defaults.withCredentials = true
 
 // setting up interceptors
-[Api.auth, Api.users, Api.tickets].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
+[Api.auth, Api.users, Api.tickets, Api.schedules].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
 
 
 const saparApp = createApp(App);

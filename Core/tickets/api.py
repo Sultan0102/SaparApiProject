@@ -171,6 +171,7 @@ class ScheduleViewSet(viewsets.ViewSet):
 
 
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = ScheduleListSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             
