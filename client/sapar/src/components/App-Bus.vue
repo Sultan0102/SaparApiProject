@@ -52,6 +52,22 @@ export default {
                 [{ "id": 51, "seatNumber": 41, "ticketStatus": 2 }, { "id": 52, "seatNumber": 42, "ticketStatus": 1 }, { "id": 53, "seatNumber": null, "ticketStatus": 0 }, { "id": 54, "seatNumber": 43, "ticketStatus": 1 }, { "id": 55, "seatNumber": 44, "ticketStatus": 2 }]],
         }
     },
+    computed: {
+        formattedTickets: function() {
+            let tickets = [];
+            let subTickets = []
+            for(let i = 0; i < this.schedule.tickets.length; i++) {
+                if (i % 4 == 0 && i != 0) {
+                    tickets.push(subTickets)
+                    subTickets = []
+                }
+
+                subTickets.push(ticket)
+            }
+            
+            return tickets;
+        }
+    },
     methods: {
         currentStatusColor(n) {
             switch (n) {

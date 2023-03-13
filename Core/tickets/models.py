@@ -8,6 +8,7 @@ class TicketStatus(models.Model):
     name = models.CharField(db_index=True,max_length=255)
     class Meta:
         db_table = "TicketStatus"
+        
 class PassportNumberType(models.Model):
     id = models.AutoField(primary_key=True)
     typeName = models.CharField(db_index=True,max_length=255)

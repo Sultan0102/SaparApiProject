@@ -105,12 +105,24 @@ class ScheduleRouteSerializer(serializers.ModelSerializer):
         depth=1
 
 
+class ScheduleTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['id', 'seatNumber', 'cost', 'status']
 
 class ScheduleSerializer(serializers.ModelSerializer):
     route = ScheduleRouteSerializer()
+    tickets = serializers.SerializerMethodField()
+
+    def get_tickets(self, obj):
+        print(obj.id)
+        tickets = ScheduleTicketSerializer(data=Ticket.objects.filter(schedule=obj.id), many=True)
+        tickets.is_valid()
+
+        return tickets.data;
 
     class Meta:
         model = Schedule
-        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType']
+        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets']
         read_only_fields = ('language_id', )
         depth=2

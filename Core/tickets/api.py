@@ -180,8 +180,9 @@ class ScheduleViewSet(viewsets.ViewSet):
             lanugage_id = serializer.validated_data['language_id']
 
             filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate), scheduleType__id=serializer.validated_data['scheduleType'])
-            
+
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
+            
             
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
