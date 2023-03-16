@@ -16,7 +16,7 @@ INSERT INTO "Users"(id, "email", "password", "firstName", "lastName", "is_superu
 		  (3,'Available');
 
 	INSERT INTO "PassportNumberType"(id, "typeName", format)
-	VALUES(4,'identification','[0-9]{9}'),
+	VALUES(1,'identification','[0-9]{9}'),
 		  (2,'kz_passport','^([A-Z]{1})([0-9]{8})');
 
 	INSERT INTO "ResourceCode"(id, "defaultValue")

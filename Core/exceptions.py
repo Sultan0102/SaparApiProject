@@ -64,3 +64,4 @@ class InvalidTokenException(APIException):
 class RefreshTokenInvalidException(InvalidTokenException):
     default_code = "refresh_token_invalid"
     default_detail = "Refresh token is invalid or expired!"
+

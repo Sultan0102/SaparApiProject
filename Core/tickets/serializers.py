@@ -1,5 +1,9 @@
 from rest_framework import serializers
+
+from Core.exceptions import ValidationAPIException
+from Core.validators import validate_passportType
 from .models import *
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -126,3 +130,63 @@ class ScheduleSerializer(serializers.ModelSerializer):
         fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets']
         read_only_fields = ('language_id', )
         depth=2
+
+class PassportNumberTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PassportNumberType
+        fields = '__all__' 
+
+class TicketPersonSerializer(serializers.ModelSerializer):
+
+    ticketId = serializers.IntegerField(min_value=1)
+
+    class Meta:
+        model = TicketPerson
+        fields = ['firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'ticketId']
+    
+
+    def validate(self, data):
+        try:
+            passNumberType = data['passportNumberType']
+            if validate_passportType(data['passportNumber'], passNumberType.format) == False:
+                raise ValidationAPIException(detail="Invalid passport number format!", code="invalid_passport_number_format")
+
+        except ObjectDoesNotExist as e:
+            raise ValidationAPIException(detail="Invalid passport number type!", code="invalid_passport_number_type",)
+
+        return data
+
+    def create(self, validated_data):
+
+        try:
+            
+            ticketPerson = TicketPerson(
+                firstName=validated_data['firstName'],
+                lastName=validated_data['lastName'],
+                secondName=validated_data['secondName'],
+                passportNumber=validated_data['passportNumber'],
+                passportNumberType=validated_data['passportNumberType'],
+            );
+            ticketPerson.save()
+
+        except Exception as e:
+            print("Error Creating Ticket PErson")
+            raise e
+        
+        print("Ticket Person: ")
+        print(ticketPerson.id)
+        try:
+            ticketId = validated_data['ticketId']
+            print(ticketId)
+            ticket = Ticket.objects.get(id=ticketId)
+            ticket.person=ticketPerson
+            ticket.save()
+
+        except ObjectDoesNotExist as e:
+            raise ValidationAPIException("No such Ticket")
+        except Exception as e:
+            print(e)
+            raise Exception("Error binding ticket to ticket Person")
+
+        return validated_data

@@ -18,10 +18,10 @@ class PassportNumberType(models.Model):
 
 class TicketPerson(models.Model):
     id = models.AutoField(primary_key=True)
-    firstName = models.CharField(db_index=True,max_length=255)
-    lastName = models.CharField(db_index=True, max_length=255)
-    secondName = models.CharField(db_index=True, max_length=255)
-    passportNumber= models.CharField(db_index=True, max_length=255)
+    firstName = models.CharField(db_index=True,max_length=255, blank=False, null=False)
+    lastName = models.CharField(db_index=True, max_length=255, blank=False, null=False)
+    secondName = models.CharField(db_index=True, max_length=255, blank=False, null=False)
+    passportNumber= models.CharField(db_index=True, max_length=255, blank=False, null=False)
     passportNumberType = models.ForeignKey('PassportNumberType', on_delete=models.PROTECT, blank=True)
     class Meta:
         db_table = "TicketPerson"
@@ -180,6 +180,19 @@ class Review(models.Model):
 
     class Meta:
         db_table = "Review"
+
+
+class CachedTicketPerson(models.Model):
+    id = models.AutoField(primary_key = True)
+    firstName = models.CharField(db_index=True,max_length=255)
+    lastName = models.CharField(db_index=True, max_length=255)
+    secondName = models.CharField(db_index=True, max_length=255)
+    passportNumber= models.CharField(db_index=True, max_length=255)
+    passportNumberType = models.ForeignKey('PassportNumberType', on_delete=models.PROTECT, blank=True)
+    user = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
+
+    class Meta:
+        db_table="CachedTicketPerson"
 
 
 

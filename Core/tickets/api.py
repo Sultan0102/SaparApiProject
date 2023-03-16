@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from .models import *
-from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, ScheduleSerializer, \
+from .serializers import PassportNumberTypeSerializer, RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, ScheduleSerializer, TicketPersonSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -167,8 +167,6 @@ class ScheduleFilterSet(filters.FilterSet):
 class ScheduleViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated,]
     queryset = Schedule.objects.all()
-    
-
 
     def create(self, request, *args, **kwargs):
         print(request.data)
@@ -187,5 +185,22 @@ class ScheduleViewSet(viewsets.ViewSet):
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
-        return Response('nice', status=status.HTTP_200_OK)
+        return Response('', status=status.HTTP_204_NO_CONTENT)
 
+
+class TicketPersonViewSet(viewsets.ModelViewSet):
+    queryset = TicketPerson.objects.all()
+    serializer_class = TicketPersonSerializer
+    permission_classes = [IsAuthenticated, ]
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            result = serializer.save()
+            result['passportNumberType'] = result['passportNumberType'].id
+            
+            return Response(result, status=status.HTTP_201_CREATED)
+
+        return Response('Validation Error', status=status.HTTP_400_BAD_REQUEST)
