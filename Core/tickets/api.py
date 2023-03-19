@@ -114,17 +114,27 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated, ]
+
     def create(self, request):
-        ticket_id = request.data['id']
-        ticket = Ticket.objects.get(id=ticket_id)
-        order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
-        ticket.order = order
-        ticket.save()
-        serializer = OrderSerializer(order)
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            return Response(serializer.data)
+        # ticket_id = request.data['id']
+        # ticket = Ticket.objects.get(id=ticket_id)
+        # order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
+        # ticket.order = order
+        # ticket.save()
+        # serializer = OrderSerializer(order)
         return Response(serializer.data)
+    
     # def get_permissions(self):
     #     if self.action in ("create",):
-    #         self.permission_classes = (permissions.IsAuthenticated,)
+    #         self.permission_classes = [permissions.IsAuthenticated,]
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
@@ -142,6 +152,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if self.action in ("create", "update", "partial_update", "destroy"):
             return WriteReviewSerializer
         return ReadReviewSerializer
+    
     def get_permissions(self):
         if self.action in ("create",):
             self.permission_classes = (permissions.IsAuthenticated,)
@@ -185,7 +196,7 @@ class ScheduleViewSet(viewsets.ViewSet):
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
-        return Response('', status=status.HTTP_204_NO_CONTENT)
+        return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
 
 class TicketPersonViewSet(viewsets.ModelViewSet):
@@ -197,10 +208,11 @@ class TicketPersonViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             result = serializer.save()
             result['passportNumberType'] = result['passportNumberType'].id
             
             return Response(result, status=status.HTTP_201_CREATED)
 
         return Response('Validation Error', status=status.HTTP_400_BAD_REQUEST)
+

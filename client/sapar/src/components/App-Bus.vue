@@ -16,9 +16,9 @@
                 </div>      
                 <div class="col-md-3 mx-auto">
                     <h6 class="mb-3 py-3 colour mx-auto availableSeat">Available</h6>
-                    <h6 class="mb-3 py-3 colour mx-auto occupiedSeat">Occupied</h6>
+                    <h6 class="mb-3 py-3 colour mx-auto occupiedSeatByMe">Occupied</h6>
                     <h6 class="mb-3 py-3 colour mx-auto bookedSeat">Booked</h6>
-                    <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
+                    <button type="button" class="btn btn-primary mx-auto my-3" @click="createOrder()">Buy</button>
                 </div>        
         </div>
     </td>
@@ -27,10 +27,13 @@
 
 
 <script>
+
+
 export default {
     props: ['schedule'],
     data() {
         return {
+            tickets: [],
             ticketCounter: 0
         }
     },
@@ -38,7 +41,8 @@ export default {
         formattedTickets: function() {
             let tickets = [];
             let subTickets = []
-            for(let i = 0; i < this.schedule.tickets.length; i++) {
+            
+            for(let i = 0; i < this.tickets.length; i++) {
                 if (i % 4 == 0 && i != 0) {
                     tickets.push(subTickets)
                     subTickets = []
@@ -51,14 +55,17 @@ export default {
                         status: 0
                     })
                 }
+                
+                // let ticket = this.schedule.tickets[i]
 
-                subTickets.push(this.schedule.tickets[i])
+
+                subTickets.push(this.tickets[i])
             }
 
             return tickets;
         },
         occupiedTickets: function() {
-            return this.schedule.tickets.filter(t => t.status == 1)
+            return this.tickets.filter(t => t.status == 4)
         }
     },
     methods: {
@@ -67,16 +74,20 @@ export default {
                 case 0:
                     return "empty-space";
                 case 1:
-                    return "occupiedSeat";
+                    return "bookedSeat";
                 case 2:
                     return "bookedSeat";
                 case 3:
+                    return "availableSeat";
+                case 4:
+                    return "occupiedSeatByMe";
+                default:
                     return "availableSeat";
             }
         },
     
         occupySeat(ticket) {
-            if (ticket.id == null) return;
+            if (ticket.id == null || ticket.status == 1 || ticket.status == 2) return;
             
             if (ticket.status == 3) {
                 
@@ -89,22 +100,23 @@ export default {
                     return;
                 }
                 
-                ticket.status = 1;
-                this.setTicketStatus(ticket.id, 1)
+                ticket.status = 4;
             } 
-            else if (ticket.status == 1) {
+            else if (ticket.status == 4) {
                 ticket.status = 3;
-                this.setTicketStatus(ticket.id, 3)
             }
             
-            console.log(this.schedule.tickets)
+            console.log(this.tickets)
         },
 
-        setTicketStatus(id, status) {
-            let ticket = this.schedule.tickets.filter(t => t.id == id)[0];
-            let index = this.schedule.tickets.indexOf(ticket);
-            this.schedule.tickets[index].status = status
+
+        createOrder() {
+            let tickets = this.occupiedTickets;
+            console.log(tickets)
         }
+    },
+    mounted() {
+        this.tickets = this.schedule.tickets;
     }
 
 }
@@ -142,7 +154,7 @@ export default {
     background-color: #FFF;
     cursor: pointer;
 }
-.occupiedSeat{
+.occupiedSeatByMe{
     background-color: #D5D4D4;
     cursor: default;
 }

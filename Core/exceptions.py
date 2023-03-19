@@ -65,3 +65,7 @@ class RefreshTokenInvalidException(InvalidTokenException):
     default_code = "refresh_token_invalid"
     default_detail = "Refresh token is invalid or expired!"
 
+class FailedToCreateOrder(APIException):
+    status_code = 400
+    default_code = "failed_to_create_order"
+    default_detail = 'Failed to create order'

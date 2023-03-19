@@ -1,10 +1,9 @@
 from rest_framework import serializers
-
-from Core.exceptions import ValidationAPIException
+from Core.exceptions import FailedToCreateOrder, ValidationAPIException
 from Core.validators import validate_passportType
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.db.transaction import atomic
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,7 +119,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     def get_tickets(self, obj):
         print(obj.id)
-        tickets = ScheduleTicketSerializer(data=Ticket.objects.filter(schedule=obj.id), many=True)
+        tickets = ScheduleTicketSerializer(data=Ticket.objects.filter(schedule=obj.id).order_by('seatNumber'), many=True)
         tickets.is_valid()
 
         return tickets.data;
@@ -143,7 +142,8 @@ class TicketPersonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TicketPerson
-        fields = ['firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'ticketId']
+        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'ticketId']
+        read_only_fields = ['id']
     
 
     def validate(self, data):
@@ -169,13 +169,12 @@ class TicketPersonSerializer(serializers.ModelSerializer):
                 passportNumberType=validated_data['passportNumberType'],
             );
             ticketPerson.save()
+            validated_data['id'] = ticketPerson.id
 
         except Exception as e:
-            print("Error Creating Ticket PErson")
+            print("Error Creating Ticket Person")
             raise e
         
-        print("Ticket Person: ")
-        print(ticketPerson.id)
         try:
             ticketId = validated_data['ticketId']
             print(ticketId)
@@ -190,3 +189,45 @@ class TicketPersonSerializer(serializers.ModelSerializer):
             raise Exception("Error binding ticket to ticket Person")
 
         return validated_data
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'schedule', 'totalPrice', 'ticket_ids', 'isPaid']
+        read_only_fields=['id', 'totalPrice', 'isPaid']
+        extra_kwargs = {
+            'user': {'write_only': True}, 
+            'schedule': {'write_only': True}, 
+        }
+    
+    def validate_ticket_ids(self, value):
+        
+        if len(value) == 0:
+            raise ValidationAPIException("cannot create order without ticket ids!")
+
+        return value
+    
+    @atomic
+    def create(self, validated_data):
+        tickets = Ticket.objects.filter(id__in=validated_data['ticket_ids'])
+        print(tickets)
+        order_data = {
+            'user': validated_data['user'],
+            'schedule': validated_data['schedule'],
+            'totalPrice': sum(i.cost for i in tickets),
+            'isPaid': False
+        }
+
+        try: 
+            order = Order.objects.create(**order_data);
+            print(order_data)
+            tickets.update(status_id=1, order_id=order.id)
+
+        except Exception as e:
+            print("Could not create an order")
+            raise FailedToCreateOrder()
+
+        return order

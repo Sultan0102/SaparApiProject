@@ -44,4 +44,4 @@ urlpatterns = [
 ]
 # Order
 orderRouter = DefaultRouter()
-reviewRouter.register('order',OrderViewSet,basename= 'order')
+reviewRouter.register('orders',OrderViewSet,basename= 'orders')
