@@ -16,6 +16,9 @@ import OrderPayment  from '@/components/App-OrderPayment';
 import About from '@/components/App-About';
 import GuideApply from '@/components/App-GuideApply';
 import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
+import Error403 from '@/components/App-Error403';
+import Error404 from '@/components/App-Error404';
+import Error500 from '@/components/App-Error500';
 import store from '@/store';
 
 
@@ -122,6 +125,21 @@ const routes = [
     component: PageServerError, 
     name: "PageServerError"
   },
+  {
+    path: "/error403", 
+    component: Error403, 
+    name: "Error403"
+  },
+  {
+    path: "/error404", 
+    component: Error404, 
+    name: "Error404"
+  },
+  {
+    path: "/error500", 
+    component: Error500, 
+    name: "Error500"
+  }
 ]
 
 

@@ -5,27 +5,24 @@
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-
 			<div class="collapse navbar-collapse row container" id="navbar">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0 col-6">
-					<li class="nav-item">
+				<ul class="navbar-nav mb-2 mb-lg-0">
+					<li class="ms-1 my-auto nav-item">
 						<router-link class="nav-link me-2" aria-current="page" to="/tickets">{{ $t('Tickets') }}</router-link>
 					</li>
-					<li class="nav-item">
+					<li class="ms-1 my-auto nav-item">
 						<router-link class="nav-link me-2" aria-current="page" to="/tickets">{{ $t('Tours') }}</router-link>
 					</li>
-					<li class="nav-item">
+					<li class="ms-1 my-auto nav-item">
 						<router-link class="nav-link me-2" aria-current="page" to="/about">{{ $t('About us') }}</router-link>
 					</li>
-				</ul>
-				<ul class="navbar-nav justify-content-end mb-2 mb-lg-0 col-6">
-					<li class="nav-item" v-if="isLoggedIn">
-						<router-link class="nav-link d-flex justify-content-end" to="/profile">{{ $t('hello') }} {{ getUserEmail }}<i class="bi bi-person-circle ms-3"></i></router-link>
+					<li class="ms-1 my-auto nav-item ms-0 ms-lg-auto" v-if="isLoggedIn">
+						<router-link class="nav-link d-flex" to="/profile">{{ $t('hello') }} {{ getUserEmail() }}<i class="bi bi-person-circle ms-3 my-auto"></i></router-link>
 					</li>
-					<li class="nav-item" v-else>
-						<router-link class="nav-link d-flex justify-content-end" to="/register"><span class="border p-1 me-2">{{ $t('Sign up') }}</span></router-link>
+					<li class="my-auto nav-item ms-0 ms-lg-auto" v-else>
+						<router-link class="nav-link d-flex" to="/register"><span class="border p-1 me-2">{{ $t('Sign up') }}</span></router-link>
 					</li>
-					<li class="nav-item my-auto d-flex justify-content-end">
+					<li class="ms-1 my-auto nav-item my-auto d-flex">
 						<LocaleSwitcher class="nav-link " />
 					</li>
 				</ul>

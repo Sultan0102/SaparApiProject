@@ -1,4 +1,5 @@
 {
+  "SAPAR IN NUMBERS": "SAPAR САНДАРДА",
   "Bus routes operated": "Автобус бағыттары қолданыста",
   "Guided tours operated": "Ұйымдастырылған экскурсиялар",
   "Business partners": "Іскери серіктестер",
@@ -16,10 +17,8 @@
   "Trending Tours": "Танымал турлар",
   "Sign up": "Тіркелу",
   "Route": "Бағыт",
-  "From": "Қайдан",
-  "To": "Қайда",
-  "Departure Time": "Кету уақыты",
-  "Arrival Time": "Келу уақыты",
+  "From - To": "Қайдан - Қайда",
+  "Departure - Arrival Time": "Кету - Келу уақыты",
   "Tickets": "Билеттер",
   "Tours": "Турлар",
   "About us": "Біз туралы",
@@ -57,5 +56,13 @@
   "Dont have account? Sign up!": "Сізде аккаунт жоқ па? Тіркеліңіз!",
   "Email": "Электрондық пошта",
   "Review": "Пікір",
+  "We connect people to their dreams":"Біз армандарымен байланыстырамыз",
+  "90% of people using Sapar report higher satisfaction level from traveling activities":"Sapar-ды қолданатын адамдардың 90%-ы саяхатқа қанағаттанудың жоғары деңгейі туралы хабарлайды",
+  "Buy tickets to your favorite destinations within seconds!":"Бірнеше секунд ішінде сүйікті бағыттарыңызға билеттерді сатып алыңыз!",
+  "If you are a guide, we suggest extensive collaborative tools":"Егер сіз гид болсаңыз, бірлесіп жұмыс істеуге көптеген құралдар ұсынамыз",
+  "If you are a local tourism-based business, we offer you beneficial opportunities":"Егер сіз жергілікті туристік бизнеспен айналысатын болсаңыз, біз тиімді мүмкіндіктер ұсынамыз",
+  "Access denied": "Кіруге тыйым салынады",
+  "Page not found": "Парақша табылмады",
+  "Internal server error": "Ішкі сервер қатесі",
   "hello": "Саламалейкум"
 }

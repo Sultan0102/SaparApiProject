@@ -1,4 +1,5 @@
 {
+  "SAPAR IN NUMBERS": "SAPAR В ЦИФРАХ",
   "Bus routes operated": "Действующих автобусных маршрутов",
   "Guided tours operated": "Организованных экскурсии с гидом",
   "Business partners": "Деловые партнеры",
@@ -16,10 +17,8 @@
   "Trending Tours": "Популярные туры",
   "Sign up": "Зарегистрироваться",
   "Route": "Маршрут",
-  "From": "Откуда",
-  "To": "Куда",
-  "Departure Time": "Время отправления",
-  "Arrival Time": "Время прибытия",
+  "From - To": "Откуда - Куда",
+  "Departure - Arrival Time": "Время отправления - прибытия",
   "Tickets": "Билеты",
   "Tours": "Туры",
   "About us": "О нас",
@@ -57,5 +56,13 @@
   "Dont have account? Sign up!": "У вас нет учетной записи? Зарегистрируйтесь!",
   "Email": "Электронная почта",
   "Review": "Отзыв",
+  "We connect people to their dreams":"Мы соединяем людей с их мечтами",
+  "90% of people using Sapar report higher satisfaction level from traveling activities":"90% людей, использующих Sapar, сообщают о высоком уровне удовлетворенности путешествиями",
+  "Buy tickets to your favorite destinations within seconds!":"Покупайте билеты в ваши любимые направления за считанные секунды!",
+  "If you are a guide, we suggest extensive collaborative tools":"Если вы являетесь гидом, мы предлагаем обширные инструменты для совместной работы",
+  "If you are a local tourism-based business, we offer you beneficial opportunities":"Если вы занимаетесь местным туристическим бизнесом, мы предлагаем вам выгодные возможности",
+  "Access denied": "В доступе отказано",
+  "Page not found": "Страница не найдена",
+  "Internal server error": "Внутренняя ошибка сервера",
   "hello": "Привет"
 }

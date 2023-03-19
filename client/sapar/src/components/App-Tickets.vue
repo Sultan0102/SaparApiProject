@@ -1,14 +1,17 @@
 <template>  
     <div class="container-fluid py-5 mt-5">
-        <div class="col-xl-6 mx-auto mb-3">
-            <input type="search" class="form-control" placeholder="Search here" aria-label="Search">
+        <div class="col-xxl-8 col-10 mx-auto mb-3">
+            <div class="input-group">
+                <input type="search" class="form-control" placeholder="Search here" aria-label="Search">
+                <span><VueDatePicker v-model="date" model-auto range position="right"/></span>
+            </div>
         </div>
         <div class="container table-responsive">
             <table class="table table-hover text-center">
                 <thead>
                     <tr>
-                        <th scope="col">{{ $t('     Route    ') }}</th>
-                        <th scope="col">{{ $t('   From - To  ') }}</th>
+                        <th scope="col">{{ $t('Route') }}</th>
+                        <th scope="col">{{ $t('From - To') }}</th>
                         <th scope="col">{{ $t('Departure - Arrival Time') }}</th>
                     </tr>
                 </thead>
