@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid py-5 mt-5">
-        <div class="container">
+        <div class="container mt-3 pb-5 mb-5">
             <h2 class="text-center">{{ $t('SAPAR IN NUMBERS') }}:</h2>
             <div class="row align-items-center border-top mt-2 pt-4">
                 <div class="col-md-4 text-center">
@@ -19,12 +19,12 @@
             <h2 class="text-center mt-3">{{ $t('Sapar is not just a ride. It is an experience') }}!</h2>
             <div class="border-top mt-2 pt-4">
                 <div class="text-center">
-                    <img src="../assets/Experience.png" class="img-fluid ">
+                    <img src="../assets/Experience.png" class="img-fluid">
                 </div>
                 <div class="row align-items-center">
-                    <div class="col-md-6 text-center">
-                        <h3 class="my-3">{{ $t('89% of our customers returned to us again') }}</h3>
-                        <h3>{{ $t('11% of people did not') }}</h3>
+                    <div class="col-md-6 text-center mt-5 mb-2">
+                        <h3>{{ $t('89% of our customers returned to us again') }}</h3>
+                        <h3 class="light-green">{{ $t('11% of people did not') }}</h3>
                     </div>
                     <div class="col-md-6">
                         <img src="../assets/Cake.svg" class="img-fluid ">
@@ -59,12 +59,12 @@
             </div>
             <div class="row align-items-center mt-2 pt-4">
                 <div class="col-md-6 text-center">
-                    <form class="text-center">
-                        <h3 class="pt-3">{{ $t('Tell us about your experience') }}!</h3>
-                        <div class="">
-                            <input type="email" class=" form-control" id="exampleInputEmail1" aria-describedby="emailHelp" :placeholder="$t('Email')" :disabled="editMode" :readonly="editMode">
+                    <form class="text-center message">
+                        <h3 class="my-3 pt-4">{{ $t('Tell us about your experience') }}!</h3>
+                        <div class="mx-auto">
+                            <input type="email" class=" form-control mx-auto" id="exampleInputEmail1" aria-describedby="emailHelp" :placeholder="$t('Email')" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <textarea class="form-control" :placeholder="$t('Review')" id="exampleFormControlTextarea1" rows="5"></textarea>
+                        <textarea class="form-control mx-auto" :placeholder="$t('Review')" id="exampleFormControlTextarea1" rows="5"></textarea>
                         <button type="submit" class="btn btn-primary my-3">{{ $t('Send') }}</button>
                     </form>
                 </div>
@@ -74,21 +74,21 @@
             </div>
             <h2 class="text-center">{{ $t('PEOPLE ABOUT US') }}:</h2>
             <div class="row align-items-center border-top mt-2 pt-4">
-                <div class="col-md-3 text-center">
-                    <img src="../assets/profile-photo.png" class="img-fluid">
+                <div class="col-md-4 text-center">
+                    <img src="../assets/profile-photo.png" class="mb-3 person">
                 </div>
-                <div class="col-md-9 message p-5">
+                <div class="col-md-8 message p-5">
                     <h2>{{ $t('Katira') }}</h2>
                     <h4>{{ $t('Ive bought here my first bus tour. I didnt think bus tourism was a thing before that, haha! But Im glad I visited Kolsai with Sapar. Really opened my eyes on how many places there are to visit in Kazakhstan.') }}</h4>
                 </div>
             </div>
-            <div class="row align-items-center mt-2 pt-4">
-                <div class="col-md-9 message p-5">
+            <div class="row align-items-center mt-2 pt-4 swap-container">
+                <div class="col-md-8 message p-5">
                     <h2>{{ $t('Katira') }}</h2>
                     <h4>{{ $t('Ive bought here my first bus tour. I didnt think bus tourism was a thing before that, haha! But Im glad I visited Kolsai with Sapar. Really opened my eyes on how many places there are to visit in Kazakhstan.') }}</h4>
                 </div>
-                <div class="col-md-3 text-center">
-                    <img src="../assets/profile-photo.png" class="img-fluid">
+                <div class="col-md-4 text-center">
+                    <img src="../assets/profile-photo.png" class="mb-3 person">
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@ h1{
     font-size: 100px !important;
 }
 .border-top{
-    border-top: 2px solid #1C5E3C !important;
+	border-top: 2px solid #1C5E3C !important;
 }
 .message{
     background-color: #FFF;
@@ -128,6 +128,13 @@ textarea{
 }
 form{
 	max-width: 600px;
-    
+	border-left-style: none;
+    border-left-width: none;
+}
+.person{
+    width: 30vh;
+}
+.light-green{
+    color: #57896F !important;
 }
 </style>

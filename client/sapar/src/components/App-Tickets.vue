@@ -1,15 +1,20 @@
 <template>  
     <div class="container-fluid py-5 mt-5">
-        <div class="col-xl-6 mx-auto mb-3">
-            <input type="search" class="form-control" placeholder="Search here" aria-label="Search">
+        <div class="col-xxl-8 col-10 mx-auto mb-3">
+            <div class="input-group mx-auto">
+                <input type="search" class="form-control" placeholder="From:" aria-label="Search">
+                <input type="search" class="form-control" placeholder="To:" aria-label="Search">
+                <div class="form-control"><VueDatePicker  v-model="date" model-auto range position="right"/></div>
+                <button class="btn search" type="button"><i class="bi bi-search"></i></button>
+            </div>
         </div>
         <div class="container table-responsive">
             <table class="table table-hover text-center">
                 <thead>
                     <tr>
-                        <th scope="col">{{ $t('     Route    ') }}</th>
-                        <th scope="col">{{ $t('   From - To  ') }}</th>
-                        <th scope="col">{{ $t('Departure - Arrival Time') }}</th>
+                        <th scope="col">{{ $t('Route') }}<i class="bi bi-filter ms-1"></i></th>
+                        <th scope="col">{{ $t('From - To') }}<i class="bi bi-filter ms-1"></i></th>
+                        <th scope="col">{{ $t('Departure - Arrival Time') }}<i class="bi bi-filter ms-1"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,7 +23,7 @@
                         <td>Almaty - Taraz</td>
                         <td>10:40pm - 05:30pm</td>
                     </tr>   
-                    <td colspan="3" class="collapse " id="bus2">
+                    <td colspan="3" class="collapse" id="bus2">
                         <div class="row align-items-center " id="bus2">
                                     <div class="col-8 p-2 my-5 bus-seats mx-auto">
                                         <div class="list-group list-group-horizontal flex-wrap">
@@ -93,9 +98,29 @@ export default{
 </script>
 
 <style scoped>  
+*{
+	color: #1C5E3C;
+}
  th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }
+.form-control, .form-control-plaintext{
+    border-bottom: none !important;
+    border-radius: 15px;
+    max-width: 40% !important;
+}
 
+.collapse, .collapsing{
+    background-color: #FFF;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.search{
+    border-bottom-right-radius: 15px !important;
+	border-top-right-radius: 15px !important;
+    background-color: #FFF !important;
+}
 </style>

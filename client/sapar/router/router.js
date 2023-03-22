@@ -13,9 +13,18 @@ import Tickets2 from '@/components/App-Tickets2';
 import Order from '@/components/App-Order';
 import OrderPassengerInformation from '@/components/App-OrderPassengerInformation';
 import OrderPayment  from '@/components/App-OrderPayment';
+import OrderNumber  from '@/components/App-OrderNumber';
 import About from '@/components/App-About';
 import GuideApply from '@/components/App-GuideApply';
 import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
+import TourInfo from '@/components/App-TourInfo';
+import ViewApplications from '@/components/App-ViewApplications';
+import GuideInfo from '@/components/App-GuideInfo';
+import BusinessProfile from '@/components/App-BusinessProfile';
+import BusinessGuideModify from '@/components/App-BusinessGuideModify';
+import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
+import GuideDeletion from '@/components/App-GuideDeletion';
+import Applications from '@/components/App-Applications';
 import store from '@/store';
 
 
@@ -95,6 +104,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/order-number", 
+    component: OrderNumber, 
+    name: "OrderNumber",
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/about", 
     component: About, 
     name: "About"
@@ -122,6 +137,54 @@ const routes = [
     component: PageServerError, 
     name: "PageServerError"
   },
+  {
+    path: "/tour-info", 
+    component: TourInfo, 
+    name: "TourInfo",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/view-applications", 
+    component: ViewApplications, 
+    name: "ViewApplications",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/guide-info", 
+    component: GuideInfo, 
+    name: "GuideInfo",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/business-profile", 
+    component: BusinessProfile, 
+    name: "BusinessProfile",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/business-guide-modify", 
+    component: BusinessGuideModify, 
+    name: "BusinessGuideModify",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/view-available-guides", 
+    component: ViewAvailableGuides, 
+    name: "ViewAvailableGuides",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/guide-deletion", 
+    component: GuideDeletion, 
+    name: "GuideDeletion",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/applications", 
+    component: Applications, 
+    name: "Applications",
+    meta: { requiresAuth: true },
+  }
 ]
 
 

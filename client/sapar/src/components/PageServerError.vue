@@ -1,17 +1,21 @@
 <template>
-    <div class="container">
-        <h1>Internal Server Error</h1>
-        500 Error
+    <div class="container-fluid pt-5">
+        <div class="container text-center mt-5">
+            <h1>500</h1>
+            <h2>{{ $t('Internal server error') }}</h2>
+            <img src="../assets/Error500.svg">
+        </div>
     </div>
 </template>
 
 <script>
 
-export default {
-    
-}
 </script>
 
 <style scoped>
+img{
+    max-width: 600px;
+}
 </style>
+
 

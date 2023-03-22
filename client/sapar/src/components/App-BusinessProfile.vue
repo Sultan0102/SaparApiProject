@@ -1,6 +1,6 @@
 <template>
-    <div id="profile" class="container-fluid my-4 py-4">
-        <div class="container mt-lg-5 mt-0 pt-lg-5 pt-0">
+    <div id="profile" class="container-fluid">
+        <div class="container mt-lg-3 mt-0 pt-lg-5 pt-0">
             <div class="row align-items-center text-center">
                 <div class="col-lg-5 mx-auto pt-5">
                     <form id="edit-profile-form">
@@ -21,17 +21,21 @@
                             <i class="bi bi-eye-slash my-auto ms-3 ms-sm-5"></i>
                             <input type="password" class="form-control" id="password" name="password" placeholder="**********" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button> 
-                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button> <br>
-                        <button @click="logout" type="submit" class="btn btn-primary mb-3">{{ $t('Log out') }}</button>
+                        <div class="pb-4">
+                            <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary my-3">{{ $t('Edit') }}</button> 
+                            <button v-else @click="submit()" type="submit" class="btn btn-primary my-3">{{ $t('Confirm') }}</button>
+                            <button type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
+                            <button type="button" class="btn btn-primary my-3 ">{{ $t('Applications') }}</button>
+                            <button @click="logout" type="submit" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Log out') }}</button>
+                        </div>
                     </form>
                 </div>
                 <div class="col-lg-5 mx-auto pt-5">
                     <div class="order-history">
                         <h2 class="my-3">{{ $t('Order History') }}</h2>
-                        <ul class="list-group text-start">
-                            <li class="list-group-item list-group-item-action ps-5">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</li>
-                            <li class="list-group-item list-group-item-action ps-5">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</li>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</li>
+                            <li class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</li>
                             
                             <button type="button" class="btn btn-primary mx-auto mb-3 mt-5">{{ $t('See more') }}</button>
                         </ul>

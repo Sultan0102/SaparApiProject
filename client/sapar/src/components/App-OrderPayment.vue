@@ -1,19 +1,16 @@
 <template>
-    <div class="container-fluid py-5">
-        <div class="container">
-            <form class="text-center mt-5">
+    <div class="container-fluid my-5 py-5">
+        <div class="container mt-lg-5 mt-4 pt-lg-5 pt-4">
+            <form class="text-center mt-5 mx-auto">
                 <h2 class="pt-3">{{ $t('Checkout Details') }}</h2>
-
-                <div class="dropdown mt-3">
-                    <button class="btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ $t('Payment Method') }}
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Kaspi</a></li>
-                        <li><a class="dropdown-item" href="#">Halyk</a></li>
-                    </ul>
+                <div class="mt-3 py-4">
+                    <select class="mx-auto form-select mb-5">
+                        <option selected disabled class="selected">{{ $t('Payment Method') }}</option>
+                        <option value="1">Kaspi</option>
+                        <option value="2">Halyk</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 mb-3">{{ $t('Confirm') }}</button> <br/>
+                <button type="submit" class="btn btn-primary my-5">{{ $t('Confirm') }}</button>
             </form>
         </div>
     </div>
@@ -24,28 +21,4 @@
 </script>
 
 <style scoped>
-p{
-    color:#1C5E3C;
-    padding-bottom: 0px !important;
-}
-.alert{
-    margin: auto;
-    width: 50%;
-}
-form{
-	width: 50%;
-}
-.btn-secondary {
-  color: #6c757d !important;
-  background-color: #fff;
-  border: none !important;
-  border-color: #1C5E3C;
-  border-bottom: 1px solid !important;
-}
-.btn-check:focus + .btn-secondary, .btn-secondary:focus {
-  box-shadow: none !important;
-}
-.dropdown-item{
-    color: #1C5E3C !important;
-}
 </style>

@@ -1,24 +1,28 @@
 <template>
-    <div class="container-fluid py-5">
-        <div class="container">
-            <form id="registration-form" class="text-center mt-3" @submit.prevent="submit">
+    <div class="container-fluid my-4 py-4">
+        <div class="container mt-lg-5 mt-4 pt-lg-5 pt-4">
+            <form id="registration-form" class="text-center mt-3 mx-auto" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Welcome') }}</h2>
-                <div class="mb-3">
-                    <input v-model="form.email" type="email" class="form-control text-center" id="email" name="email" placeholder="email@example.com">
+                <div class="input-group mb-3">
+                    <i class="bi bi-envelope my-auto ms-3 ms-sm-5"></i>
+                    <input v-model="form.email" type="email" class="form-control" id="email" name="email" placeholder="email@example.com">
                 </div>
-                <div class="mb-3">
-                    <input v-model="form.firstName" type="firstname" class="form-control text-center" id="firstName" name="firstName" placeholder="Vasia">
+                <div class="input-group mb-3">
+                    <i class="bi bi-person-fill my-auto ms-3 ms-sm-5"></i>
+                    <input v-model="form.firstName" type="firstname" class="form-control" id="firstName" name="firstName" placeholder="Vasia">
                 </div>
-                <div class="mb-3">
-                    <input v-model="form.lastName" type="lastname" class="form-control text-center" id="lastName" name="lastName" placeholder="Pupkin">
+                <div class="input-group mb-3">
+                    <i class="bi bi-person-fill my-auto ms-3 ms-sm-5"></i>
+                    <input v-model="form.lastName" type="lastname" class="form-control" id="lastName" name="lastName" placeholder="Pupkin">
                 </div>
-                <div class="mb-3">
-                    <input v-model="form.password" type="password" class="form-control text-center" id="password" name="password" placeholder="**********">
+                <div class="input-group mb-3">
+                    <i class="bi bi-eye-slash my-auto ms-3 ms-sm-5"></i>
+                    <input v-model="form.password" type="password" class="form-control" id="password" name="password" placeholder="**********">
                 </div>
-                <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
+                <button type="submit" class="btn btn-primary my-2 mt-4">{{ $t('Sign up') }}</button>
+                <div class="pb-2"><router-link to="/login"><a>{{ $t('I already have an account') }}</a></router-link></div>
             </form>
             <div class="mt-3 text-center">
-            <router-link to="/login"><a class="border-bottom">{{ $t('I already have an account') }}</a></router-link>
             </div>
             <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
                     <p id="error" class="pt-3">{{ $t('Error during registration') }}</p>
@@ -139,5 +143,12 @@ a{
 }
 form{
 	max-width: 600px;
+}
+i{
+    font-size: 24px;
+}
+a{
+    color: #1C5F41 !important;
+    text-decoration: underline !important;
 }
 </style>
