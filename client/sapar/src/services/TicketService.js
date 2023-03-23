@@ -6,6 +6,12 @@ class TicketService{
             return response.data;
         })
     }
+    
+    getUserTickets(userId) {
+        return Api.tickets.get(`?userId=${userID}/`).then((response)=> {
+            return response.data
+        });
+    }
 }
 
 export default new TicketService()

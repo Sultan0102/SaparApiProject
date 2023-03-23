@@ -48,6 +48,7 @@ class DetailTicketsSerializer(serializers.ModelSerializer):
         super(DetailTicketsSerializer, self).__init__(*args,**kwargs)
         self.Meta.depth = 4
 
+
 class LocationSer(serializers.Serializer):
     id = serializers.IntegerField
     language = serializers.IntegerField
@@ -61,6 +62,8 @@ class ReadReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('id', 'author_name', 'tour', 'text', 'created_date')
+
+
 class WriteReviewSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -68,11 +71,13 @@ class WriteReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('id', 'author', 'tour', 'text', 'created_date')
 
+
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Order
         fields = ('id','user','schedule','totalPrice','creationDate','isPaid')
+
 
 class ScheduleListSerializer(serializers.Serializer):
     fromDate = serializers.DateTimeField()
@@ -190,18 +195,57 @@ class TicketPersonSerializer(serializers.ModelSerializer):
 
         return validated_data
 
+class CachedTicketPersonSerializer(serializers.ModelSerializer):
+
+    userId = serializers.SerializerMethodField()
+
+    def get_userId(self, obj):
+        return obj.user.id
+
+    class Meta:
+        model = CachedTicketPerson
+        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user', 'userId']
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'user': {'write_only': True},  
+        }
+
+    def validate(self, obj):
+        if validate_passportType(obj['passportNumber'], obj['passportNumberType'].format) == False:
+            raise ValidationAPIException(detail="Invalid passport number type!", code="invalid_passport_number_type",)
+
+        return obj
+        
+
+class OrderTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = '__all__'
+        depth=0
+    
+
 
 class OrderSerializer(serializers.ModelSerializer):
     ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    tickets = serializers.SerializerMethodField('get_tickets')
+
+    def get_tickets(self, obj):
+        if obj.id is None:
+            return []
+
+        print(obj.id)
+        serializer = OrderTicketSerializer(data=Ticket.objects.filter(order__id = obj.id), many=True)
+        serializer.is_valid()
+
+        return serializer.data
+             
+        
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'schedule', 'totalPrice', 'ticket_ids', 'isPaid']
-        read_only_fields=['id', 'totalPrice', 'isPaid']
-        extra_kwargs = {
-            'user': {'write_only': True}, 
-            'schedule': {'write_only': True}, 
-        }
+        fields = ['id', 'user', 'schedule', 'totalPrice', 'ticket_ids', 'isPaid', 'tickets']
+        read_only_fields=['id', 'totalPrice', 'isPaid', 'tickets']
+        depth=0
     
     def validate_ticket_ids(self, value):
         
@@ -231,3 +275,33 @@ class OrderSerializer(serializers.ModelSerializer):
             raise FailedToCreateOrder()
 
         return order
+    
+
+class UpdateTicketSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Ticket
+        fields = ['id', 'person']
+    
+    #update
+    def save(self):
+        print(self.validated_data)
+        ticketId = self.validated_data['id']
+        person = TicketPerson.objects.get(id=self.validated_data['person'].id)
+
+        try:
+            ticket = Ticket.objects.get(id=ticketId)
+        except ObjectDoesNotExist as e:
+            raise ValidationAPIException("No such tiket!")
+
+        ticket.person = person
+
+        try:
+            ticket.save()
+        except Exception as e:
+            print("Error updating ticket person")
+        
+        return ticket
+
+

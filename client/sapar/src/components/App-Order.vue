@@ -9,12 +9,16 @@
                         {{ $t('Choose passangers') }}
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Vasya Pupkin <i class="bi bi-pencil-square"></i></a></li>
-                        <li><a class="dropdown-item" href="#">Anatoliy Pupkin <i class="bi bi-pencil-square"></i></a></li>
-                        <li><a class="dropdown-item" href="#">{{ $t('Add a new passenger') }}</a></li>
+                        <li v-for="cachedTicketPerson in cachedTicketPersons" 
+                        :key="cachedTicketPerson.id"
+                        >
+                            <a class="dropdown-item" href="#">{{ cachedTicketPerson.firstName }} {{ cachedTicketPerson.lastName }} <i class="bi bi-pencil-square"></i></a>
+                        </li>
+                        
+                        <li><a class="dropdown-item" href="#" >{{ $t('Add a new passenger') }}</a></li>
                     </ul>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 mb-3">{{ $t('Next') }}</button> <br/>
+                <button type="submit" class="btn btn-primary mt-3 mb-3" @click="clickPassengerOption()">{{ $t('Next') }}</button> <br/>
             </form>
         </div>
     </div>
@@ -22,6 +26,77 @@
 
 
 <script>
+import OrderService from "@/services/OrderService";
+import TicketPersonService from "@/services/TicketPersonService"
+import TicketService from "@/services/TicketService";
+import { thisTypeAnnotation } from "@babel/types";
+
+export default {
+    props: ['id'],
+
+    data() {
+        return {
+            cachedTicketPersons: [],
+            passengerOption: 0,
+            order: null,
+            tickets: []
+        }
+    },
+    methods: {
+        getCachedPersons() {
+            TicketPersonService.getCachedTicketPerson().then(
+                (data)=> {
+                    this.cachedTicketPersons = data;
+                },
+                (error)=> {
+                    this.$notify({
+                        type: 'error',
+                        title: "Error",
+                        text: error.response.data.error_code,
+                    })
+                }
+            )
+        },
+
+        async getOrderAndTickets() {
+            let o = null
+            let tickets = []
+
+            await OrderService.retreive(this.id).then(
+                (order)=> {
+                    debugger;
+                    o = order
+                    tickets = order.tickets
+                },
+                (error)=> {
+                    this.$notify({
+                        type: 'error',
+                        title: "Error",
+                        text: error.response.data.error_code,
+                    })
+                }
+            )
+
+            this.order = o
+            this.tickets = tickets;
+        },
+
+
+        clickPassengerOption() {
+            console.log("Option")
+            console.log(this.passengerOption)
+        }
+        
+    },
+    mounted() {
+        console.log("Order Mounted")
+        this.getOrderAndTickets();
+        console.log(this.order)
+        this.getCachedPersons(this.order.user);
+
+    }
+}
+
 </script>
 
 <style scoped>

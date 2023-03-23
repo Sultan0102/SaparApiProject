@@ -47,14 +47,11 @@ const setup = (store, router, axiosInstance) => {
               TokenService.updateLocalAccessToken(response.data.access)
               return axiosInstance(originalConfig)
             });
-
+            
+            return res;
             }
           }
         }
-
-        // if(err.response.status == 500) {
-        //   router.push("/")          
-        // }
 
         if (err.response.status == 403) {
           // redirect to page which says that user has no access 

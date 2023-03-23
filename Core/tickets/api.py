@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from .models import *
-from .serializers import PassportNumberTypeSerializer, RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, ScheduleSerializer, TicketPersonSerializer, \
+from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
+    RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
+    ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -124,12 +126,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             serializer.save()
 
             return Response(serializer.data)
-        # ticket_id = request.data['id']
-        # ticket = Ticket.objects.get(id=ticket_id)
-        # order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
-        # ticket.order = order
-        # ticket.save()
-        # serializer = OrderSerializer(order)
+
         return Response(serializer.data)
     
     # def get_permissions(self):
@@ -216,3 +213,45 @@ class TicketPersonViewSet(viewsets.ModelViewSet):
 
         return Response('Validation Error', status=status.HTTP_400_BAD_REQUEST)
 
+class CachedTicketPersonViewSet(viewsets.ModelViewSet):
+    queryset = CachedTicketPerson.objects.all()
+    serializer_class = CachedTicketPersonSerializer
+    permission_classes = [IsAuthenticated, ]
+    http_method_names = ['post', 'get']
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response("Validation error", status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        print(args)
+        print(kwargs)
+        
+        userId = request.GET['userId']
+        if userId:
+            # self.queryset = self.get_queryset().filter(userId == userId)
+            self.queryset = self.queryset.filter(user__id=userId)
+
+        return super().list(request, *args, **kwargs)
+
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = UpdateTicketSerializer
+    permission_classes = [IsAuthenticated, ]
+    # http_method_names = ['put']
+
+    def update(self, request, pk):
+        request.data['id'] = pk;
+        print("REquest datra")
+        print(request.data)
+        serializer = self.get_serializer(data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            result = serializer.save()
+            return Response('success', status=status.HTTP_200_OK)

@@ -1,8 +1,8 @@
 from rest_framework.routers import SimpleRouter, DefaultRouter
 from Core.users.views import UserViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
-from Core.tickets.api import RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
-    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet
+from Core.tickets.api import CachedTicketPersonViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
+    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 
 # AUTHENTICATION
@@ -24,12 +24,19 @@ router.register('ticket',PostTicketViewSet,basename='ticket')
 detRouter.register('routes',DetailRouteViewSet,basename='routes')
 detRouter.register('ticket',DetailPostTicketViewSet,basename='ticket')
 
+
+# Ticket Person
+ticketRouter = DefaultRouter()
+ticketRouter.register('tickets', TicketViewSet, basename="tickets")
+
 # Ticket Person
 ticketPersonRouter = DefaultRouter()
 ticketPersonRouter.register('ticketPersons', TicketPersonViewSet, basename="ticketPerson")
-# ticketPersonAsView = TicketPersonViewSet.as_view({
-#     'post': 'create'
-# })
+
+# Ticket Person
+cachedTicketPersonRouter = DefaultRouter()
+cachedTicketPersonRouter.register('cachedTicketPersons', CachedTicketPersonViewSet, basename="cachedTicketPerson")
+
 
 # Schedule
 scheduleRouter = DefaultRouter()

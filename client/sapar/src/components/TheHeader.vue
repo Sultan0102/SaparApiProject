@@ -17,7 +17,7 @@
 						<router-link class="nav-link me-2" aria-current="page" to="/about">{{ $t('About us') }}</router-link>
 					</li>
 					<li class="ms-1 my-auto nav-item ms-0 ms-lg-auto" v-if="isLoggedIn">
-						<router-link class="nav-link d-flex" to="/profile">{{ $t('hello') }} {{ getUserEmail() }}<i class="bi bi-person-circle ms-3 my-auto"></i></router-link>
+						<router-link class="nav-link d-flex" to="/profile">{{ $t('hello') }} {{ getUserEmail }}<i class="bi bi-person-circle ms-3 my-auto"></i></router-link>
 					</li>
 					<li class="my-auto nav-item ms-0 ms-lg-auto" v-else>
 						<router-link class="nav-link d-flex" to="/register"><span class="border p-1 me-2">{{ $t('Sign up') }}</span></router-link>

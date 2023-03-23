@@ -27,6 +27,8 @@
 
 
 <script>
+import OrderService from '@/services/OrderService';
+import TokenService from '@/services/TokenService';
 
 
 export default {
@@ -106,13 +108,30 @@ export default {
                 ticket.status = 3;
             }
             
-            console.log(this.tickets)
         },
 
 
         createOrder() {
-            let tickets = this.occupiedTickets;
-            console.log(tickets)
+
+            let order = {
+                scheduleId: this.schedule.id,
+                userId: Number(TokenService.getUser().id),
+                ticket_ids: this.occupiedTickets.map(t => t.id)
+            }
+            
+            OrderService.createOrder(order).then((data) => {
+                order.id = data.id;
+                this.$router.push({params: { orderId: data.id }, name: 'OrderPassengerInformation'})
+
+            }, (error)=> {
+                const errorMessage = error.response.data.error_code;
+
+                this.$notify({
+                        type: 'error',
+                        title: "Order",
+                        text: errorMessage || "Error creating order!",
+                    })
+            })
         }
     },
     mounted() {
