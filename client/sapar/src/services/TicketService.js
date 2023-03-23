@@ -12,6 +12,14 @@ class TicketService{
             return response.data
         });
     }
+
+    getPassportTypes() {
+        return Api.passportTypes.get().then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
 }
 
 export default new TicketService()

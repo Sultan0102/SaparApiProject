@@ -133,7 +133,10 @@ const routes = [
     name: "GuideVacancyInfo",
     meta: { requiresAuth: true },
   },
-  { path: "/:pathMatch(.*)*", component: PageNotFound },
+  { path: "/:pathMatch(.*)*", 
+    component: PageNotFound,
+    name: "NotFound" 
+  },
   {
     path: "/forbidden", 
     component: PageForbidden, 

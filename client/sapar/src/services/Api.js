@@ -24,5 +24,8 @@ export default {
     }),
     orders: axios.create({
         baseURL: config.ORDERS_API_URL,
-    })
+    }),
+    passportTypes: axios.create({
+        baseURL: config.PASSPORT_TYPES_API_URL,
+    }) 
 }

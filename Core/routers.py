@@ -1,7 +1,7 @@
 from rest_framework.routers import SimpleRouter, DefaultRouter
 from Core.users.views import UserViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
-from Core.tickets.api import CachedTicketPersonViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
+from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
     DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 
@@ -24,16 +24,18 @@ router.register('ticket',PostTicketViewSet,basename='ticket')
 detRouter.register('routes',DetailRouteViewSet,basename='routes')
 detRouter.register('ticket',DetailPostTicketViewSet,basename='ticket')
 
-
 # Ticket Person
 ticketRouter = DefaultRouter()
 ticketRouter.register('tickets', TicketViewSet, basename="tickets")
+
+#PassportNumber
+ticketRouter.register('passportTypes',PassportNumberTypeViewSet,basename='passportTypes')
 
 # Ticket Person
 ticketPersonRouter = DefaultRouter()
 ticketPersonRouter.register('ticketPersons', TicketPersonViewSet, basename="ticketPerson")
 
-# Ticket Person
+# Cached Ticket Person
 cachedTicketPersonRouter = DefaultRouter()
 cachedTicketPersonRouter.register('cachedTicketPersons', CachedTicketPersonViewSet, basename="cachedTicketPerson")
 

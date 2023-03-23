@@ -255,3 +255,9 @@ class TicketViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             result = serializer.save()
             return Response('success', status=status.HTTP_200_OK)
+
+
+class PassportNumberTypeViewSet(viewsets.ModelViewSet):
+    queryset = PassportNumberType.objects.all()
+    serializer_class = PassportNumberTypeSerializer
+    permission_classes = [IsAuthenticated, ]
