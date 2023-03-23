@@ -15,10 +15,12 @@
                     </ul>  
                 </div>      
                 <div class="col-md-3 mx-auto">
-                    <h6 class="mb-3 py-3 colour mx-auto availableSeat">Available</h6>
-                    <h6 class="mb-3 py-3 colour mx-auto occupiedSeatByMe">Occupied</h6>
-                    <h6 class="mb-3 py-3 colour mx-auto bookedSeat">Booked</h6>
-                    <button type="button" class="btn btn-primary mx-auto my-3" @click="createOrder()">Buy</button>
+                    <div class="mb-3 text-center">
+                        <h4 class="mb-4"><span class="colour availableSeat me-2 py-1"></span>{{ $t('Available') }}</h4>
+                        <h4 class="mb-4"><span class="colour occupiedSeatByMe me-2 py-1"></span>{{ $t('Occupied') }}</h4>
+                        <h4 class="mb-4"><span class="colour bookedSeat me-2 py-1"></span>{{ $t('Booked') }}</h4>
+                    </div>
+                    <button type="button" class="btn btn-primary my-3" @click="createOrder()">Buy</button>
                 </div>        
         </div>
     </td>
@@ -145,7 +147,9 @@ export default {
 
 
 <style scoped>  
-
+*{  
+    color: #1C5F41;
+}
 .bus-head{
     border-style: solid;
     border-width: 2px;
@@ -194,20 +198,20 @@ export default {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
-.form-control, .form-control-plaintext{
-    border-bottom: none !important;
-    border-radius: 15px;
-}
+
 select{
     background-color:#FFF !important;
 }
 .colour{
-    max-width: 150px;
+    padding-left: 37px;
     border-width: 2px !important;
     border-color: #1C5E3C !important;
-    border-radius: 17px !important;
+    border-radius: 15px !important;
     border-style: solid !important;
     cursor: default;
 }
-
+a{
+    color: #1C5F41 !important;
+    text-decoration: underline !important;
+}
 </style>

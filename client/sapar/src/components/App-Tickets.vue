@@ -1,9 +1,11 @@
 <template>  
     <div class="container-fluid py-5 mt-5">
         <div class="col-xxl-8 col-10 mx-auto mb-3">
-            <div class="input-group">
-                <input type="search" class="form-control" placeholder="Search here" aria-label="Search">
-                <span><VueDatePicker v-model="date" model-auto range position="right"/></span>
+            <div class="input-group mx-auto">
+                <input type="search" class="form-control" placeholder="From:" aria-label="Search">
+                <input type="search" class="form-control" placeholder="To:" aria-label="Search">
+                <div class="form-control"><VueDatePicker  v-model="date" model-auto range position="right"/></div>
+                <button class="btn search" type="button"><i class="bi bi-search"></i></button>
             </div>
         </div>
         <div class="container table-responsive">
@@ -121,9 +123,29 @@ export default{
 </script>
 
 <style scoped>  
+*{
+	color: #1C5E3C;
+}
  th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }
+.form-control, .form-control-plaintext{
+    border-bottom: none !important;
+    border-radius: 15px;
+    max-width: 40% !important;
+}
 
+.collapse, .collapsing{
+    background-color: #FFF;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.search{
+    border-bottom-right-radius: 15px !important;
+	border-top-right-radius: 15px !important;
+    background-color: #FFF !important;
+}
 </style>

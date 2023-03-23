@@ -18,4 +18,10 @@ export default {
 </script>
 
 <style scoped>
+select{
+	color: #FFF !important;
+	background-color: #1C5E3C !important;
+	border: none !important;
+	font-size: 22px !important;
+}
 </style>
