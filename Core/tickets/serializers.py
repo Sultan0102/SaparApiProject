@@ -197,14 +197,9 @@ class TicketPersonSerializer(serializers.ModelSerializer):
 
 class CachedTicketPersonSerializer(serializers.ModelSerializer):
 
-    userId = serializers.SerializerMethodField()
-
-    def get_userId(self, obj):
-        return obj.user.id
-
     class Meta:
         model = CachedTicketPerson
-        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user', 'userId']
+        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user']
         read_only_fields = ['id']
         extra_kwargs = {
             'user': {'write_only': True},  
@@ -215,6 +210,26 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
             raise ValidationAPIException(detail="Invalid passport number type!", code="invalid_passport_number_type",)
 
         return obj
+
+    def save(self):
+        print(self.validated_data['user'].id)
+        cachedTicketPersons = CachedTicketPerson.objects.filter(user__id=self.validated_data['user'].id)
+        if len(cachedTicketPersons) < 4:
+            #create new
+            return self.create(self.validated_data)
+        else:
+            oldestCachedPerson = CachedTicketPerson.objects.order_by('creationDate')[0]
+            oldestCachedPerson.firstName = self.validated_data['firstName']
+            oldestCachedPerson.lastName = self.validated_data['lastName']
+            oldestCachedPerson.secondName = self.validated_data['secondName']
+            oldestCachedPerson.passportNumberType = self.validated_data['passportNumberType']
+            oldestCachedPerson.passportNumber = self.validated_data['passportNumber']
+            oldestCachedPerson.save();
+
+        return self.validated_data
+            #update with creation date - oldes
+        
+        
         
 
 class OrderTicketSerializer(serializers.ModelSerializer):

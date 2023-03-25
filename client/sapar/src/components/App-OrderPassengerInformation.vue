@@ -2,7 +2,7 @@
     <div class="carousel-item" data-bs-interval="false">
         <div class="container-fluid">
             <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
-                <form :id="'ticket-person-form-' + ticket.id" class="text-center mt-5 mx-auto">
+                <form :id="'ticket-person-form-' + ticket.id" class="text-center mt-5 mx-auto" @submit.prevent="confirmClick">
                     <div v-if="cachedTicketPersons && cachedTicketPersons.length > 0">
                         <h2 class="pt-3">{{ $t('Order confirmation') }}</h2>
                         <div class="mt-3 py-4">
@@ -21,17 +21,18 @@
                             </select>
                         </div>
                     </div>
-                    <h2 class="pt-3">{{ $t('Passenger Information') }}</h2>
+                    <h2 class="pt-3">{{ $t('Passenger Information') }} </h2>
+                    <h3>for seat №{{ ticket.seatNumber }}</h3>
                     <div class="mb-3">
-                        <input v-model="form.firstName" type="text" class="form-control mx-auto disabled" id="firstname" placeholder="Vasia" :disabled="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
+                        <input v-model="form.firstName" type="text" class="form-control mx-auto" name="firstName" placeholder="Vasia" :readonly="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
                     </div>
                     <div class="mb-3">
-                        <input v-model="form.lastName" type="text" class="form-control mx-auto disabled" id="lastname" placeholder="Pupkin" :disabled="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
+                        <input v-model="form.lastName" type="text" class="form-control mx-auto" name="lastName" placeholder="Pupkin" :readonly="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
                     </div>
                     <div class="mb-3">
-                        <input v-model="form.secondName" type="text" class="form-control mx-auto disabled" id="lastname" placeholder="Poluektovich" :disabled="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
+                        <input v-model="form.secondName" type="text" class="form-control mx-auto" name="lastName" placeholder="Poluektovich" :readonly="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
                     </div>
-                    <select v-model="form.documentType" id="passportTypeDropDown" class="mx-auto form-select mb-3 disabled" :disabled="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
+                    <select v-model="form.documentType" :id="'passportTypeDropDown_'+ticket.id" name="passportTypeDropDown" class="mx-auto form-select mb-3" :readonly="form.cachedPerson == 0 && cachedTicketPersons.length > 0">
                         <option selected disabled value="0">{{ $t('Document Type') }}</option>
                         <option  v-for="passportType in passportTypes"
                         :key="passportType.id"
@@ -39,11 +40,11 @@
                         >{{ $t(passportType.typeName) }}</option>
                     </select>   
                     <div class="mb-3">
-                        <input v-model="form.documentNumber" type="text" class="form-control mx-auto disabled" id="lastname" placeholder="Document Number" :disabled="form.documentType == 0 || (form.cachedPerson == 0 && cachedTicketPersons.length > 0)" >
+                        <input v-model="form.documentNumber" type="text" class="form-control mx-auto" name="documentNumber" placeholder="Document Number" :readonly="form.documentType == 0 || (form.cachedPerson == 0 && cachedTicketPersons.length > 0)" >
                     </div>
-                    <button v-if='!isLast' type="submit" class="btn btn-primary my-3" data-bs-target="#carouselExampleDark" data-bs-slide="next">{{ $t('Next') }}</button><br/>
-                    <button v-if='index!=0' type="submit" class="btn btn-primary my-3" data-bs-target="#carouselExampleDark" data-bs-slide="prev">{{ $t('Previous') }}</button><br/>
-                    <button v-if="isLast" disabled type="submit" class="btn btn-primary mt-3 mb-5" >{{ $t('Confirm') }}</button>
+                    <button v-if='!isLast' class="btn btn-primary my-3" data-bs-target="#carouselExampleDark" data-bs-slide="next">{{ $t('Next') }}</button><br/>
+                    <button v-if='index!=0' class="btn btn-primary my-3" data-bs-target="#carouselExampleDark" data-bs-slide="prev">{{ $t('Previous') }}</button><br/>
+                    <button v-if="isLast" class="btn btn-primary mt-3 mb-5" >{{ $t('Confirm') }}</button>
                 </form>
             </div>
         </div>
@@ -53,11 +54,15 @@
 
 <script>
 
-
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
 
 
 export default {
-    props: ['index', 'ticket', 'cachedTicketPersons', 'passportTypes', 'isLast'],
+    props: ['index', 'ticket', 'cachedTicketPersons', 'passportTypes', 'isLast', 'confirmCallback'],
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
             form: {
@@ -67,6 +72,24 @@ export default {
                 documentType: 0,
                 documentNumber: '',
                 cachedPerson: 0,
+            }
+        }
+    },
+    computed: {
+        currentDocumentFormat: function() {
+            if(documentType == 0) return ''
+
+            let documentType = this.passportTypes.filter(t => t.id == this.documentType)[0]
+            return documentType.format
+        }
+    },
+    validations() {
+        return {
+            form: {
+                firstName: { required },
+                lastName: { required },
+                secondName: { required },
+                documentNumber: { required },
             }
         }
     },
@@ -107,9 +130,14 @@ export default {
             
         },
 
+        confirmClick() {
+            this.confirmCallback();
+        }
+
+
     },
     mounted(){
-
+        console.log('Mount child')
     }
 }
 

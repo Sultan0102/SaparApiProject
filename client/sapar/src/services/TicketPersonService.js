@@ -17,6 +17,18 @@ class TicketPersonService{
             return response.data;
         })
     }
+
+    saveCachedTicketPerson(person) {
+        return Api.cachedTicketPersons.post('', {
+            firstName: person.firstName,  
+            lastName: person.lastName,  
+            secondName: person.secondName,  
+            passportNumber: person.passportNumber,  
+            passportNumberType: person.passportNumberType,  
+            ticketId: person.ticketId,
+            user: person.user  
+        })
+    }
 }
 
 export default new TicketPersonService()

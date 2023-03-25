@@ -219,6 +219,7 @@ class CachedTicketPersonViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     http_method_names = ['post', 'get']
 
+
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
 

@@ -190,6 +190,7 @@ class CachedTicketPerson(models.Model):
     passportNumber= models.CharField(db_index=True, max_length=255)
     passportNumberType = models.ForeignKey('PassportNumberType', on_delete=models.PROTECT, blank=True)
     user = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
+    creationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table="CachedTicketPerson"

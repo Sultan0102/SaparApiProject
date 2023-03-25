@@ -12,6 +12,8 @@
                     :passportTypes="documentTypes"
                     :index="index"
                     :isLast="index == order.tickets.length-1"
+                    :confirm-callback="confirmClick"
+                    ref="ticketPerson"
                     />
                     
                     <div class="carousel-indicators">
@@ -25,7 +27,9 @@
                          aria-label="Slide 1">
                         </button>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -39,9 +43,13 @@ import TokenService from '@/services/TokenService';
 import TicketService from '@/services/TicketService';
 import TicketPersonService from '@/services/TicketPersonService';
 
+import { useVuelidate } from '@vuelidate/core'
 
 export default {
     props: ['orderId'],
+    setup() {
+        return { v$: useVuelidate() }
+    },
     data() {
         return {
             order: null,
@@ -88,8 +96,91 @@ export default {
                 }
             )
         },
-        enableValidation() {
-            // on all the forms(differentiate by id: ticket-person-form- + ticket.id)
+
+        confirmClick() {
+            let ticketPersons = []
+
+            let isValid = this.$refs.ticketPerson.every((ticketPerson) => {
+                
+                if(ticketPerson.v$.$invalid) {
+                    debugger;
+                    let errorMessages = ''
+                    ticketPerson.v$.$silentErrors.forEach((error) => {
+                        errorMessages+= error.$property + ' ' + error.$message + '<br />'
+                    });
+
+                    this.$notify({
+                    title: 'Ticket Person with seat: '+ticketPerson.ticket.seatNumber,
+                    type: 'error',
+                    text: errorMessages
+                    })
+                    return false
+                }
+                ticketPersons.push(
+                    {
+                        'firstName': ticketPerson.form.firstName,
+                        'lastName': ticketPerson.form.lastName,
+                        'secondName': ticketPerson.form.secondName,
+                        'passportNumber': ticketPerson.form.documentNumber,
+                        'passportNumberType': ticketPerson.form.documentType,
+                        'ticketId': ticketPerson.ticket.id,
+                    }
+                )
+                return true
+            })
+            
+            if(!isValid) return;
+            
+            let isSuccess = true
+
+            ticketPersons.every((person) => {
+                TicketPersonService.create(person).then(
+                    (data)=>{
+                        
+                    },
+                    (error)=> {
+                        isSuccess = false
+                    }
+                )
+
+                
+                return true
+            })
+
+            debugger;
+            if(!isSuccess) {
+                this.$notify({
+                title: 'Ticket Person',
+                type: 'error',
+                text: 'Failed to save ticket persons'
+                })
+            } else {
+                debugger;
+                ticketPersons.every((person) => {
+                    let cachedPerson = {
+                        firstName: person.firstName,
+                        lastName: person.lastName,
+                        secondName: person.secondName,
+                        passportNumberType: person.passportNumberType,
+                        passportNumber: person.passportNumber,
+                        user: TokenService.getUser().id,
+                    }
+                    console.log(cachedPerson)
+                    TicketPersonService.saveCachedTicketPerson(cachedPerson).then(
+                        (data)=> {
+                            console.log("Saved ticket person")
+                        },
+                        (error)=> {
+                            console.log("Failed to save cached Ticket person")
+                        }
+                    )
+                    return true
+                })
+            }
+
+            // console.log(this.order.tickets)
+            // create ticket persons and link them with tickets
+            // rewrite last cachedPersons with current persons 
         }
     },
     async created() {
