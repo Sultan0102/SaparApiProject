@@ -15,5 +15,17 @@ export default {
     }),
     schedules: axios.create({
         baseURL: config.SCHEDULES_API_URL,
-    })
+    }),
+    ticketPersons: axios.create({
+        baseURL: config.TICKET_PERSONS_API_URL,
+    }),
+    cachedTicketPersons: axios.create({
+        baseURL: config.CACHED_TICKET_PERSONS_API_URL,
+    }),
+    orders: axios.create({
+        baseURL: config.ORDERS_API_URL,
+    }),
+    passportTypes: axios.create({
+        baseURL: config.PASSPORT_TYPES_API_URL,
+    }) 
 }

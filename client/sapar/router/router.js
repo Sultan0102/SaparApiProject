@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
 import LoginForgotPassword from '@/components/App-LoginForgotPassword';
@@ -11,7 +11,7 @@ import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
 import Tickets2 from '@/components/App-Tickets2';
 import Order from '@/components/App-Order';
-import OrderPassengerInformation from '@/components/App-OrderPassengerInformation';
+import OrderPassengerInformationList from '@/components/App-OrderPassengerInformationList';
 import OrderPayment  from '@/components/App-OrderPayment';
 import OrderNumber  from '@/components/App-OrderNumber';
 import About from '@/components/App-About';
@@ -87,16 +87,23 @@ const routes = [
     meta: { requiresAuth: true },
   },
   { 
-    path: "/order", 
+    path: "/order/:id", 
     component: Order, 
     name: "Order",
     meta: { requiresAuth: true },
+    props: true,
+    // beforeEnter: (to, from) => {
+    //   if(from.name != 'Tickets') {
+    //     return '/'
+    //   }
+    // }
   },
   {
-    path: "/order-passenger-information", 
-    component: OrderPassengerInformation, 
+    path: "/order/:orderId/passengerInformation", 
+    component: OrderPassengerInformationList, 
     name: "OrderPassengerInformation",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/order-payment", 
@@ -127,7 +134,10 @@ const routes = [
     name: "GuideVacancyInfo",
     meta: { requiresAuth: true },
   },
-  { path: "/:pathMatch(.*)*", component: PageNotFound },
+  { path: "/:pathMatch(.*)*", 
+    component: PageNotFound,
+    name: "NotFound" 
+  },
   {
     path: "/forbidden", 
     component: PageForbidden, 

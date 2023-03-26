@@ -1,53 +1,75 @@
 <template>
-<tr data-bs-toggle="collapse" data-bs-target="#bus3">
-    <th scope="row"><span id="schedule-number">AB4958</span></th>
-    <td><span id="route-source-dest">Almaty - Taraz</span></td>
-    <td><span id="begin-end-date">10:40pm - 05:30pm</span></td>
-</tr>
-                       
-<td colspan="3" class="collapse " id="bus3">
-    <div class="row align-items-center " id="bus3">
-            <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
-                <ul v-for="row in tickets" class="list-group list-group-horizontal">
-                    <li v-for="ticket in row" :key="ticket.id" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap">
-                        <span :id=ticket.id>{{ ticket.seatNumber }}</span>
-                    </li>
-                </ul>  
-            </div>      
-            <div class="col-md-3 mx-auto">
+       
+    <td colspan="3" class="collapse td-schedule" :id="schedule.scheduleNumber">
+        <div class="row align-items-center">
+                <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
+                    <ul v-for="row in formattedTickets" class="list-group list-group-horizontal">
+                        <li v-for="ticket in row" 
+                        :key="ticket.id" 
+                        :class="currentStatusColor(ticket.status)" 
+                        @click="occupySeat(ticket)" 
+                        class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap"
+                        >   
+                            <span :id=ticket.id>{{ ticket.seatNumber }}</span>
+                        </li>
+                    </ul>  
+                </div>      
+                <div class="col-md-3 mx-auto">
                     <div class="mb-3 text-center">
                         <h4 class="mb-4"><span class="colour availableSeat me-2 py-1"></span>{{ $t('Available') }}</h4>
-                        <h4 class="mb-4"><span class="colour occupiedSeat me-2 py-1"></span>{{ $t('Occupied') }}</h4>
+                        <h4 class="mb-4"><span class="colour occupiedSeatByMe me-2 py-1"></span>{{ $t('Occupied') }}</h4>
                         <h4 class="mb-4"><span class="colour bookedSeat me-2 py-1"></span>{{ $t('Booked') }}</h4>
                     </div>
-                    <button type="button" class="btn btn-primary my-3">{{ $t('Buy') }}</button>
-                    <router-link class="nav-link" aria-current="page" to="/tour-info"><a>About this tour</a></router-link>
-            </div>        
-    </div>
-</td>
+                    <button type="button" class="btn btn-primary my-3" @click="createOrder()">Buy</button>
+                </div>        
+        </div>
+    </td>
 </template>
 
+
+
 <script>
+import OrderService from '@/services/OrderService';
+import TokenService from '@/services/TokenService';
+
+
 export default {
-    props: ['template'],
+    props: ['schedule'],
     data() {
         return {
-            tickets: [
-                [{ "id": 1, "seatNumber": 1, "ticketStatus": 1 }, 
-                { "id": 2, "seatNumber": 2, "ticketStatus": 2 },
-                { "id": 3, "seatNumber": null, "ticketStatus": 0 }, 
-                { "id": 4, "seatNumber": 3, "ticketStatus": 2 }, 
-                { "id": 5, "seatNumber": 4, "ticketStatus": 1 }], 
-                [{ "id": 6, "seatNumber": 5, "ticketStatus": 1 }, 
-                { "id": 7, "seatNumber": 6, "ticketStatus": 2 }, 
-                { "id": 8, "seatNumber": null, "ticketStatus": 0 }, 
-                { "id": 9, "seatNumber": 7, "ticketStatus": 2 }, 
-                { "id": 10, "seatNumber": 8, "ticketStatus": 1 }], 
-                [{ "id": 11, "seatNumber": 9, "ticketStatus": 2 }, 
-                { "id": 12, "seatNumber": 10, "ticketStatus": 1 }, 
-                { "id": 13, "seatNumber": null, "ticketStatus": 0 }, 
-                { "id": 14, "seatNumber": 11, "ticketStatus": 1 }, 
-                { "id": 15, "seatNumber": 12, "ticketStatus": 2 }], [{ "id": 16, "seatNumber": 13, "ticketStatus": 1 }, { "id": 17, "seatNumber": 14, "ticketStatus": 1 }, { "id": 18, "seatNumber": null, "ticketStatus": 0 }, { "id": 19, "seatNumber": null, "ticketStatus": 0 }, { "id": 20, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 21, "seatNumber": 17, "ticketStatus": 1 }, { "id": 22, "seatNumber": 18, "ticketStatus": 2 }, { "id": 23, "seatNumber": null, "ticketStatus": 0 }, { "id": 24, "seatNumber": 19, "ticketStatus": 1 }, { "id": 25, "seatNumber": 20, "ticketStatus": 1 }], [{ "id": 26, "seatNumber": 21, "ticketStatus": 1 }, { "id": 27, "seatNumber": 22, "ticketStatus": 1 }, { "id": 28, "seatNumber": null, "ticketStatus": 0 }, { "id": 29, "seatNumber": 23, "ticketStatus": 1 }, { "id": 30, "seatNumber": 24, "ticketStatus": 1 }], [{ "id": 31, "seatNumber": 25, "ticketStatus": 1 }, { "id": 32, "seatNumber": 26, "ticketStatus": 1 }, { "id": 33, "seatNumber": null, "ticketStatus": 0 }, { "id": 34, "seatNumber": 27, "ticketStatus": 1 }, { "id": 35, "seatNumber": 28, "ticketStatus": 1 }], [{ "id": 36, "seatNumber": 29, "ticketStatus": 1 }, { "id": 37, "seatNumber": 30, "ticketStatus": 1 }, { "id": 38, "seatNumber": null, "ticketStatus": 0 }, { "id": 39, "seatNumber": null, "ticketStatus": 0 }, { "id": 40, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 41, "seatNumber": 33, "ticketStatus": 1 }, { "id": 42, "seatNumber": 34, "ticketStatus": 2 }, { "id": 43, "seatNumber": null, "ticketStatus": 0 }, { "id": 44, "seatNumber": 35, "ticketStatus": 2 }, { "id": 45, "seatNumber": 36, "ticketStatus": 1 }], [{ "id": 46, "seatNumber": 37, "ticketStatus": 1 }, { "id": 47, "seatNumber": 38, "ticketStatus": 2 }, { "id": 48, "seatNumber": null, "ticketStatus": 0 }, { "id": 49, "seatNumber": 39, "ticketStatus": 2 }, { "id": 50, "seatNumber": 40, "ticketStatus": 1 }], [{ "id": 51, "seatNumber": 41, "ticketStatus": 2 }, { "id": 52, "seatNumber": 42, "ticketStatus": 1 }, { "id": 53, "seatNumber": null, "ticketStatus": 0 }, { "id": 54, "seatNumber": 43, "ticketStatus": 1 }, { "id": 55, "seatNumber": 44, "ticketStatus": 2 }]],
+            tickets: [],
+            ticketCounter: 0
+        }
+    },
+    computed: {
+        formattedTickets: function() {
+            let tickets = [];
+            let subTickets = []
+            
+            for(let i = 0; i < this.tickets.length; i++) {
+                if (i % 4 == 0 && i != 0) {
+                    tickets.push(subTickets)
+                    subTickets = []
+                }
+                
+                // put third 'dummy' element before real ticket
+                if(subTickets.length == 2) {
+                    subTickets.push({
+                        id: null,
+                        status: 0
+                    })
+                }
+                
+                // let ticket = this.schedule.tickets[i]
+
+
+                subTickets.push(this.tickets[i])
+            }
+
+            return tickets;
+        },
+        occupiedTickets: function() {
+            return this.tickets.filter(t => t.status == 4)
         }
     },
     methods: {
@@ -56,39 +78,66 @@ export default {
                 case 0:
                     return "empty-space";
                 case 1:
-                    return "availableSeat";
-                case 2:
-                    return "occupiedSeat";
-                case 3:
                     return "bookedSeat";
+                case 2:
+                    return "bookedSeat";
+                case 3:
+                    return "availableSeat";
+                case 4:
+                    return "occupiedSeatByMe";
+                default:
+                    return "availableSeat";
             }
         },
-        currentStatussColo(n) {
-            switch(n) {
-                case 0: 
-                    return"empty-space";
-                case 1: 
-                    return "acailableSeat";
-                case 2: 
-                    return " bookedSeat";
-
-            }
-        },
+    
         occupySeat(ticket) {
-            if (ticket.ticketStatus == 1 && this.ticketsSum < 5) {
-                ticket.ticketStatus = 3;
-                this.ticketsSum++;
+            if (ticket.id == null || ticket.status == 1 || ticket.status == 2) return;
+            
+            if (ticket.status == 3) {
+                
+                if(this.occupiedTickets.length >= 4) {
+                    this.$notify({
+                        type: 'error',
+                        title: "Tickets",
+                        text: "You cannot choose more than 4 seats!",
+                    })
+                    return;
+                }
+                
+                ticket.status = 4;
+            } 
+            else if (ticket.status == 4) {
+                ticket.status = 3;
             }
-            else if (ticket.ticketStatus == 3) {
-                ticket.ticketStatus = 1;
-                this.ticketsSum--;
-            }
-            else {
-                console.log(ticket.ticketStatus);
-            }
-            console.log(this.ticketsSum);
-            console.log(this.tickets.filter(t => t.ticketStatus == 3));
+            
         },
+
+
+        createOrder() {
+
+            let order = {
+                scheduleId: this.schedule.id,
+                userId: Number(TokenService.getUser().id),
+                ticket_ids: this.occupiedTickets.map(t => t.id)
+            }
+            
+            OrderService.createOrder(order).then((data) => {
+                order.id = data.id;
+                this.$router.push({params: { orderId: data.id }, name: 'OrderPassengerInformation'})
+
+            }, (error)=> {
+                const errorMessage = error.response.data.error_code;
+
+                this.$notify({
+                        type: 'error',
+                        title: "Order",
+                        text: errorMessage || "Error creating order!",
+                    })
+            })
+        }
+    },
+    mounted() {
+        this.tickets = this.schedule.tickets;
     }
 
 }
@@ -128,7 +177,7 @@ export default {
     background-color: #FFF;
     cursor: pointer;
 }
-.occupiedSeat{
+.occupiedSeatByMe{
     background-color: #D5D4D4;
     cursor: default;
 }

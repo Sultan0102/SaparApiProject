@@ -23,3 +23,6 @@ def validate_password(password):
 
 def validate_verificationCode(code):
     return bool(re.search("\d{4}", code))
+
+def validate_passportType(value, format):
+    return bool(re.search(format, value))

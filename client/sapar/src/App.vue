@@ -25,6 +25,18 @@ $.validator.addMethod("pwcheck", function(value) {
    return re.test(value)
 });
 
+$.validator.addMethod("documentNumberFormat", function(value, element, typeElement) {
+  let documentFormats = {
+    1: '[0-9]{9}',
+    2: '^([A-Z]{1})([0-9]{8})'
+  }
+
+  const formatId = $(typeElement).val()
+
+  let re = new RegExp(documentFormats[formatId])
+  return re.test(value)
+})
+
 </script>
 
 <style>

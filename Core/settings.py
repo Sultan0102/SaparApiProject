@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'Core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SaparAPI',
+        'NAME': 'saparapi',
         'USER': 'postgres',
-        'PASSWORD': '1320',
+        'PASSWORD': 'anuar123',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -158,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': False, 
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
 

@@ -1,31 +1,16 @@
 <template>
-  <div>
-    <p>Source: {{ source }}</p>
-    <p>Destination: {{ destination }}</p>
+
+<div class="container-fluid py-5 mt-5">
+  <div class="container">
+    <VueDatePicker v-model="date" model-auto range position="left"/>
+    <p v-if="date">Selected date: {{ date }}</p>
   </div>
+</div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue';
 
-export default {
-  data() {
-    return {
-      ticketData: null,
-      source: null,
-      destination: null,
-    };
-  },
-  mounted() {
-    axios.get('http://127.0.0.1:8000/api/post_ticket/3/1')
-      .then(response => {
-        this.ticketData = response.data;
-        this.source = response.data.route.source.nameCode.value;
-        this.destination = response.data.route.destination.nameCode.value;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-}
+const date = ref();
 </script>
+

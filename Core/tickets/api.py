@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from .models import *
-from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, ScheduleSerializer, \
+from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
+    RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
+    ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -114,17 +116,22 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated, ]
+
     def create(self, request):
-        ticket_id = request.data['id']
-        ticket = Ticket.objects.get(id=ticket_id)
-        order = Order.objects.create(schedule= ticket.schedule, user= self.request.user, totalPrice=ticket.cost)
-        ticket.order = order
-        ticket.save()
-        serializer = OrderSerializer(order)
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            return Response(serializer.data)
+
         return Response(serializer.data)
+    
     # def get_permissions(self):
     #     if self.action in ("create",):
-    #         self.permission_classes = (permissions.IsAuthenticated,)
+    #         self.permission_classes = [permissions.IsAuthenticated,]
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
@@ -142,6 +149,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if self.action in ("create", "update", "partial_update", "destroy"):
             return WriteReviewSerializer
         return ReadReviewSerializer
+    
     def get_permissions(self):
         if self.action in ("create",):
             self.permission_classes = (permissions.IsAuthenticated,)
@@ -167,10 +175,9 @@ class ScheduleFilterSet(filters.FilterSet):
 class ScheduleViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated,]
     queryset = Schedule.objects.all()
-    
-
 
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = ScheduleListSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             
@@ -179,11 +186,79 @@ class ScheduleViewSet(viewsets.ViewSet):
             lanugage_id = serializer.validated_data['language_id']
 
             filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate), scheduleType__id=serializer.validated_data['scheduleType'])
-            
+
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
+            
             
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
-        return Response('nice', status=status.HTTP_200_OK)
+        return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
+
+class TicketPersonViewSet(viewsets.ModelViewSet):
+    queryset = TicketPerson.objects.all()
+    serializer_class = TicketPersonSerializer
+    permission_classes = [IsAuthenticated, ]
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            result = serializer.save()
+            result['passportNumberType'] = result['passportNumberType'].id
+            
+            return Response(result, status=status.HTTP_201_CREATED)
+
+        return Response('Validation Error', status=status.HTTP_400_BAD_REQUEST)
+
+class CachedTicketPersonViewSet(viewsets.ModelViewSet):
+    queryset = CachedTicketPerson.objects.all()
+    serializer_class = CachedTicketPersonSerializer
+    permission_classes = [IsAuthenticated, ]
+    http_method_names = ['post', 'get']
+
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response("Validation error", status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        print(args)
+        print(kwargs)
+        
+        userId = request.GET['userId']
+        if userId:
+            # self.queryset = self.get_queryset().filter(userId == userId)
+            self.queryset = self.queryset.filter(user__id=userId)
+
+        return super().list(request, *args, **kwargs)
+
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = UpdateTicketSerializer
+    permission_classes = [IsAuthenticated, ]
+    # http_method_names = ['put']
+
+    def update(self, request, pk):
+        request.data['id'] = pk;
+        print("REquest datra")
+        print(request.data)
+        serializer = self.get_serializer(data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            result = serializer.save()
+            return Response('success', status=status.HTTP_200_OK)
+
+
+class PassportNumberTypeViewSet(viewsets.ModelViewSet):
+    queryset = PassportNumberType.objects.all()
+    serializer_class = PassportNumberTypeSerializer
+    permission_classes = [IsAuthenticated, ]

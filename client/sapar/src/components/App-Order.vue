@@ -90,6 +90,77 @@
 
 
 <script>
+import OrderService from "@/services/OrderService";
+import TicketPersonService from "@/services/TicketPersonService"
+import TicketService from "@/services/TicketService";
+import { thisTypeAnnotation } from "@babel/types";
+
+export default {
+    props: ['id'],
+
+    data() {
+        return {
+            cachedTicketPersons: [],
+            passengerOption: 0,
+            order: null,
+            tickets: []
+        }
+    },
+    methods: {
+        getCachedPersons() {
+            TicketPersonService.getCachedTicketPerson().then(
+                (data)=> {
+                    this.cachedTicketPersons = data;
+                },
+                (error)=> {
+                    this.$notify({
+                        type: 'error',
+                        title: "Error",
+                        text: error.response.data.error_code,
+                    })
+                }
+            )
+        },
+
+        async getOrderAndTickets() {
+            let o = null
+            let tickets = []
+
+            await OrderService.retreive(this.id).then(
+                (order)=> {
+                    debugger;
+                    o = order
+                    tickets = order.tickets
+                },
+                (error)=> {
+                    this.$notify({
+                        type: 'error',
+                        title: "Error",
+                        text: error.response.data.error_code,
+                    })
+                }
+            )
+
+            this.order = o
+            this.tickets = tickets;
+        },
+
+
+        clickPassengerOption() {
+            console.log("Option")
+            console.log(this.passengerOption)
+        }
+        
+    },
+    mounted() {
+        console.log("Order Mounted")
+        this.getOrderAndTickets();
+        console.log(this.order)
+        this.getCachedPersons(this.order.user);
+
+    }
+}
+
 </script>
 
 <style scoped>
