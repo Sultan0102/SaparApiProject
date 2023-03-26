@@ -74,8 +74,8 @@ form{
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
 	width: 15vw;
-    max-width: 350px !important;
-    min-width: 200px !important;
+    max-width: 300px !important;
+    min-width: 150px !important;
     font-size: 24px;
 }
 .btn-secondary{
