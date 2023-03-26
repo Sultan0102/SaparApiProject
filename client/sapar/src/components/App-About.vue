@@ -21,15 +21,14 @@
                 <div class="text-center">
                     <img src="../assets/Experience.png" class="img-fluid">
                 </div>
-                <div class="row align-items-center">
-                    <div class="col-md-6 text-center mt-5 mb-2">
+                <div class="row align-items-center swap-container">
+                    <div class="col-md-5 text-md-end text-center mb-5 mb-md-0">
+                        <img src="../assets/Cake.svg" class="person">
+                    </div>
+                    <div class="col-md-7 text-md-start text-center mt-5 mt-md-0">
                         <h3>{{ $t('89% of our customers returned to us again') }}</h3>
                         <h3 class="light-green">{{ $t('11% of people did not') }}</h3>
                     </div>
-                    <div class="col-md-6">
-                        <img src="../assets/Cake.svg" class="img-fluid ">
-                    </div>
-
                 </div>
             </div>
             <h2 class="text-center">{{ $t('MORE NUMBERS') }}:</h2>
@@ -74,20 +73,20 @@
             </div>
             <h2 class="text-center">{{ $t('PEOPLE ABOUT US') }}:</h2>
             <div class="row align-items-center border-top mt-2 pt-4">
-                <div class="col-md-4 text-center">
+                <div class="col-lg-4 text-center">
                     <img src="../assets/profile-photo.png" class="mb-3 person">
                 </div>
-                <div class="col-md-8 message p-5">
+                <div class="col-lg-8 message p-5">
                     <h2>{{ $t('Katira') }}</h2>
                     <h4>{{ $t('Ive bought here my first bus tour. I didnt think bus tourism was a thing before that, haha! But Im glad I visited Kolsai with Sapar. Really opened my eyes on how many places there are to visit in Kazakhstan.') }}</h4>
                 </div>
             </div>
-            <div class="row align-items-center mt-2 pt-4 swap-container">
-                <div class="col-md-8 message p-5">
+            <div class="row align-items-center mt-2 pt-4 swap-lg-container">
+                <div class="col-lg-8 message p-5">
                     <h2>{{ $t('Katira') }}</h2>
                     <h4>{{ $t('Ive bought here my first bus tour. I didnt think bus tourism was a thing before that, haha! But Im glad I visited Kolsai with Sapar. Really opened my eyes on how many places there are to visit in Kazakhstan.') }}</h4>
                 </div>
-                <div class="col-md-4 text-center">
+                <div class="col-lg-4 text-center">
                     <img src="../assets/profile-photo.png" class="mb-3 person">
                 </div>
             </div>
@@ -132,7 +131,8 @@ form{
     border-left-width: none;
 }
 .person{
-    width: 30vh;
+    width: 35vh;
+    max-width: 400px;
 }
 .light-green{
     color: #57896F !important;

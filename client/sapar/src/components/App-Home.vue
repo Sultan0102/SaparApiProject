@@ -54,10 +54,10 @@
                             <img src="../assets/Kolsai-Lakes.jpg" class="my-3 img-fluid">
                         </div>
                         <div class="col-md-6 my-auto ps-5">
-                            <h1 class="mb-0 mb-md-3">Almaty Kolsai Lake</h1>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
+                            <h1 class="mb-3">Almaty Kolsai Lake</h1>
+                            <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
+                            <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
+                            <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
                             <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
                         </div>
                     </div>
@@ -68,10 +68,10 @@
                             <img src="../assets/Kolsai-Lakes.jpg" class="my-3 img-fluid">
                         </div>
                         <div class="col-md-6 my-auto ps-5">
-                            <h1 class="mb-0 mb-md-3">Almaty Kolsai Lake</h1>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
+                            <h1 class="mb-3">Almaty Kolsai Lake</h1>
+                            <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
+                            <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
+                            <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
                             <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
                         </div>
                     </div>
@@ -82,10 +82,10 @@
                             <img src="../assets/Kolsai-Lakes.jpg" class="my-3 img-fluid">
                         </div>
                         <div class="col-md-6 my-auto ps-5">
-                            <h1 class="mb-0 mb-md-3">Almaty Kolsai Lake</h1>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
-                            <h5 class="mb-0 mb-md-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
+                            <h1 class="mb-3">Almaty Kolsai Lake</h1>
+                            <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
+                            <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
+                            <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
                             <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
                         </div>
                     </div>

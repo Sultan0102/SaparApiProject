@@ -60,4 +60,5 @@ i{
 .nav-link:hover{
  opacity: 0.7;
 }
+
 </style>
