@@ -25,7 +25,7 @@
                             <i class="bi bi-caret-down-fill ms-4 ms-sm-5 my-auto"></i>
                             <select class="form-select">
                                 <option selected disabled class="selected">{{ $t('Firing reason') }}</option>
-                                <option value="1" data-content="">{{ $t('Incompetence') }}</option>
+                                <option value="1">{{ $t('Incompetence') }}</option>
                                 <option value="2">{{ $t('Time management') }}</option>
                                 <option value="3">{{ $t('Inappropriate behaviour') }}</option>
                                 <option value="4">{{ $t('Other') }}</option>

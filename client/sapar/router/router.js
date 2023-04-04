@@ -7,6 +7,8 @@ import PageNotFound from '@/components/PageNotFound';
 import PageForbidden from "@/components/PageForbidden"
 import PageServerError from "@/components/PageServerError"
 import Registration from '@/components/App-Registration';
+import RegistrationGuide from '@/components/App-RegistrationGuide';
+import RegistrationBusiness from '@/components/App-RegistrationBusiness';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
 import Tickets2 from '@/components/App-Tickets2';
@@ -66,6 +68,18 @@ const routes = [
     path: "/register", 
     component: Registration, 
     name: "Registration",
+    meta: { guest: true },
+  },
+  { 
+    path: "/register-guide", 
+    component: RegistrationGuide, 
+    name: "RegistrationGuide",
+    meta: { guest: true },
+  },
+  { 
+    path: "/register-business", 
+    component: RegistrationBusiness, 
+    name: "RegistrationBusiness",
     meta: { guest: true },
   },
   { 
