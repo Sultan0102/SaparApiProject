@@ -76,6 +76,7 @@ class LocationView(generics.RetrieveAPIView):
             "location_id" : location.id,
             "locationName" : location_value.value
         })
+    
 class PostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
@@ -119,6 +120,24 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        depth = 0
+        try:
+            depth = int(self.request.query_params.get('depth', 0))
+        except ValueError:
+            pass # Ignore non-numeric parameters and keep default 0 depth
+        
+        context['depth'] = depth
+
+        return context
+    
+    def get_queryset(self):
+        query_set = super().get_queryset();
+        if self.request.user:
+            query_set = Order.objects.filter(user=self.request.user)
+        return query_set 
+    
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
 
@@ -128,7 +147,6 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
         return Response(serializer.data)
-    
     # def get_permissions(self):
     #     if self.action in ("create",):
     #         self.permission_classes = [permissions.IsAuthenticated,]

@@ -105,13 +105,14 @@ const routes = [
     props: true
   },
   {
-    path: "/order-payment", 
+    path: "/order/:orderId/payment", 
     component: OrderPayment, 
     name: "OrderPayment",
     meta: { requiresAuth: true },
+    props: true
   },
   {
-    path: "/order-number", 
+    path: "/order/:orderId/number", 
     component: OrderNumber, 
     name: "OrderNumber",
     meta: { requiresAuth: true },

@@ -4,6 +4,8 @@ from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshV
 from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
     DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
+from Core.payment.api import PaymentViewSet
+
 
 # AUTHENTICATION
 routes = SimpleRouter()
@@ -53,4 +55,5 @@ urlpatterns = [
 ]
 # Order
 orderRouter = DefaultRouter()
-reviewRouter.register('orders',OrderViewSet,basename= 'orders')
+orderRouter.register('orders', OrderViewSet,basename= 'orders')
+orderRouter.register('payment', PaymentViewSet, basename='payment')

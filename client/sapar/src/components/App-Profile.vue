@@ -49,6 +49,7 @@
 import EventBus from "../common/EventBus"
 import UserService from "@/services/UserService"
 import TokenService from "@/services/TokenService"
+import OrderService from "@/services/OrderService"
 
 export default {
     data() {
@@ -58,7 +59,8 @@ export default {
                 firstName: null,
                 lastName: null
             },
-            editMode: true
+            editMode: true,
+            orders: []
         }
     },
 	computed : {
@@ -87,7 +89,6 @@ export default {
             })
             return;
         }
-        debugger;
         const id = TokenService.getUser().id;
         const user = {
             id,
@@ -152,6 +153,15 @@ export default {
             this.$store.commit('updateUserFromLocalStorage');
             
         })
+
+        OrderService.getUserOrders().then(
+            (data)=> {
+                this.orders = data
+            },
+            (error)=> {
+                
+            }
+        )
     },
     beforeMount() {
         EventBus.remove("logout");

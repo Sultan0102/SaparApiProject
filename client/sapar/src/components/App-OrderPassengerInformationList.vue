@@ -124,6 +124,7 @@ export default {
                         'passportNumber': ticketPerson.form.documentNumber,
                         'passportNumberType': ticketPerson.form.documentType,
                         'ticketId': ticketPerson.ticket.id,
+                        'cachedPersonId': ticketPerson.form.cachedPerson
                     }
                 )
                 return true
@@ -147,25 +148,26 @@ export default {
                 return true
             })
 
-            debugger;
             if(!isSuccess) {
                 this.$notify({
                 title: 'Ticket Person',
                 type: 'error',
                 text: 'Failed to save ticket persons'
                 })
+                return;
             } else {
-                debugger;
+                
                 ticketPersons.every((person) => {
                     let cachedPerson = {
-                        firstName: person.firstName,
+                        cachedPersonId: person.cachedPersonId < 0 ? 0 : person.cachedPersonId,
+                        firstName: person.firstName, 
                         lastName: person.lastName,
                         secondName: person.secondName,
                         passportNumberType: person.passportNumberType,
                         passportNumber: person.passportNumber,
                         user: TokenService.getUser().id,
                     }
-                    console.log(cachedPerson)
+                    
                     TicketPersonService.saveCachedTicketPerson(cachedPerson).then(
                         (data)=> {
                             console.log("Saved ticket person")
@@ -178,23 +180,17 @@ export default {
                 })
             }
 
-            // console.log(this.order.tickets)
-            // create ticket persons and link them with tickets
-            // rewrite last cachedPersons with current persons 
+            this.$router.push({name: 'OrderPayment', params: { orderId: this.order.id }})
         }
     },
     async created() {
-        console.log("Mounted")
+        console.log("Mounted Pass Info list")
         await this.getOrderTickets();
-        console.log(TokenService.getUser())
         if(this.order == null || TokenService.getUser().id != this.order.user) {
             this.$router.push({'name': 'NotFound'})
         }
         await this.getPassportTypes()
         await this.getCachedTicketPersons();
-        console.log(this.order);
-        console.log(this.documentTypes);
-        console.log(this.cachedTicketPersons);
     }
 
 }

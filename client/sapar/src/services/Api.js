@@ -27,5 +27,9 @@ export default {
     }),
     passportTypes: axios.create({
         baseURL: config.PASSPORT_TYPES_API_URL,
-    }) 
+    }),
+    payments: axios.create({
+        baseURL: config.PAYMENTS_API_URL,
+    }),
+     
 }

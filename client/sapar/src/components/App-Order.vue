@@ -92,8 +92,6 @@
 <script>
 import OrderService from "@/services/OrderService";
 import TicketPersonService from "@/services/TicketPersonService"
-import TicketService from "@/services/TicketService";
-import { thisTypeAnnotation } from "@babel/types";
 
 export default {
     props: ['id'],
@@ -128,7 +126,6 @@ export default {
 
             await OrderService.retreive(this.id).then(
                 (order)=> {
-                    debugger;
                     o = order
                     tickets = order.tickets
                 },

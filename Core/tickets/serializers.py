@@ -196,11 +196,12 @@ class TicketPersonSerializer(serializers.ModelSerializer):
         return validated_data
 
 class CachedTicketPersonSerializer(serializers.ModelSerializer):
+    cachedPersonId = serializers.IntegerField(min_value=0, write_only=True)
 
     class Meta:
         model = CachedTicketPerson
-        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user']
-        read_only_fields = ['id']
+        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user', 'cachedPersonId']
+        read_only_fields= ['id']
         extra_kwargs = {
             'user': {'write_only': True},  
         }
@@ -212,22 +213,22 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         return obj
 
     def save(self):
-        print(self.validated_data['user'].id)
-        cachedTicketPersons = CachedTicketPerson.objects.filter(user__id=self.validated_data['user'].id)
-        if len(cachedTicketPersons) < 4:
-            #create new
-            return self.create(self.validated_data)
+    
+        if self.validated_data['cachedPersonId'] != 0:
+            #update
+            person = CachedTicketPerson.objects.get(id=self.validated_data['cachedPersonId'])
+            person.firstName = self.validated_data['firstName']
+            person.lastName = self.validated_data['lastName']
+            person.secondName = self.validated_data['secondName']
+            person.passportNumberType = self.validated_data['passportNumberType']
+            person.passportNumber = self.validated_data['passportNumber']
+            person.save();
         else:
-            oldestCachedPerson = CachedTicketPerson.objects.order_by('creationDate')[0]
-            oldestCachedPerson.firstName = self.validated_data['firstName']
-            oldestCachedPerson.lastName = self.validated_data['lastName']
-            oldestCachedPerson.secondName = self.validated_data['secondName']
-            oldestCachedPerson.passportNumberType = self.validated_data['passportNumberType']
-            oldestCachedPerson.passportNumber = self.validated_data['passportNumber']
-            oldestCachedPerson.save();
+            self._validated_data.pop('cachedPersonId')
+            return self.create(self.validated_data)
+        
 
         return self.validated_data
-            #update with creation date - oldes
         
         
         
@@ -239,16 +240,18 @@ class OrderTicketSerializer(serializers.ModelSerializer):
         depth=0
     
 
-
 class OrderSerializer(serializers.ModelSerializer):
     ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     tickets = serializers.SerializerMethodField('get_tickets')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
 
     def get_tickets(self, obj):
         if obj.id is None:
             return []
 
-        print(obj.id)
         serializer = OrderTicketSerializer(data=Ticket.objects.filter(order__id = obj.id), many=True)
         serializer.is_valid()
 

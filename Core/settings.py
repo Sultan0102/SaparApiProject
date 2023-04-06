@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Core.tickets',
     'corsheaders',
     'Core.users',
+    'Core.payment',
     'django_filters',
 ]
 

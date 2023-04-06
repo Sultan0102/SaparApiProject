@@ -6,7 +6,7 @@
                 <div class="mt-3 py-4">
                     <h1>3546520110</h1>
                 </div>
-                <button type="submit" class="btn btn-primary mt-3 mb-5">{{ $t('Go to Kaspi.kz') }}</button> <br/>
+                <button type="submit" class="btn btn-primary mt-3 mb-5" @click="this.$router.push({path: '/'})">{{ $t('Go to Kaspi.kz') }}</button> <br/>
             </form>
         </div>
     </div>

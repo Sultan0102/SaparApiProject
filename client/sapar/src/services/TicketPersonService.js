@@ -26,7 +26,8 @@ class TicketPersonService{
             passportNumber: person.passportNumber,  
             passportNumberType: person.passportNumberType,  
             ticketId: person.ticketId,
-            user: person.user  
+            user: person.user,
+            cachedPersonId: person.cachedPersonId  
         })
     }
 }
