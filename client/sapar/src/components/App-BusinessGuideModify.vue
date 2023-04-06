@@ -20,33 +20,33 @@
                     </div>
                 </div>
                 <div class="collapse tours" id="tour">
-                    <div class="row my-5">
+                    <div class="row my-5 ">
                         <div class="col-5 row mb-5 mb-md-3">
-                            <div class="col-lg-8 my-auto">
+                            <div class="col-lg-6 my-auto">
+                                <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
+                            </div>
+                            <div class="col-lg-4 my-auto">
+                                <button type="button" class="btn btn-primary text-center me-auto">{{ $t('Fire') }}</button>
+                            </div>
+                        </div>
+                        <div class="col-5 row mb-5 mb-md-3 mx-auto ps-5">
+                            <div class="col-lg-6">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
                                 <button type="button" class="btn btn-primary text-center mx-auto">{{ $t('Fire') }}</button>
                             </div>
                         </div>
-                        <div class="col-5 row mb-5 mb-md-3 mx-auto">
-                            <div class="col-lg-8">
-                                <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
-                            </div>
-                            <div class="col-lg-4 my-auto">
-                                <button type="button" class="btn btn-primary text-center mx-auto">{{ $t('Fire') }}</button>
-                            </div>
-                        </div>
                         <div class="col-5 row mb-5 mb-md-3">
-                            <div class="col-lg-8">
+                            <div class="col-lg-6">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Yuri L.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
                                 <button type="button" class="btn btn-primary text-center mx-auto">{{ $t('Fire') }}</button>
                             </div>
                         </div>
-                        <div class="col-5 row mb-5 mb-md-3 mx-auto">
-                            <div class="col-lg-8">
+                        <div class="col-5 row mb-5 mb-md-3 mx-auto ps-5">
+                            <div class="col-lg-6">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Yuri L.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="col-5 row mb-5 mb-md-3">
-                            <div class="col-lg-8">
+                            <div class="col-lg-6">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Klavdiya M.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
@@ -85,7 +85,7 @@
                 <div class="collapse tours" id="tour2">
                     <div class="row my-5">
                         <div class="col-5 row mb-5 mb-md-3">
-                            <div class="col-lg-8 my-auto">
+                            <div class="col-lg-6 my-auto">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
@@ -116,15 +116,15 @@
                 <div class="collapse tours" id="tour3">
                     <div class="row my-5">
                         <div class="col-5 row mb-5 mb-md-3">
-                            <div class="col-lg-8 my-auto">
+                            <div class="col-lg-6 my-auto">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">
                                 <button type="button" class="btn btn-primary text-center mx-auto">{{ $t('Fire') }}</button>
                             </div>
                         </div>
-                        <div class="col-5 row mb-5 mb-md-3 mx-auto">
-                            <div class="col-lg-8">
+                        <div class="col-5 row mb-5 mb-md-3 mx-auto ps-5">
+                            <div class="col-lg-6">
                                 <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>Elena K.</h3>
                             </div>
                             <div class="col-lg-4 my-auto">

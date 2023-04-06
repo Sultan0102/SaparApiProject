@@ -148,4 +148,7 @@ export default{
 	border-top-right-radius: 15px !important;
     background-color: #FFF !important;
 }
+.input-group{
+    max-width: 1300px;
+}
 </style>

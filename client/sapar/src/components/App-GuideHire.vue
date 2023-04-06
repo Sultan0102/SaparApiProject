@@ -24,11 +24,9 @@
                         <div class="input-group mb-3">
                             <i class="bi bi-caret-down-fill ms-4 ms-sm-5 my-auto"></i>
                             <select class="form-select">
-                                <option selected disabled class="selected">{{ $t('Firing reason') }}</option>
-                                <option value="1">{{ $t('Incompetence') }}</option>
-                                <option value="2">{{ $t('Time management') }}</option>
-                                <option value="3">{{ $t('Inappropriate behaviour') }}</option>
-                                <option value="4">{{ $t('Other') }}</option>
+                                <option selected disabled class="selected">{{ $t('Choose a tour') }}</option>
+                                <option value="1" data-content="">{{ $t('Tour Kolsai - Almaty') }}</option>
+                                <option value="2">{{ $t('Tour Kolsai - Almaty') }}</option>
                             </select>   
                         </div>
                         <button type="submit" class="btn btn-primary mt-5 mb-3 disabled">{{ $t('Approve') }}</button> <br/>

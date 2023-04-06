@@ -19,9 +19,14 @@ export default {
 
 <style scoped>
 select{
-	color: #FFF !important;
 	background-color: #1C5E3C !important;
 	border: none !important;
 	font-size: 22px !important;
+}
+select, option{
+    color: #FFF !important;
+}
+option{
+	background-color: #1C5E3C !important;
 }
 </style>

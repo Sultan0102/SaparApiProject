@@ -73,7 +73,9 @@ form{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
-	min-width: 300px;
+	width: 15vw;
+    max-width: 300px !important;
+    min-width: 150px !important;
     font-size: 24px;
 }
 .btn-secondary{
@@ -100,9 +102,15 @@ button{
 }
 i{
     color: #1C5E3C;
-} 
+	padding-right: .25rem !important;
+}
 @media (max-width: 767px) {
 	.swap-container {
+	flex-direction: column-reverse !important;
+	}
+}
+@media (max-width: 991px) {
+	.swap-lg-container {
 	flex-direction: column-reverse !important;
 	}
 }
@@ -113,11 +121,11 @@ i{
 	max-width: 80% !important;
 	border-radius: 0px;
 }
- select, option{
+select, option{
     color: #1C5E3C !important;
 }
-.selected{
-	color: #6C757D !important;
+option{
+	background-color: #FFF !important;
 }
 
 /*VueDatePicker*/

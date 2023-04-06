@@ -88,9 +88,9 @@ WSGI_APPLICATION = 'Core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'saparapi',
+        'NAME': 'SaparAPI',
         'USER': 'postgres',
-        'PASSWORD': 'anuar123',
+        'PASSWORD': '1320',
         'HOST': 'localhost',
         'PORT': '5432',
     }

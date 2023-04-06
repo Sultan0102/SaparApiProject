@@ -7,6 +7,8 @@ import PageNotFound from '@/components/PageNotFound';
 import PageForbidden from "@/components/PageForbidden"
 import PageServerError from "@/components/PageServerError"
 import Registration from '@/components/App-Registration';
+import RegistrationGuide from '@/components/App-RegistrationGuide';
+import RegistrationBusiness from '@/components/App-RegistrationBusiness';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
 import Tickets2 from '@/components/App-Tickets2';
@@ -25,6 +27,7 @@ import BusinessGuideModify from '@/components/App-BusinessGuideModify';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideDeletion from '@/components/App-GuideDeletion';
 import Applications from '@/components/App-Applications';
+import GuideHire from '@/components/App-GuideHire';
 import store from '@/store';
 
 
@@ -65,6 +68,18 @@ const routes = [
     path: "/register", 
     component: Registration, 
     name: "Registration",
+    meta: { guest: true },
+  },
+  { 
+    path: "/register-guide", 
+    component: RegistrationGuide, 
+    name: "RegistrationGuide",
+    meta: { guest: true },
+  },
+  { 
+    path: "/register-business", 
+    component: RegistrationBusiness, 
+    name: "RegistrationBusiness",
     meta: { guest: true },
   },
   { 
@@ -194,6 +209,12 @@ const routes = [
     path: "/applications", 
     component: Applications, 
     name: "Applications",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/guide-hire", 
+    component: GuideHire, 
+    name: "GuideHire",
     meta: { requiresAuth: true },
   }
 ]

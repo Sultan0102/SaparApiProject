@@ -7,7 +7,7 @@
                 <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
             </div>
             <div class="carousel-inner mb-3 pb-5">
-                <div class="carousel-item active" data-bs-interval="false">
+                <div class="carousel-item active" data-bs-interval="100000000000">
                     <div class="container-fluid">
                         <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
                             <form class="text-center mt-5 mx-auto">
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item" data-bs-interval='false'>
+                <div class="carousel-item" data-bs-interval='100000000000'>
                     <div class="container-fluid">
                         <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
                             <form class="text-center mt-5 mx-auto">
