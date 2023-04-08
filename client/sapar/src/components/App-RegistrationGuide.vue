@@ -17,23 +17,28 @@
                 </div>
                 <div class="input-group mb-3">
                     <i class="bi bi-briefcase-fill ms-3 ms-sm-5"></i>
-                    <select class="form-select">
-                                <option selected disabled class="selected">{{ $t('Main Specialization') }}</option>
-                                <option value="1">{{ $t('option 1') }}</option>
-                                <option value="2">{{ $t('option 2') }}</option>
-                                <option value="3">{{ $t('option 3') }}</option>
-                                <option value="4">{{ $t('Other') }}</option>
+                    <select v-model="form.mainSpecialization" class="form-select">
+                                <option selected disabled class="selected" value="0">{{ $t('Main Specialization') }}</option>
+                                <option v-for="specialization in mainSpecializations"
+                                :key="specialization.id"
+                                :value="specialization.id"
+                                >
+                                {{ specialization.name }}
+                                </option>
                             </select>   
                 </div>
                 <div class="input-group mb-3">
                     <i class="bi bi-briefcase my-auto ms-3 ms-sm-5"></i>
-                    <select class="form-select">
-                                <option selected disabled class="selected">{{ $t('Secondary Specialization') }}</option>
-                                <option value="1">{{ $t('option 1') }}</option>
-                                <option value="2">{{ $t('option 2') }}</option>
-                                <option value="3">{{ $t('option 3') }}</option>
-                                <option value="4">{{ $t('Other') }}</option>
-                            </select>   
+                    <select v-model="form.secondarySpecialization" class="form-select">
+                            <option selected disabled value="0" class="selected" >{{ $t('Secondary Specialization') }}</option>
+                            <option v-for="specialization in secondarySpecializations"
+                            :key="specialization.id"
+                            :value="specialization.id"
+                            >
+                            {{ specialization.name }}
+                            </option>
+                            
+                    </select>   
                 </div>
                 <div class="input-group mb-3">
                     <i class="bi bi-eye-slash my-auto ms-3 ms-sm-5"></i>
@@ -54,6 +59,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import AuthService from "@/services/AuthService";
+
+
 export default {
     components: {},
     data() {
@@ -62,23 +70,50 @@ export default {
                 email: "",
                 firstName: "",
                 lastName: "",
-                password: ""
+                password: "",
+                mainSpecialization: null,
+                secondarySpecialization: null
             },
-            showError: false
+            showError: false,
+            mainSpecializations: [
+                {
+                    id: 1,
+                    name: 'Location History',
+                },
+                {
+                    id: 2,
+                    name: 'Cultural Significance'
+                },
+                {
+                    id: 3,
+                    name: 'Entertaining Activities'
+                },
+                
+            ],
+            secondarySpecializations: [
+                {
+                    id: 1,
+                    name: 'Food Expert'
+                },
+                {
+                    id: 2,
+                    name: 'Story Teller'
+                },
+                {
+                    id: 3,
+                    name: 'Singer'
+                },
+                {
+                    id: 4,
+                    name: 'Florist'
+                },
+            ]
         }
     },
     methods: {
         ...mapActions(["register"]),
         async submit() {
-            const user = {
-                email: this.form.email,
-                password: this.form.password,
-                firstName: this.form.firstName,
-                lastName: this.form.lastName,
-            }
-            
             let form = $("#registration-form");
-
 
             if(!form.valid()) {
                 var validateResult = form.validate();
@@ -93,8 +128,19 @@ export default {
                 })
                 return;
             }
+
+            const user = {
+                email: this.form.email,
+                password: this.form.password,
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+                specializations: []
+                                    .concat(this.mainSpecializations.filter(s => s.id == this.form.mainSpecialization).map(s => { return { name: s.name, isMain: true} }))
+                                    .concat(this.secondarySpecializations.filter(s => s.id == this.form.secondarySpecialization).map(s => { return { name: s.name, isMain: true} })),
+                roleId: 3
+            }
             
-            this.register(user).then(
+            AuthService.registerGuide(user).then(
                 () => {
                     this.$router.push({ name: "VerificationCode", params: { email: this.form.email }})
                     this.$notify({

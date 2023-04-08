@@ -14,10 +14,8 @@ def validate_password(password):
     for pattern in patterns:
         matchResult = re.search(pattern, password)
         if matchResult is not None:
-            print(matchResult)
             results.append(re.match(pattern, password))
     
-    print(len(results))
     return len(results) == len(patterns)
 
 

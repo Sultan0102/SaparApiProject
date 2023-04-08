@@ -1,4 +1,4 @@
-from Core.authorization.serializers import UserSerializer, VerifyUserSerializer
+from Core.authorization.serializers import UserSerializer, VerifyUserSerializer, BusinessPersonSerializer, GuideSerializer, GuideSpecializationSerializer
 from Core.exceptions import EmailNotFoundException, InvalidVerificationCodeException, \
 ValidationAPIException, FailedToSendEmailException, RefreshTokenInvalidException, InvalidTokenException
 from django.http import JsonResponse
@@ -17,6 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken, AuthenticationFailed
 from Core.authorization.serializers import LoginSerializer, RegisterSerializer
 from rest_framework.exceptions import ValidationError
+from django.db.transaction import atomic 
 
 
 
@@ -41,26 +42,49 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
     permission_classes = (AllowAny,)
     http_method_names = ['post']
 
+    @atomic
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             raise ValidationAPIException(serializer.errors)
 
         user = serializer.save()
+        request.data['user'] = user.id;
+        print(user.role)
+        if user.role == User.BUSINESS_PERSON:
+            businessSerializer = BusinessPersonSerializer(data=request.data)
+            businessSerializer.is_valid(raise_exception=True)
+            businessSerializer.save();
         
+        if user.role == User.GUIDE:
+            guideSerializer = GuideSerializer(data=request.data)
+            guideSerializer.is_valid(raise_exception=True)
+            guide = guideSerializer.save()
+            print("Guide: {}".format(guide))
+            for i in request.data['specializations']:
+                i['guide'] = guide.id
+            print(request.data['specializations'])
+            guideSpecializationSerializer = GuideSpecializationSerializer(data=request.data['specializations'], many=True)
+            guideSpecializationSerializer.is_valid(raise_exception=True)
+            guideSpecializationSerializer.save();
+
+
         try:
             send_mail(
                 subject="Account Verification",
+                message=f"Your Verification Code: {user.verificationCode}",
                 html_message=f"<h2>Your Verification Code: {user.verificationCode}</h2>",
                 from_email="saparServicePass@yandex.ru",
-                receipient_list=[user.email],
+                recipient_list=[user.email],
                 fail_silently=False
             )
-        except:
+        except Exception as e:
+            print(e)
             raise FailedToSendEmailException()
             
         return Response(status=status.HTTP_201_CREATED)
         
+
 
 
 class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):

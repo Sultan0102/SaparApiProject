@@ -46,6 +46,8 @@
 
 <script>
 import { mapActions } from "vuex";
+import AuthService from "@/services/AuthService";
+
 export default {
     components: {},
     data() {
@@ -65,15 +67,7 @@ export default {
     methods: {
         ...mapActions(["register"]),
         async submit() {
-            const user = {
-                email: this.form.email,
-                password: this.form.password,
-                firstName: this.form.firstName,
-                lastName: this.form.lastName,
-            }
-            
             let form = $("#registration-form");
-
 
             if(!form.valid()) {
                 var validateResult = form.validate();
@@ -88,8 +82,19 @@ export default {
                 })
                 return;
             }
+
+            const user = {
+                email: this.form.email,
+                password: this.form.password,
+                firstName: this.form.firstName,
+                lastName: this.form.lastName,
+                companyName: this.form.companyName,
+                binNumber: this.form.binNumber,
+                legalAddress: this.form.legalAddress,
+                roleId: 4
+            }
             
-            this.register(user).then(
+            AuthService.registerBusinessPerson(user).then(
                 () => {
                     this.$router.push({ name: "VerificationCode", params: { email: this.form.email }})
                     this.$notify({
@@ -121,6 +126,15 @@ export default {
                         required: true,
                     },
                     firstName: {
+                        required: true,
+                    },
+                    binNumber: {
+                        required: true,
+                    },
+                    companyName: {
+                        required: true,
+                    },
+                    legalAddress: {
                         required: true,
                     },
                     lastName: {

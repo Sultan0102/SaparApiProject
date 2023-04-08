@@ -75,10 +75,38 @@ class RegisterSerializer(UserSerializer):
         if user:
             raise EmailAlreadyExistsException()
         
-        self.validated_data['role'] = User.CUSTOMER
+        # self.validated_data['role'] = User.CUSTOMER
         self.validated_data['verificationCode'] = self.generateOTP();
         
         return User.objects.create_user(**self.validated_data)
+
+
+class BusinessPersonSerializer(serializers.ModelSerializer):
+    serviceRating = serializers.SerializerMethodField()
+
+    def get_serviceRating(self, obj):
+        return getattr(obj, 'serviceRating', 0)
+
+    class Meta:
+        model = BusinessPerson
+        fields = '__all__'
+
+class GuideSerializer(serializers.ModelSerializer):
+
+    serviceRating = serializers.SerializerMethodField()
+
+    def get_serviceRating(self, obj):
+        return getattr(obj, 'serviceRating', 0)
+
+    class Meta:
+        model = Guide
+        fields = '__all__'
+
+class GuideSpecializationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GuideSpecialization
+        fields = '__all__'
 
 class VerifyUserSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True, max_length=128)
