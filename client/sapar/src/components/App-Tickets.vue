@@ -112,7 +112,7 @@ export default{
             return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
         },
         concatenatedBeginDateAndEndDate: function(schedule) {
-            return schedule.beginDate.split('T')[1] + ' ' + schedule.endDate.split('T')[1]
+            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
       },
     },
     mounted() {
