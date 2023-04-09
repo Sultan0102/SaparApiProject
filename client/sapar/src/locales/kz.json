@@ -17,7 +17,8 @@
   "Trending Tours": "Танымал турлар",
   "Sign up": "Тіркелу",
   "Route": "Бағыт",
-  "From - To": "Қайдан - Қайда",
+  "From": "Қайдан",
+  "To": "Қайда",
   "Departure - Arrival Time": "Кету - Келу уақыты",
   "Tickets": "Билеттер",
   "Tours": "Турлар",
@@ -97,5 +98,9 @@
   "Approve": "Бекіту",
   "Previous": "Артыңғы",
   "Hire": "Жалдау",
+  "Create a tour": "Тур жасаңыз",
+  "Guide": "Гид",
+  "Duration": "Ұзақтығы",
+  "Description": "Сипаттама",
   "hello": "Саламалейкум"
 }

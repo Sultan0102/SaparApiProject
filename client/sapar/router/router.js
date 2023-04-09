@@ -28,6 +28,7 @@ import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideDeletion from '@/components/App-GuideDeletion';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
+import NewTour from '@/components/App-NewTour';
 import store from '@/store';
 
 
@@ -214,6 +215,12 @@ const routes = [
     path: "/guide-hire", 
     component: GuideHire, 
     name: "GuideHire",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/new-tour", 
+    component: NewTour, 
+    name: "NewTour",
     meta: { requiresAuth: true },
   }
 ]

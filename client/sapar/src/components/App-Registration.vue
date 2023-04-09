@@ -20,7 +20,7 @@
                     <input v-model="form.password" type="password" class="form-control" id="password" name="password" placeholder="**********">
                 </div>
                 <button type="submit" class="btn btn-primary my-2 mt-4">{{ $t('Sign up') }}</button>
-                <div class="pb-2"><router-link to="/login"><a>{{ $t('I already have an account') }}</a></router-link></div>
+                <div class="py-3"><router-link to="/login"><a>{{ $t('I already have an account') }}</a></router-link></div>
             </form>
             <div class="mt-3 text-center">
             </div>

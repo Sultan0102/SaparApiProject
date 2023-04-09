@@ -32,7 +32,7 @@
                 </div>
             </div>
             <h2 class="text-center">{{ $t('MORE NUMBERS') }}:</h2>
-            <div class="row align-items-center border-top mt-2 pt-4">
+            <div class="row align-items-center border-top mt-2 pt-5">
                 <div class="col-md-4 text-center">
                     <h1>500</h1>
                     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-bus-front" viewBox="0 0 16 16">
@@ -63,7 +63,7 @@
                         <div class="mx-auto">
                             <input type="email" class=" form-control mx-auto" id="exampleInputEmail1" aria-describedby="emailHelp" :placeholder="$t('Email')" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <textarea class="form-control mx-auto" :placeholder="$t('Review')" id="exampleFormControlTextarea1" rows="5"></textarea>
+                        <textarea class="form-control mx-auto" :placeholder="$t('Review')" id="review" rows="5"></textarea>
                         <button type="submit" class="btn btn-primary my-3">{{ $t('Send') }}</button>
                     </form>
                 </div>

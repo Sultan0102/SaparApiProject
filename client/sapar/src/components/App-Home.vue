@@ -2,12 +2,14 @@
     <div class="banner-home position-relative container-fluid">
         <div class="container">
             <div class="position-absolute bottom-0 text-center mb-5 ">
-                <h1 class="white my-3">{{ $t('We connect people to their dreams') }}</h1>
-                <hr class="border-top" v-if="!isLoggedIn">
+                <h1 class="white my-3 mx-5">{{ $t('We connect people to their dreams') }}</h1>
+                <hr class="border-top mx-5" v-if="!isLoggedIn">
                 <h1 class="white my-3 mb-5" v-if="!isLoggedIn">{{ $t('Join us as') }}</h1>
-                <router-link to="/register-guide" v-if="!isLoggedIn"><button type="button" class="btn btn-secondary px-3  py-1">{{ $t('A guide') }}</button></router-link>
-                <router-link to="/register-business" v-if="!isLoggedIn"><button type="button" class="btn btn-secondary px-3 py-1 ms-5">{{ $t('A business') }}</button></router-link>
-                <router-link to="/register" v-if="!isLoggedIn"><button type="button" class="btn btn-secondary btn-green px-3 py-1 ms-5">{{ $t('A customer') }}</button></router-link>
+                <div class="row">
+                    <router-link to="/register-guide" v-if="!isLoggedIn" class="col-md-4 mb-3"><button type="button" class="btn btn-secondary">{{ $t('A guide') }}</button></router-link>
+                    <router-link to="/register-business" v-if="!isLoggedIn" class="col-md-4 mb-3"><button type="button" class="btn btn-secondary">{{ $t('A business') }}</button></router-link>
+                    <router-link to="/register" v-if="!isLoggedIn" class="col-md-4 mb-3"><button type="button" class="btn btn-secondary btn-green">{{ $t('A customer') }}</button></router-link>
+                </div>
             </div>
         </div>
     </div>
@@ -58,7 +60,7 @@
                             <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
                             <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
                             <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
-                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
+                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button>
                         </div>
                     </div>
                 </div>
@@ -72,7 +74,7 @@
                             <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
                             <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
                             <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
-                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
+                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button>
                         </div>
                     </div>
                 </div>
@@ -86,7 +88,7 @@
                             <h5 class="mb-3"><i class="bi bi-calendar me-2"></i>2 December</h5>
                             <h5 class="mb-3"><i class="bi bi-clock me-2"></i>6:00 am</h5>
                             <h5 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Sayran</h5>
-                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign up') }}</button>
+                            <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button>
                         </div>
                     </div>
                 </div>
@@ -176,5 +178,8 @@ hr{
     border: 3px solid #ECECEC !important;
     border-radius: 18px;
     opacity: 1;
+}
+.btn-secondary{
+    width: 200px;
 }
 </style>

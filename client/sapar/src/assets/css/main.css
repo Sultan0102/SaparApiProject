@@ -69,6 +69,9 @@ form{
 .form-select{
 	padding: .375rem .75rem !important;
 }
+.btn{
+	word-wrap: normal !important;
+}
 .btn-primary{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
