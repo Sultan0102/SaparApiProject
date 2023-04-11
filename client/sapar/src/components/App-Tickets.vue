@@ -2,8 +2,8 @@
     <div class="container-fluid py-5 mt-5">
         <div class="col-xxl-8 col-10 mx-auto mb-3">
             <div class="input-group mx-auto">
-                <input type="search" class="form-control" placeholder="From:" aria-label="Search">
-                <input type="search" class="form-control" placeholder="To:" aria-label="Search">
+                <input type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
+                <input type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
                 <div class="form-control"><VueDatePicker  v-model="date" model-auto range position="right"/></div>
                 <button class="btn search" type="button"><i class="bi bi-search"></i></button>
             </div>
@@ -12,9 +12,9 @@
             <table class="table table-hover text-center">
                 <thead>
                     <tr>
-                        <th scope="col">{{ $t('Route') }}</th>
-                        <th scope="col">{{ $t('From - To') }}</th>
-                        <th scope="col">{{ $t('Departure - Arrival Time') }}</th>
+                        <th scope="col">{{ $t('Route') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                        <th scope="col">{{ $t('From') }} - {{ $t('To') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                        <th scope="col">{{ $t('Departure - Arrival Time') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -150,5 +150,8 @@ export default{
 }
 .input-group{
     max-width: 1300px;
+}
+.filter-icon{
+    width: 15px;
 }
 </style>

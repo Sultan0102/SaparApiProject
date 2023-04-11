@@ -17,7 +17,8 @@
   "Trending Tours": "Trending Tours",
   "Sign up": "Sign up",
   "Route": "Route",
-  "From - To": "From - To",
+  "From": "From",
+  "To": "To",
   "Departure - Arrival Time": "Departure - Arrival Time",
   "Tickets": "Tickets",
   "Tours": "Tours",
@@ -89,5 +90,10 @@
   "Approve": "Approve",
   "Previous": "Previous",
   "Hire": "Hire",
+  "Create a tour": "Create a tour",
+  "Guide": "Guide",
+  "Create": "Create",
+  "Duration": "Duration",
+  "Description": "Description",
   "hello": "Hello"
 }

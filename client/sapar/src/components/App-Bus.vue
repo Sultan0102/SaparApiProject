@@ -1,26 +1,29 @@
 <template>
        
     <td colspan="3" class="collapse td-schedule" :id="schedule.scheduleNumber">
-        <div class="row align-items-center">
+        <div class="row align-items-center" :id="schedule.scheduleNumber">
                 <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
+                    <div class ="bus-head my-2 mx-1"></div>
                     <ul v-for="row in formattedTickets" class="list-group list-group-horizontal">
                         <li v-for="ticket in row" 
                         :key="ticket.id" 
                         :class="currentStatusColor(ticket.status)" 
                         @click="occupySeat(ticket)" 
-                        class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap"
+                        class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap mx-auto"
                         >   
                             <span :id=ticket.id>{{ ticket.seatNumber }}</span>
                         </li>
                     </ul>  
                 </div>      
                 <div class="col-md-3 mx-auto">
-                    <div class="mb-3 text-center">
-                        <h4 class="mb-4"><span class="colour availableSeat me-2 py-1"></span>{{ $t('Available') }}</h4>
-                        <h4 class="mb-4"><span class="colour occupiedSeatByMe me-2 py-1"></span>{{ $t('Occupied') }}</h4>
-                        <h4 class="mb-4"><span class="colour bookedSeat me-2 py-1"></span>{{ $t('Booked') }}</h4>
+                    <div class="mx-auto">
+                        <div class="text-start ms-5 ps-5 ms-md-0 ps-md-0 ms-lg-3 ps-lg-3 ms-xl-5 ps-xl-4">
+                            <h4 class="mb-4"><span class="colour availableSeat me-2 py-1"></span>{{ $t('Available') }}</h4>
+                            <h4 class="mb-4"><span class="colour occupiedSeatByMe me-2 py-1"></span>{{ $t('Occupied') }}</h4>
+                            <h4 class="mb-4"><span class="colour bookedSeat me-2 py-1"></span>{{ $t('Booked') }}</h4>
+                        </div>
+                        <button type="button" class="btn btn-primary my-3 mx-auto col-12" @click="createOrder()">Buy</button>
                     </div>
-                    <button type="button" class="btn btn-primary my-3" @click="createOrder()">Buy</button>
                 </div>        
         </div>
     </td>
@@ -153,9 +156,11 @@ export default {
 .bus-head{
     border-style: solid;
     border-width: 2px;
-    border-radius: 20px;
+    border-radius: 15px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
     border-color: #1C5F41;
-    height: 298.8px;
+    height: 90px;
 }
 .bus-seats{
     border-style: solid;
@@ -190,6 +195,7 @@ export default {
     opacity: 0;
     cursor: default;
     height: 42px;
+    width: 25px !important;
 }
 .collapse, .collapsing{
     background-color: #FFF;
