@@ -52,17 +52,26 @@ class TicketFilter(filters.FilterSet):
 
 class RouteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoutesFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = RoutesFilter
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        langId = self.request.data.get('languageId', None)
+        if langId:
+            context.update({"languageId": self.request.data['languageId']})
+        return context
+
+    
 
 class DetailRouteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesFilter
     queryset = Route.objects.all()
-    serializer_class = DetailRouteSerializer
+    # serializer_class = DetailRouteSerializer
 
 class LocationView(generics.RetrieveAPIView):
     queryset = Location.objects.all()

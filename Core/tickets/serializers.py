@@ -5,17 +5,51 @@ from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.transaction import atomic
 
+
+class ResourceValueByLanguageSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        langId = self.context.get('languageId', 0)
+
+        if langId != 0:
+            data = data.filter(language__id=langId)
+
+        return super(ResourceValueByLanguageSerializer, self).to_representation(data)
+
+class ResourceValueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ResourceValue
+        list_serializer_class=ResourceValueByLanguageSerializer
+        fields = '__all__'
+ 
+class ResourceCodeSerializer(serializers.ModelSerializer):
+    codeResourceValues = ResourceValueSerializer(many=True)
+
+    class Meta:
+        model = ResourceCode
+        fields = ['id', 'defaultValue', 'codeResourceValues']
+    
+    def create(self, validated_data):
+        resourceValues_data = validated_data.pop('codeResourceValues')
+        code = ResourceCode.objects.create(**validated_data)
+        for resourceValue in resourceValues_data:
+            ResourceValue.objects.create(code=code, **resourceValue)
+        return code
+
+    
+
 class LocationSerializer(serializers.ModelSerializer):
+    nameCode = ResourceCodeSerializer()
+
     class Meta:
         model = Location
-        fields = ['id','coordinates', 'nameCode']
-
-    def __init__(self,*args,**kwargs):
-        super(LocationSerializer, self).__init__(*args,**kwargs)
-        self.Meta.depth = 1
+        fields = ['id','coordinates', 'nameCode', 'type']
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    source = LocationSerializer()
+    destination = LocationSerializer()
+
     class Meta:
         model = Route
         fields = ['id','destination','source','duration','distance']
@@ -85,11 +119,6 @@ class ScheduleListSerializer(serializers.Serializer):
     language_id = serializers.IntegerField(min_value=1, max_value=3)
     scheduleType = serializers.IntegerField(min_value=1)
 
-class ResourceValueSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ResourceValue
-        fields = ['id', 'value', 'code', 'language']
 
 class ScheduleRouteSerializer(serializers.ModelSerializer):
     destinationName = serializers.SerializerMethodField('get_destination_name')

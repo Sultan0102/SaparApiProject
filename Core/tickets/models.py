@@ -55,7 +55,7 @@ class Language(models.Model):
 class ResourceValue(models.Model):
     id = models.AutoField(primary_key=True)
     language = models.ForeignKey('Language',on_delete=models.PROTECT,blank=True)
-    code = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True)
+    code = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True, related_name='codeResourceValues')
     value = models.CharField(db_index=True, max_length=255)
     deleteDate = models.DateTimeField
 
