@@ -106,11 +106,9 @@ class WriteReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'author', 'tour', 'text', 'created_date')
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = Order
-        fields = ('id','user','schedule','totalPrice','creationDate','isPaid')
+class RouteQuerySerializer(serializers.Serializer):
+    route = RouteSerializer()
+
 
 
 class ScheduleListSerializer(serializers.Serializer):

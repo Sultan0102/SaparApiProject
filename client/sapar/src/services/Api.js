@@ -31,5 +31,8 @@ export default {
     payments: axios.create({
         baseURL: config.PAYMENTS_API_URL,
     }),
+    routes: axios.create({
+        baseURL: config.ROUTES_API_URL,
+    }),
      
 }

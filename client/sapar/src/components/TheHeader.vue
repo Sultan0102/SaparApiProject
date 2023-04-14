@@ -47,7 +47,10 @@ export default {
             return email;
         },
 		getUserRole: function() {
-			let role = this.$store.getters.getUser.role;
+			let user = this.$store.getters.getUser;
+			let role = 0
+			if (user)
+				role = user.role
 			return role;
 		}
     },

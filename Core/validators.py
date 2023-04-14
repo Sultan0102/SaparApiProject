@@ -24,3 +24,7 @@ def validate_verificationCode(code):
 
 def validate_passportType(value, format):
     return bool(re.search(format, value))
+
+def validate_any(value, format):
+    result = re.search(format, value)
+    return bool(result)

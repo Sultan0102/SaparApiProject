@@ -11,13 +11,15 @@ from .models import *
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
-    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
+    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly
 from ..authorization.models import User
+from rest_framework.decorators import action
+import Core.validators
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -63,7 +65,24 @@ class RouteViewSet(viewsets.ModelViewSet):
         if langId:
             context.update({"languageId": self.request.data['languageId']})
         return context
+    
+    
+    @action(detail=False, methods=['post'], url_path='order/(?P<order_pk>[^/.]+)')
+    def getRoutesByOrder(self, request, order_pk):
+        if order_pk is None or Core.validators.validate_any(order_pk, '^[0-9]+$') == False:
+            print('Error')
+            return Response('Error', status=status.HTTP_400_BAD_REQUEST)
+        
+        order = Order.objects.get(id=order_pk)
+        print(order.schedule.route.id)
+        serializer = self.get_serializer(order.schedule.route)
+        # serializer.is_valid(raise_exception=True);
+        print(serializer.data)
+        
+        
 
+        return Response(serializer.data, status=status.HTTP_200_OK);
+    
     
 
 class DetailRouteViewSet(viewsets.ModelViewSet):

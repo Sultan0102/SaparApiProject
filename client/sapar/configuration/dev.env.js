@@ -7,6 +7,7 @@ export default {
     CACHED_TICKET_PERSONS_API_URL: 'http://localhost:8000/api/cachedTicketPersons/',
     ORDERS_API_URL: 'http://localhost:8000/api/orders/',
     PASSPORT_TYPES_API_URL: 'http://localhost:8000/api/passportTypes/',
-    PAYMENTS_API_URL: 'http://localhost:8000/api/payment/'
+    PAYMENTS_API_URL: 'http://localhost:8000/api/payment/',
+    ROUTES_API_URL: 'http://localhost:8000/api/routes/',
 
 }
