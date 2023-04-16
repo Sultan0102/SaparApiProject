@@ -32,6 +32,7 @@ class Route(models.Model):
     source = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='source')
     duration = models.CharField(db_index=True,max_length=255)
     distance = models.FloatField()
+    coordinates = models.CharField(max_length=255)
 
     class Meta:
         db_table = "Route"
@@ -111,7 +112,9 @@ class Schedule(models.Model):
     endDate = models.DateTimeField(db_index=True)
     isActive = models.BooleanField(default=False)
     deleteDate = models.DateTimeField(null=True)
-    scheduleType =models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
+    scheduleType = models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
+    guide = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+
     class Meta:
         db_table = "Schedule"
     
@@ -143,9 +146,9 @@ class TouristTrip(models.Model):
     owner = models.ForeignKey(User,on_delete=models.ForeignKey,blank=True,related_name="Owner")
     price = models.IntegerField(db_index=True,blank=True)
     deletedDate = models.DateTimeField(db_index=True,null=True)
-    guide = models.ForeignKey(User,on_delete=models.ForeignKey, blank=True, related_name="Guide")
-    schedule = models.ForeignKey('Schedule',on_delete=models.PROTECT, blank=True)
-    
+    schedules = models.ManyToManyField(Schedule, db_table='TourSchedules', related_name='tours')
+    guides = models.ManyToManyField(User, db_table='GuideTours', related_name='tours')
+
     class Meta:
         db_table = "TouristTrip"
 

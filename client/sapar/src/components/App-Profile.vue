@@ -23,10 +23,12 @@
                         </div>
                         <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button> 
                         <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button> <br>
-                        <button @click="logout" type="submit" class="btn btn-primary mb-3">{{ $t('Log out') }}</button>
+                        <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
+                        <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ">{{ $t('Applications') }}</button>
+                        <button @click="logout" type="submit" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Log out') }}</button>
                     </form>
                 </div>
-                <div class="col-lg-5 mx-auto pt-5">
+                <div v-if="orders.length>0" class="col-lg-5 mx-auto pt-5">
                     <div class="order-history">
                         <h2 class="my-3">{{ $t('Order History') }}</h2>
                         <ul class="list-group text-start">
@@ -78,6 +80,10 @@ export default {
             : this.orders.length;
 
             return this.orders.slice(0, length);
+        },
+        userRole: function() {
+            let user = TokenService.getUser();
+            return user.role;
         }
     },
 	methods: {
