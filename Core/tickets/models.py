@@ -1,5 +1,5 @@
 from django.db import models
-from Core.authorization.models import User
+from Core.authorization.models import User, Guide
 import datetime
 
 
@@ -113,7 +113,7 @@ class Schedule(models.Model):
     isActive = models.BooleanField(default=False)
     deleteDate = models.DateTimeField(null=True)
     scheduleType = models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
-    guide = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    guide = models.ForeignKey(Guide, on_delete=models.PROTECT, null=True)
 
     class Meta:
         db_table = "Schedule"
@@ -139,7 +139,7 @@ class Order(models.Model):
     class Meta:
         db_table = "Order"
 
-class TouristTrip(models.Model):
+class TouristTour(models.Model):
     id = models.AutoField(primary_key=True)
     titleNameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True, related_name="title")
     descriptionNameCode = models.ForeignKey('ResourceCode',on_delete= models.CASCADE, blank=True,related_name="description")
@@ -150,7 +150,7 @@ class TouristTrip(models.Model):
     guides = models.ManyToManyField(User, db_table='GuideTours', related_name='tours')
 
     class Meta:
-        db_table = "TouristTrip"
+        db_table = "TouristTour"
 
 class TicketType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -176,7 +176,7 @@ class Ticket(models.Model):
 class Review(models.Model):
     id = models.AutoField(primary_key = True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    tour = models.ForeignKey('TouristTrip', on_delete=models.CASCADE)
+    tour = models.ForeignKey('TouristTour', on_delete=models.CASCADE)
     text = models.TextField()
     creationDate = models.DateTimeField(auto_now_add=True)
 
