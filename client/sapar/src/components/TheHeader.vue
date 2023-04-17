@@ -11,7 +11,7 @@
 						<router-link class="nav-link" aria-current="page" to="/tickets">{{ $t('Tickets') }}</router-link>
 					</li>
 					<li class="ms-lg-5">
-						<router-link class="nav-link" aria-current="page" to="/tickets">{{ $t('Tours') }}</router-link>
+						<router-link class="nav-link" aria-current="page" to="/tour-tickets">{{ $t('Tours') }}</router-link>
 					</li>
 					<li class="ms-lg-5">
 						<router-link class="nav-link" aria-current="page" to="/about">{{ $t('About us') }}</router-link>

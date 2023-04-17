@@ -1,12 +1,12 @@
 import Api from "./Api"
 
 class ScheduleService{
-    getSchedules(fromDate, toDate, lang_id, scheduleTypeId) {
+    getSchedules(criteria) {
         return Api.schedules.post('', {
-            fromDate,
-            toDate,
-            language_id:lang_id,
-            scheduleType: scheduleTypeId
+            fromDate: criteria.fromDate,
+            toDate: criteria.toDate,
+            language_id: criteria.language_id,
+            scheduleType: criteria.scheduleTypeId
         }).then((response)=> {
             return response.data;
         })

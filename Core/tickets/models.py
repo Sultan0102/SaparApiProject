@@ -28,10 +28,10 @@ class TicketPerson(models.Model):
 
 class Route(models.Model):
     id = models.AutoField(primary_key=True)
-    destination = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='destination')
-    source = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='source')
-    duration = models.CharField(db_index=True,max_length=255)
-    distance = models.FloatField()
+    destination = models.ForeignKey('Location', on_delete=models.PROTECT, related_name='destination')
+    source = models.ForeignKey('Location', on_delete=models.PROTECT, related_name='source')
+    duration = models.CharField(db_index=True,max_length=255, null=True)
+    distance = models.FloatField(null=True)
     coordinates = models.CharField(max_length=255)
 
     class Meta:
@@ -104,8 +104,8 @@ class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
     route = models.ForeignKey('Route',on_delete=models.PROTECT,blank=True)
     bus = models.ForeignKey('Bus',on_delete=models.PROTECT, blank=True)
-    driver = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
-    scheduleNumber = models.CharField(db_index=True, blank=True, max_length=6)
+    driver = models.ForeignKey(User,on_delete=models.PROTECT, null=True)
+    scheduleNumber = models.CharField(db_index=True, null=True, max_length=6)
     creationDate = models.DateField(auto_now_add=True)
     weekDay = models.IntegerField(db_index=True,blank=True)
     beginDate = models.DateTimeField(db_index=True)
@@ -141,10 +141,10 @@ class Order(models.Model):
 
 class TouristTour(models.Model):
     id = models.AutoField(primary_key=True)
-    titleNameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True, related_name="title")
-    descriptionNameCode = models.ForeignKey('ResourceCode',on_delete= models.CASCADE, blank=True,related_name="description")
-    owner = models.ForeignKey(User,on_delete=models.ForeignKey,blank=True,related_name="Owner")
-    price = models.IntegerField(db_index=True,blank=True)
+    titleNameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT, related_name="title")
+    descriptionNameCode = models.ForeignKey('ResourceCode',on_delete= models.CASCADE, related_name="description")
+    owner = models.ForeignKey(User,on_delete=models.ForeignKey,related_name="Owner")
+    price = models.IntegerField(db_index=True)
     deletedDate = models.DateTimeField(db_index=True,null=True)
     schedules = models.ManyToManyField(Schedule, db_table='TourSchedules', related_name='tours')
     guides = models.ManyToManyField(User, db_table='GuideTours', related_name='tours')

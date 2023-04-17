@@ -11,7 +11,7 @@ import RegistrationGuide from '@/components/App-RegistrationGuide';
 import RegistrationBusiness from '@/components/App-RegistrationBusiness';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
-import Tickets2 from '@/components/App-Tickets2';
+import TourTickets from '@/components/App-TourTickets';
 import Order from '@/components/App-Order';
 import OrderPassengerInformationList from '@/components/App-OrderPassengerInformationList';
 import OrderPayment  from '@/components/App-OrderPayment';
@@ -94,12 +94,13 @@ const routes = [
     component: Tickets, 
     name: "Tickets",
     meta: { requiresAuth: true },
+    props: { scheduleType: 1 }
   },
   { 
-    path: "/tickets2", 
-    component: Tickets2, 
-    name: "Tickets2",
-    meta: { requiresAuth: true },
+    path: "/tour-tickets", 
+    component: TourTickets, 
+    name: "TourTickets",
+    meta: { requiresAuth: true }
   },
   { 
     path: "/order/:id", 

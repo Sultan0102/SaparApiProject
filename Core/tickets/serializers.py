@@ -113,7 +113,7 @@ class RouteQuerySerializer(serializers.Serializer):
 
 class ScheduleListSerializer(serializers.Serializer):
     fromDate = serializers.DateTimeField()
-    toDate = serializers.DateTimeField()
+    toDate = serializers.DateTimeField(allow_null=True)
     language_id = serializers.IntegerField(min_value=1, max_value=3)
     scheduleType = serializers.IntegerField(min_value=1)
 
@@ -350,3 +350,24 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
         return ticket
 
 
+class GuideSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Guide
+        fields = '__all__'
+
+class TourScheduleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Schedule
+
+class TouristTourSerializer(serializers.ModelSerializer):
+    schedules = ScheduleSerializer(read_only=True, many=True)
+    guides = GuideSerializer(read_only=True, many=True)
+
+
+    class Meta:
+        model = TouristTour
+        fields = ['schedules', 'guides', 'titleNameCode', 'descriptionNameCode', 'owner']
+    
+    

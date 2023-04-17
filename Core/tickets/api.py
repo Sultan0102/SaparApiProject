@@ -11,7 +11,8 @@ from .models import *
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
-    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer
+    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer, \
+    TouristTourSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
@@ -223,16 +224,18 @@ class ScheduleViewSet(viewsets.ViewSet):
     queryset = Schedule.objects.all()
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = ScheduleListSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            
             fromDate = serializer.validated_data['fromDate']
             toDate = serializer.validated_data['toDate']
             lanugage_id = serializer.validated_data['language_id']
 
-            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate), scheduleType__id=serializer.validated_data['scheduleType'])
+            if toDate is None:
+                toDate = '9999-12-31T00:00:00'
 
+            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate))
+            filtered_data = filtered_data.filter(scheduleType__id=serializer.validated_data['scheduleType'])
+            
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
             
             
@@ -240,6 +243,7 @@ class ScheduleViewSet(viewsets.ViewSet):
         # print(serialized_data)
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
+    
 
 
 class TicketPersonViewSet(viewsets.ModelViewSet):
@@ -308,3 +312,15 @@ class PassportNumberTypeViewSet(viewsets.ModelViewSet):
     queryset = PassportNumberType.objects.all()
     serializer_class = PassportNumberTypeSerializer
     permission_classes = [IsAuthenticated, ]
+
+
+class TouristTourViewSet(viewsets.ModelViewSet):
+    queryset = TouristTour.objects.all()
+    serializer_class = TouristTourSerializer
+    # permission_classes = []
+
+    def create(self, request):
+        schedule = request.data['schedule']
+        destination = request.data['destination']
+
+        return Response('create', status=status.HTTP_201_CREATED);
