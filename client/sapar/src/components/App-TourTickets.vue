@@ -51,6 +51,7 @@ import ScheduleService from "@/services/ScheduleService";
 
 
 export default{
+    props: ['scheduleType'],
     name: "Tickets",
     components: {
         AppBus
@@ -59,9 +60,9 @@ export default{
         return {
             schedules: null,
             filters: {
-                beginDate: new Date(2023,0, 16),
-                endDate: new Date(2023, 1, 11),
-                dateRange: null
+                beginDate: new Date(),
+                endDate: null,
+                dateRange: new Date()
             },
             locales: {
                 'en': 3,
@@ -98,7 +99,10 @@ export default{
       },
       formattedEndDateString: function() {
         let endDate = this.filters.endDate;
-        return endDate.toISOString().split('T')[0]
+
+        return endDate != null
+               ? endDate.toISOString().split('T')[0]
+               : null;
       } 
     },
     methods: {
@@ -122,13 +126,16 @@ export default{
 
         getSchedules() {
             let langId = this.currentLanguageId;
-            console.log(`Lang ID: ${langId}`) 
-            console.log(`Dates`)
-            console.log(this.formattedBeginDateString)
-            console.log(this.formattedEndDateString)
-            console.log(this.scheduleType)
+            
+            const criteria = {
+                fromDate: this.formattedBeginDateString,
+                toDate: this.formattedEndDateString,
+                language_id: langId,
+                scheduleTypeId: this.scheduleType,
+                isActive: true
+            }
 
-            ScheduleService.getSchedules(this.formattedBeginDateString, this.formattedEndDateString, langId, this.scheduleType).then((schedules)=> {
+            ScheduleService.getSchedules(criteria).then((schedules)=> {
                 this.schedules = schedules;
             },
             (error)=> {
@@ -137,7 +144,6 @@ export default{
         },
 
         filterSchedules() {
-            debugger;
             if(this.filters.dateRange == null) {
                 this.filters.beginDate = new Date();
                 this.filters.endDate = null
@@ -152,7 +158,7 @@ export default{
             }
 
             console.log(this.filters)
-            // this.getSchedules()
+            this.getSchedules()
         },
 
         concatenatedSourceAndDestination: function (schedule) {

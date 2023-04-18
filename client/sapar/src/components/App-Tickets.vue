@@ -126,18 +126,13 @@ export default{
 
         getSchedules() {
             let langId = this.currentLanguageId;
-            console.log(`Lang ID: ${langId}`) 
-            console.log(`Dates`)
-            console.log(this.formattedBeginDateString)
-            console.log(this.formattedEndDateString)
-            console.log(this.scheduleType)
-            debugger;
 
             const criteria = {
                 fromDate: this.formattedBeginDateString,
                 toDate: this.formattedEndDateString,
                 language_id: langId,
-                scheduleTypeId: this.scheduleType
+                scheduleTypeId: this.scheduleType,
+                isActive: true
             }
 
             ScheduleService.getSchedules(criteria).then((schedules)=> {

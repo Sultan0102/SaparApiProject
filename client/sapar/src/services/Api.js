@@ -34,5 +34,8 @@ export default {
     routes: axios.create({
         baseURL: config.ROUTES_API_URL,
     }),
+    tours: axios.create({
+        baseURL: config.TOURS_API_URL,
+    }),
      
 }

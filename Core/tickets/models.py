@@ -1,6 +1,8 @@
 from django.db import models
 from Core.authorization.models import User, Guide
 import datetime
+import string
+import random
 
 
 class TicketStatus(models.Model):
@@ -32,7 +34,6 @@ class Route(models.Model):
     source = models.ForeignKey('Location', on_delete=models.PROTECT, related_name='source')
     duration = models.CharField(db_index=True,max_length=255, null=True)
     distance = models.FloatField(null=True)
-    coordinates = models.CharField(max_length=255)
 
     class Meta:
         db_table = "Route"
@@ -69,6 +70,7 @@ class LocationType(models.Model):
     class Meta:
         db_table = "LocationType"
 
+
 class Location(models.Model):
     id = models.AutoField(primary_key=True)
     coordinates = models.CharField(db_index=True, max_length=255)
@@ -103,7 +105,7 @@ class Bus(models.Model):
 class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
     route = models.ForeignKey('Route',on_delete=models.PROTECT,blank=True)
-    bus = models.ForeignKey('Bus',on_delete=models.PROTECT, blank=True)
+    bus = models.ForeignKey('Bus',on_delete=models.PROTECT, null=True)
     driver = models.ForeignKey(User,on_delete=models.PROTECT, null=True)
     scheduleNumber = models.CharField(db_index=True, null=True, max_length=6)
     creationDate = models.DateField(auto_now_add=True)
@@ -114,6 +116,19 @@ class Schedule(models.Model):
     deleteDate = models.DateTimeField(null=True)
     scheduleType = models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
     guide = models.ForeignKey(Guide, on_delete=models.PROTECT, null=True)
+
+    @staticmethod
+    def generateScheduleNumber():
+        scheduleNumbers = list(map(lambda x: x.scheduleNumber, Schedule.objects.all()))
+
+        while(True):
+            randomNumber = ''.join([str(random.randint(0, 9)) for i in range(4)])
+            newScheduleNumber = random.choice(string.ascii_uppercase) + random.choice(string.ascii_uppercase) + randomNumber;
+            
+            if newScheduleNumber not in scheduleNumbers:
+                break
+        
+        return newScheduleNumber;
 
     class Meta:
         db_table = "Schedule"

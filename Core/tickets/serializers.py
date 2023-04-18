@@ -365,9 +365,10 @@ class TouristTourSerializer(serializers.ModelSerializer):
     schedules = ScheduleSerializer(read_only=True, many=True)
     guides = GuideSerializer(read_only=True, many=True)
 
-
     class Meta:
         model = TouristTour
-        fields = ['schedules', 'guides', 'titleNameCode', 'descriptionNameCode', 'owner']
+        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner']
+    
+    
     
     

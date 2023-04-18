@@ -6,7 +6,8 @@ class ScheduleService{
             fromDate: criteria.fromDate,
             toDate: criteria.toDate,
             language_id: criteria.language_id,
-            scheduleType: criteria.scheduleTypeId
+            scheduleType: criteria.scheduleTypeId,
+            isActive: criteria.isActive
         }).then((response)=> {
             return response.data;
         })

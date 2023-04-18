@@ -78,6 +78,8 @@
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import VueMultiSelect from 'vue-multiselect'
+import TourService from '@/services/TourService';
+import TokenService from '@/services/TokenService';
 
 export default {
     setup() {
@@ -135,6 +137,25 @@ export default {
             }
 
             return weekDays;
+        },
+        currentLanguageId: function() {
+            let currentLocale = this.$store.getters.getCurrentLanguage;
+            let langId = null;
+            switch(currentLocale) {
+                case 'en':
+                    langId = 3;
+                    break;
+                case 'kz':
+                    langId = 2;
+                    break;
+                case 'ru':
+                    langId = 1;
+                    break;
+                default:
+                    langId = 1;
+                    break;
+            }
+            return langId;
         }
     },
     methods: {
@@ -155,6 +176,36 @@ export default {
                 })
                 return;
             } 
+            
+            const tour = {
+                title: this.form.title,    
+                description: this.form.description,    
+                owner: TokenService.getUser().id,    
+                price: this.form.price,    
+                source: this.form.source,    
+                destination: this.form.destination,    
+                weekDays: this.form.weekDays,    
+                beginTime: this.form.beginTime,    
+                endTime: this.form.endTime, 
+                languageId: this.currentLanguageId
+            }
+            console.log(tour)
+            
+            return;
+
+            await TourService.createTour(tour).then(
+                (data)=> {
+                    this.$router.push({'path': '/'})
+                    this.$notify({
+                        type: 'success',
+                        title: 'Tour',
+                        text: "Tour successfully created!"
+                    })
+                },
+                (error)=> {
+                    
+                }
+            )
 
         }
     },

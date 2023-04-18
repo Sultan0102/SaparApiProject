@@ -1,4 +1,6 @@
 import time
+import datetime
+import pytz
 from rest_framework import status
 import django_filters
 from rest_framework import viewsets, generics, permissions
@@ -7,7 +9,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from .models import *
+from .models import Location, Schedule, Ticket, Route, Order, Review, ResourceCode, \
+ResourceValue, TicketPerson, CachedTicketPerson, PassportNumberType, TouristTour \
+
+
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
@@ -21,6 +26,7 @@ from .permissions import IsAuthorOrReadOnly
 from ..authorization.models import User
 from rest_framework.decorators import action
 import Core.validators
+from django.db.transaction import atomic
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -224,18 +230,26 @@ class ScheduleViewSet(viewsets.ViewSet):
     queryset = Schedule.objects.all()
 
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = ScheduleListSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             fromDate = serializer.validated_data['fromDate']
             toDate = serializer.validated_data['toDate']
             lanugage_id = serializer.validated_data['language_id']
+            isActive = request.data.get('isActive')
+            print(isActive)
 
             if toDate is None:
                 toDate = '9999-12-31T00:00:00'
 
             filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate))
             filtered_data = filtered_data.filter(scheduleType__id=serializer.validated_data['scheduleType'])
+            if isActive is not None:
+                filtered_data = filtered_data.filter(isActive=isActive)
+                
             
+                
+
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
             
             
@@ -317,10 +331,94 @@ class PassportNumberTypeViewSet(viewsets.ModelViewSet):
 class TouristTourViewSet(viewsets.ModelViewSet):
     queryset = TouristTour.objects.all()
     serializer_class = TouristTourSerializer
-    # permission_classes = []
+    permission_classes = [IsAuthenticated, ]
+    currentLanguageId = 3
 
+    def createOrGetRoute(self, sourceValue, destinationValue):
+        sourceLocation = self.createOrGetLocationByName(sourceValue)
+        destinationLocation = self.createOrGetLocationByName(destinationValue)
+
+        route = Route.objects.filter(source=sourceLocation, destination=destinationLocation).filter().first()
+        if route is None:
+            route = Route.objects.create(source=sourceLocation, destination=destinationLocation);
+        print("Route ID: ", route.id, sep=' ')
+
+        return route
+
+    def createOrGetLocationByName(self, value):
+        resourceValue = ResourceValue.objects.filter(value__icontains=value, language__id=self.currentLanguageId).first()
+        if resourceValue is None:
+            resourceCode = ResourceCode.objects.filter(defaultValue__icontains=value).first()
+
+            if resourceCode is None:
+                resourceCode = ResourceCode.objects.create(defaultValue=value)
+
+            resourceValue = ResourceValue.objects.create(value=value, language_id=self.currentLanguageId, code_id=resourceCode.id)
+
+        location = Location.objects.filter(nameCode__id=resourceValue.code.id).first()
+
+        if location is None:
+            location = Location.objects.create(nameCode_id=resourceValue.code.id, type_id=2) #2 - LocationType for TouristPlace
+        
+
+        return location
+    
+    def createResourceCode(self, value):
+        code = ResourceCode.objects.create(defaultValue=value)
+        ResourceValue.objects.create(value=value, code_id=code.id, language_id=self.currentLanguageId)
+        return code
+
+    @atomic
     def create(self, request):
-        schedule = request.data['schedule']
-        destination = request.data['destination']
+        self.currentLanguageId = request.data['languageId']
+        destinationValue = request.data['destination']
+        sourceValue = request.data['source']
+        route = self.createOrGetRoute(sourceValue, destinationValue);
+        titleNameCode = self.createResourceCode(request.data['title'])
+        descriptionNameCode = self.createResourceCode(request.data['description'])
+
+        newTour = {
+            'titleNameCode': titleNameCode.id,
+            'descriptionNameCode': descriptionNameCode.id,
+            'price': request.data['price'],
+            'owner': request.data['owner'],
+        }
+
+        serializer = self.get_serializer(data=newTour)
+        serializer.is_valid(raise_exception=True)
+        newTour = serializer.save();
+
+
+        current_date = datetime.date.today()
+        delta = datetime.timedelta(days=1)
+        
+        for i in range(1, 8):
+            current_date+=delta
+            if current_date.weekday() + 1 in request.data['weekDays']:
+                beginTime = datetime.time(*[int(i) for i in request.data['beginTime'].split(':')])
+                endTime = datetime.time(*[int(i) for i in request.data['endTime'].split(':')])
+
+                beginDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, beginTime))
+                if endTime < beginTime:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date+delta, endTime))
+                else:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, endTime))
+                
+                schedule = {
+                    'scheduleNumber': Schedule.generateScheduleNumber(),
+                    'route': route,
+                    'weekDay': current_date.weekday() + 1,
+                    'beginDate': beginDate,
+                    'endDate': endDate,
+                    'isActive': False,
+                    'scheduleType_id': 2
+                }
+                
+
+                schedule = Schedule.objects.create(**schedule)
+                newTour.schedules.add(schedule)
+        
+        newTour.save();
+        
 
         return Response('create', status=status.HTTP_201_CREATED);

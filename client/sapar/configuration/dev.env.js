@@ -9,5 +9,6 @@ export default {
     PASSPORT_TYPES_API_URL: 'http://localhost:8000/api/passportTypes/',
     PAYMENTS_API_URL: 'http://localhost:8000/api/payment/',
     ROUTES_API_URL: 'http://localhost:8000/api/routes/',
+    TOURS_API_URL: 'http://localhost:8000/api/tours/',
 
 }
