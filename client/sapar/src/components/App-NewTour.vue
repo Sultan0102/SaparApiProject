@@ -156,11 +156,40 @@ export default {
                     break;
             }
             return langId;
-        }
+        },
+        beginTimeStr: function() {
+            let hours = String(this.form.beginTime.hours).length == 1 
+                        ? '0' + this.form.beginTime.hours
+                        : this.form.beginTime.hours;
+            let minutes =String(this.form.beginTime.minutes).length == 1 
+            ? '0' + this.form.beginTime.minutes
+            : this.form.beginTime.minutes;
+
+            
+            let timeStr = `${hours}:${minutes}`
+
+            return timeStr
+        },
+        endTimeStr: function() {
+            let hours = String(this.form.endTime.hours).length == 1 
+                        ? '0' + this.form.endTime.hours
+                        : this.form.endTime.hours;
+            let minutes =String(this.form.endTime.minutes).length == 1 
+            ? '0' + this.form.endTime.minutes
+            : this.form.endTime.minutes;
+
+            
+            let timeStr = `${hours}:${minutes}`
+
+            return timeStr
+        },
     },
     methods: {
         async createTour() {
             console.log(this.form)
+            console.log(this.beginTimeStr)
+            console.log(this.endTimeStr)
+
             const validationResult = await this.v$.$validate()
             if(!validationResult) {
                 console.log(this.v$.$errors)
@@ -185,8 +214,8 @@ export default {
                 source: this.form.source,    
                 destination: this.form.destination,    
                 weekDays: this.form.weekDays,    
-                beginTime: this.form.beginTime,    
-                endTime: this.form.endTime, 
+                beginTime: this.beginTimeStr,    
+                endTime: this.endTimeStr, 
                 languageId: this.currentLanguageId
             }
             console.log(tour)
