@@ -183,16 +183,15 @@ export default {
 
             return timeStr
         },
+        selectedWeekDays: function() {
+            let weekDaysIds = this.form.weekDays.map(w => w.id)
+            return weekDaysIds
+        }
     },
     methods: {
         async createTour() {
-            console.log(this.form)
-            console.log(this.beginTimeStr)
-            console.log(this.endTimeStr)
-
             const validationResult = await this.v$.$validate()
             if(!validationResult) {
-                console.log(this.v$.$errors)
                 let errorMessages = ''
                 this.v$.$errors.forEach((error)=> {
                     errorMessages+= `Field '${error.$property}'. ${error.$message} </br>`
@@ -213,15 +212,12 @@ export default {
                 price: this.form.price,    
                 source: this.form.source,    
                 destination: this.form.destination,    
-                weekDays: this.form.weekDays,    
+                weekDays: this.selectedWeekDays,    
                 beginTime: this.beginTimeStr,    
                 endTime: this.endTimeStr, 
                 languageId: this.currentLanguageId
             }
-            console.log(tour)
             
-            return;
-
             await TourService.createTour(tour).then(
                 (data)=> {
                     this.$router.push({'path': '/'})
@@ -232,7 +228,11 @@ export default {
                     })
                 },
                 (error)=> {
-                    
+                    this.$notify({
+                        type: 'error',
+                        title: 'Error',
+                        text: "Tour was not created!"
+                    })
                 }
             )
 

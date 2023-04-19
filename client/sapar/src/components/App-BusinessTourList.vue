@@ -1,6 +1,15 @@
 <template>
     <div class="container-fluid py-5 mt-5">
+
         <div class="container">
+            <div class="row mb-1 p-3">
+                <div class="col-md-12 text-center">
+                    <router-link to="/new-tour">
+                        <button type="button" class="btn btn-primary mb-3" @click="">{{ $t('New Tour') }}</button>
+                    </router-link>
+                </div>
+            </div>
+
             <div class="row align-items-center tours mb-1 p-3">
                 <div class="col-md-3">
                     <img src="../assets/Experience.png" class="img-fluid">
@@ -141,6 +150,15 @@
 
 <script>
 
+export default {
+    data() {
+
+    },
+
+    methods: {
+        
+    }
+}
 </script>
 
 <style scoped> 

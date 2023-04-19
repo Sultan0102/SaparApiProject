@@ -23,7 +23,9 @@
                         </div>
                         <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button> 
                         <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button> <br>
-                        <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
+                        <router-link to="/tours">
+                            <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
+                        </router-link>
                         <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ">{{ $t('Applications') }}</button>
                         <button @click="logout" type="submit" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Log out') }}</button>
                     </form>

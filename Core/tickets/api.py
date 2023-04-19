@@ -391,8 +391,8 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
         current_date = datetime.date.today()
         delta = datetime.timedelta(days=1)
-        
-        for i in range(1, 8):
+        # weekDays in python: Monday is 0 and Sunday is 6
+        for i in range(1, 15):
             current_date+=delta
             if current_date.weekday() + 1 in request.data['weekDays']:
                 beginTime = datetime.time(*[int(i) for i in request.data['beginTime'].split(':')])

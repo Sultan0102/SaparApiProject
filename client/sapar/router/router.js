@@ -23,7 +23,7 @@ import TourInfo from '@/components/App-TourInfo';
 import ViewApplications from '@/components/App-ViewApplications';
 import GuideInfo from '@/components/App-GuideInfo';
 import BusinessProfile from '@/components/App-BusinessProfile';
-import BusinessGuideModify from '@/components/App-BusinessGuideModify';
+import BusinessTourList from '@/components/App-BusinessTourList';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideDeletion from '@/components/App-GuideDeletion';
 import Applications from '@/components/App-Applications';
@@ -190,9 +190,9 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/business-guide-modify", 
-    component: BusinessGuideModify, 
-    name: "BusinessGuideModify",
+    path: "/tours", 
+    component: BusinessTourList, 
+    name: "BusinessTourList",
     meta: { requiresAuth: true },
   },
   {
