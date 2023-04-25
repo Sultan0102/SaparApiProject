@@ -10,14 +10,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from .models import Location, Schedule, Ticket, Route, Order, Review, ResourceCode, \
-ResourceValue, TicketPerson, CachedTicketPerson, PassportNumberType, TouristTour \
-
+ResourceValue, TicketPerson, CachedTicketPerson, PassportNumberType, TouristTour 
+from Core.exceptions import ValidationAPIException
 
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer, \
-    TouristTourSerializer
+    TouristTourSerializer, ScheduleRouteSerializer, ResourceCodeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
@@ -225,9 +225,10 @@ class ScheduleFilterSet(filters.FilterSet):
             'scheduleType': ['exact']
         }
 
-class ScheduleViewSet(viewsets.ViewSet):
+class ScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated,]
     queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
 
     def create(self, request, *args, **kwargs):
         print(request.data)
@@ -237,6 +238,11 @@ class ScheduleViewSet(viewsets.ViewSet):
             toDate = serializer.validated_data['toDate']
             lanugage_id = serializer.validated_data['language_id']
             isActive = request.data.get('isActive')
+            locationType = 1 if serializer.validated_data['scheduleType'] == 1 else 2
+            destination = request.data.get('destination')
+            source = request.data.get('source')
+
+
             print(isActive)
 
             if toDate is None:
@@ -246,17 +252,27 @@ class ScheduleViewSet(viewsets.ViewSet):
             filtered_data = filtered_data.filter(scheduleType__id=serializer.validated_data['scheduleType'])
             if isActive is not None:
                 filtered_data = filtered_data.filter(isActive=isActive)
-                
             
+            if destination is not None and len(destination) > 0:
+                print('Destination:', destination, sep=' ')
+                destinationResourceCodeSet = set()
+                [destinationResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=destination) ]
+                filtered_data = filtered_data.filter(route__destination__nameCode__id__in=destinationResourceCodeSet).filter(route__destination__type__id=locationType)
+            
+            if source is not None and len(source) > 0:
+                print('Source:', source, sep=' ')
+                sourceResourceCodeSet = set()
+                [sourceResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=source) ]
+                filtered_data = filtered_data.filter(route__source__nameCode__id__in=sourceResourceCodeSet).filter(route__source__type__id=locationType)
                 
 
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
-            
             
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
+
     
 
 
@@ -355,7 +371,7 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
             resourceValue = ResourceValue.objects.create(value=value, language_id=self.currentLanguageId, code_id=resourceCode.id)
 
-        location = Location.objects.filter(nameCode__id=resourceValue.code.id).first()
+        location = Location.objects.filter(nameCode__id=resourceValue.code.id, type__id=2).first()
 
         if location is None:
             location = Location.objects.create(nameCode_id=resourceValue.code.id, type_id=2) #2 - LocationType for TouristPlace
@@ -367,6 +383,33 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         code = ResourceCode.objects.create(defaultValue=value)
         ResourceValue.objects.create(value=value, code_id=code.id, language_id=self.currentLanguageId)
         return code
+    
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(owner_id=user.id)
+
+    @action(detail=False, methods=['post'], url_path='schedule')
+    def getTourByScheduleId(self, request):
+        print('Endpoint')
+        scheduleId = request.data.get('scheduleId', None)
+        if scheduleId is None:
+            raise ValidationAPIException(detail="Schedule id not supplied")
+               
+        tour = TouristTour.objects.filter(schedules__in=[scheduleId]).first()
+        # tour.schedules = tour.schedules.filter(id=scheduleId)
+        tour.schedules.set([tour.schedules.get(id=scheduleId)])
+
+        language_id = request.data.get('languageId')
+        print(request.data)
+        context = {}
+        if language_id:
+            context['language_id'] = language_id
+        
+        descriptionCodeSerializer = ResourceCodeSerializer(tour.descriptionNameCode)
+        context['description'] = descriptionCodeSerializer.data
+        serializer = TouristTourSerializer(tour, context=context)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @atomic
     def create(self, request):
@@ -395,8 +438,8 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         for i in range(1, 15):
             current_date+=delta
             if current_date.weekday() + 1 in request.data['weekDays']:
-                beginTime = datetime.time(*[int(i) for i in request.data['beginTime'].split(':')])
-                endTime = datetime.time(*[int(i) for i in request.data['endTime'].split(':')])
+                beginTime = datetime.time(*[int(j) for j in request.data['beginTime'].split(':')])
+                endTime = datetime.time(*[int(j) for j in request.data['endTime'].split(':')])
 
                 beginDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, beginTime))
                 if endTime < beginTime:

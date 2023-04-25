@@ -4,7 +4,7 @@ from Core.validators import validate_passportType
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.transaction import atomic
-
+from Core.authorization.serializers import UserSerializer
 
 class ResourceValueByLanguageSerializer(serializers.ListSerializer):
     def to_representation(self, data):
@@ -158,7 +158,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Schedule
-        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets']
+        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets', 'tours']
         read_only_fields = ('language_id', )
         depth=2
 
@@ -351,10 +351,12 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
 
 
 class GuideSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = Guide
-        fields = '__all__'
+        fields = ['id', 'user', 'serviceRating']
+        read_only_fields=['id']
 
 class TourScheduleSerializer(serializers.ModelSerializer):
 
@@ -364,11 +366,22 @@ class TourScheduleSerializer(serializers.ModelSerializer):
 class TouristTourSerializer(serializers.ModelSerializer):
     schedules = ScheduleSerializer(read_only=True, many=True)
     guides = GuideSerializer(read_only=True, many=True)
+    description = serializers.SerializerMethodField()
+    
+    def get_description(self, obj):
+        if self.context.get('description', None):
+            return self.context.get('description')
+
+        return None
 
     class Meta:
         model = TouristTour
-        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner']
+        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner', 'id', 'description']
+        read_only_fields = ['id']
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
     
     
     

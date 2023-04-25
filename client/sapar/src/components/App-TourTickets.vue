@@ -2,8 +2,8 @@
     <div class="container-fluid py-5 mt-5">
         <div class="col-xxl-8 col-10 mx-auto mb-3">
             <div class="input-group mx-auto">
-                <input type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
-                <input type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
+                <input v-model="filters.source" type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
+                <input v-model="filters.destination" type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
                 <div class="form-control">
                     <VueDatePicker 
                     v-model="filters.dateRange" 
@@ -60,6 +60,8 @@ export default{
         return {
             schedules: null,
             filters: {
+                destination: null,
+                source: null,
                 beginDate: new Date(),
                 endDate: null,
                 dateRange: new Date()
@@ -128,6 +130,8 @@ export default{
             let langId = this.currentLanguageId;
             
             const criteria = {
+                source: this.filters.source,
+                destination: this.filters.destination,
                 fromDate: this.formattedBeginDateString,
                 toDate: this.formattedEndDateString,
                 language_id: langId,

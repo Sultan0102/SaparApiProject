@@ -106,7 +106,7 @@ class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
     route = models.ForeignKey('Route',on_delete=models.PROTECT,blank=True)
     bus = models.ForeignKey('Bus',on_delete=models.PROTECT, null=True)
-    driver = models.ForeignKey(User,on_delete=models.PROTECT, null=True)
+    driver = models.ForeignKey(User,on_delete=models.PROTECT, null=True, related_name='schedules')
     scheduleNumber = models.CharField(db_index=True, null=True, max_length=6)
     creationDate = models.DateField(auto_now_add=True)
     weekDay = models.IntegerField(db_index=True,blank=True)
@@ -115,7 +115,7 @@ class Schedule(models.Model):
     isActive = models.BooleanField(default=False)
     deleteDate = models.DateTimeField(null=True)
     scheduleType = models.ForeignKey('ScheduleType', on_delete=models.PROTECT, blank=False)
-    guide = models.ForeignKey(Guide, on_delete=models.PROTECT, null=True)
+    guide = models.ForeignKey(Guide, on_delete=models.PROTECT, null=True, related_name='guide_schedules')
 
     @staticmethod
     def generateScheduleNumber():
@@ -158,11 +158,11 @@ class TouristTour(models.Model):
     id = models.AutoField(primary_key=True)
     titleNameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT, related_name="title")
     descriptionNameCode = models.ForeignKey('ResourceCode',on_delete= models.CASCADE, related_name="description")
-    owner = models.ForeignKey(User,on_delete=models.ForeignKey,related_name="Owner")
+    owner = models.ForeignKey(User,on_delete=models.ForeignKey, related_name="tours")
     price = models.IntegerField(db_index=True)
     deletedDate = models.DateTimeField(db_index=True,null=True)
     schedules = models.ManyToManyField(Schedule, db_table='TourSchedules', related_name='tours')
-    guides = models.ManyToManyField(User, db_table='GuideTours', related_name='tours')
+    guides = models.ManyToManyField(Guide, db_table='GuideTours', related_name='tours')
 
     class Meta:
         db_table = "TouristTour"

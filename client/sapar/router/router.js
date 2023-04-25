@@ -29,6 +29,7 @@ import GuideDeletion from '@/components/App-GuideDeletion';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
 import NewTour from '@/components/App-NewTour';
+import AppBusinessToursExample from '@/components/App-BusinessToursExample'
 import store from '@/store';
 
 
@@ -166,10 +167,11 @@ const routes = [
     name: "PageServerError"
   },
   {
-    path: "/tour-info", 
+    path: "/tour-info/:scheduleId", 
     component: TourInfo, 
     name: "TourInfo",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/view-applications", 
@@ -193,6 +195,12 @@ const routes = [
     path: "/tours", 
     component: BusinessTourList, 
     name: "BusinessTourList",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tours-example", 
+    component: AppBusinessToursExample, 
+    name: "AppBusinessToursExample",
     meta: { requiresAuth: true },
   },
   {

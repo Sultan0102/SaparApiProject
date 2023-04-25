@@ -19,6 +19,9 @@ export default {
         let currentLanguage = this.$i18n.locale;
         this.$store.commit('setCurrentLanguage', currentLanguage)
       }
+    },
+    mounted() {
+      this.$i18n.locale = this.$store.getters.getCurrentLanguage
     }
 }
 </script>

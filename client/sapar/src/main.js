@@ -42,8 +42,8 @@ saparApp.component('VueDatePicker', VueDatePicker);
 
 // middleware
 saparApp
-.use(i18n)
 .use(store)
+.use(i18n)
 .use(router)
 .use(VueAxios, axios)
 .use(Notifications);

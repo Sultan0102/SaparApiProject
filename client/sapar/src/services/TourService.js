@@ -17,6 +17,25 @@ class TourService{
             return response.data;
         })
     }
+
+    retreive() {
+        return Api.tours.get('').then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
+    retreiveByScheduleId(scheduleId, langId) {
+        return Api.tours.post('schedule/', {
+            scheduleId,
+            languageId: langId
+        }).then(
+            (response)=> {
+                return response.data;
+            }
+        )
+    }
 }
 
 export default new TourService()

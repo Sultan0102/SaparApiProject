@@ -23,7 +23,7 @@ detRouter = DefaultRouter()
 router.register('routes',RouteViewSet,basename='routes')
 router.register('location',LocationViewSet, basename='location')
 router.register('ticket',PostTicketViewSet,basename='ticket')
-detRouter.register('routes',DetailRouteViewSet,basename='routes')
+# detRouter.register('routes',DetailRouteViewSet,basename='routes')
 detRouter.register('ticket',DetailPostTicketViewSet,basename='ticket')
 detRouter.register('tours', TouristTourViewSet, basename='tour')
 
