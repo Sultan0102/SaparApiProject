@@ -23,7 +23,13 @@
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="collapse" :data-bs-target="`#${tourSelectorId}`">{{ $t('Modify') }}</button>
             </div>
         </div>
+
         <div :id="tourSelectorId" class="collapse tours">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary m-3" data-bs-toggle="collapse">{{ $t('Hire') }}</button>
+                </div>
+            </div>
             <div class="row my-5 ">
                 <div v-for="guide in tour.guides"
                 :key="guide.id" 

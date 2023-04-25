@@ -5,6 +5,7 @@ from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSe
     DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet, TouristTourViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 from Core.payment.api import PaymentViewSet
+from Core.applications.api import DocumentViewSet
 
 
 # AUTHENTICATION
@@ -26,6 +27,7 @@ router.register('ticket',PostTicketViewSet,basename='ticket')
 # detRouter.register('routes',DetailRouteViewSet,basename='routes')
 detRouter.register('ticket',DetailPostTicketViewSet,basename='ticket')
 detRouter.register('tours', TouristTourViewSet, basename='tour')
+detRouter.register('docs', DocumentViewSet, basename='doc')
 
 # Ticket Person
 ticketRouter = DefaultRouter()
