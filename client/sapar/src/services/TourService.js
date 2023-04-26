@@ -26,6 +26,14 @@ class TourService{
         )
     }
 
+    retreiveById(tourId) {
+        return Api.tours.get(`${tourId}/`).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     retreiveByScheduleId(scheduleId, langId) {
         return Api.tours.post('schedule/', {
             scheduleId,

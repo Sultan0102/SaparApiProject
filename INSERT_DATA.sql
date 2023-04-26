@@ -153,6 +153,12 @@ VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20',
 INSERT INTO "ApplicationType"(id, "name")
 VALUES	(1, 'HireGuide'),
 		(2, 'FireGuide');
+
+
+INSERT INTO "ApplicationStatus"
+VALUES	(1, 'Created'),
+		(2, 'Approved'),
+		(3, 'Rejected');
 	-- INSERT INTO "TouristTrip"(id,"titleNameCode_id","descriptionNameCode_id","owner_id","price","deletedDate","guide_id","schedule_id")
 	-- VALUES(1,9,10,1,12000,null,3,1),
 	--       (2,11,12,1,10000,null,3,1),

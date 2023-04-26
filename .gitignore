@@ -132,5 +132,6 @@ dmypy.json
 /Core/tickets/migrations/
 /Core/users/migrations/
 /Core/payment/migrations/
+/Core/applications/migrations/
 /client/sapar/node_modules/
 */node_modules/*

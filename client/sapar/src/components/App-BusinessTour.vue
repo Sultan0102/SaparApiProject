@@ -27,7 +27,12 @@
         <div :id="tourSelectorId" class="collapse tours">
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary m-3" data-bs-toggle="collapse">{{ $t('Hire') }}</button>
+                    <router-link :to="{
+                        name: 'ViewAvailableGuides',
+                        params: { tourId: tour.id }
+                    }">
+                        <button type="button" class="btn btn-primary m-3" data-bs-toggle="collapse">{{ $t('Hire') }}</button>
+                    </router-link>
                 </div>
             </div>
             <div class="row my-5 ">

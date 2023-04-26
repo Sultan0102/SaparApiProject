@@ -43,7 +43,26 @@
 </template>
 
 <script>
+    import TourService from '@/services/TourService';
 
+    export default {
+        props: ['tourId'],
+        data() {
+            return {
+                tour: null
+            }
+        },
+        methods: {
+            async getTour() {
+                TourService.retreiveById(this.tourId)
+            }
+        },
+
+        async mounted() {
+            await this.getTour();
+        }
+        
+    }
 </script>
 
 <style scoped> 

@@ -25,8 +25,8 @@ class Document(models.Model):
         db_table='Document'
 
 class Application(models.Model):
-    senderUserId = models.ForeignKey(User, on_delete=models.PROTECT, related_name='sent_applications')
-    receiverUserId = models.ForeignKey(User, on_delete=models.PROTECT, related_name='received_applications')
+    senderUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name='sent_applications')
+    receiverUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name='received_applications')
     status = models.ForeignKey(ApplicationStatus, on_delete=models.PROTECT)
     type = models.ForeignKey(ApplicationType, on_delete=models.PROTECT)
     creationDate = models.DateTimeField(auto_now_add=True)

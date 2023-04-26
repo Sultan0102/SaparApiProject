@@ -204,10 +204,11 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/view-available-guides", 
+    path: "/tour/:tourId/available-guides", 
     component: ViewAvailableGuides, 
     name: "ViewAvailableGuides",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/guide-deletion", 
