@@ -150,7 +150,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
     tickets = serializers.SerializerMethodField()
 
     def get_tickets(self, obj):
-        print(obj.id)
         tickets = ScheduleTicketSerializer(data=Ticket.objects.filter(schedule=obj.id).order_by('seatNumber'), many=True)
         tickets.is_valid()
 
@@ -376,8 +375,8 @@ class TouristTourSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TouristTour
-        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner', 'id', 'description']
-        read_only_fields = ['id']
+        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner', 'id', 'description', 'deletedDate']
+        read_only_fields = ['id', 'deletedDate']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -223,10 +223,11 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/guide-hire", 
+    path: "/tour/:tourId/guide-hire/:guideId", 
     component: GuideHire, 
     name: "GuideHire",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/new-tour", 

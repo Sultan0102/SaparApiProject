@@ -386,7 +386,16 @@ class TouristTourViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        return super().get_queryset().filter(owner_id=user.id)
+        queryset = super().get_queryset().filter(owner_id=user.id)
+
+        non_deleted = self.request.query_params.get('non_deleted');
+        print(non_deleted)
+        
+        if non_deleted and str.upper(non_deleted)=="TRUE":
+            queryset = queryset.filter(deletedDate=None)
+
+
+        return queryset
 
     @action(detail=False, methods=['post'], url_path='schedule')
     def getTourByScheduleId(self, request):

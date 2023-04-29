@@ -36,14 +36,27 @@ export default {
 
     methods: {
         async getTours() {
-            await TourService.retreive().then(
+            let tours = null
+            await TourService.retreiveNonDeleted().then(
                 (data)=> {
-                    this.tours = data
+                    tours = data
                 },
                 (error)=> {
 
                 }
             )
+
+            this.tours = tours.filter(t => this.hasRelevantSchedules(t))
+            
+        },
+
+        hasRelevantSchedules(tour) {
+            for(let i in tour.schedules) {
+                let beginDate = new Date(tour.schedules[i].beginDate)
+                if (beginDate > new Date()) 
+                    return true;
+            }
+            return false
         }
     },
     async mounted() {

@@ -26,6 +26,14 @@ class TourService{
         )
     }
 
+    retreiveNonDeleted() {
+        return Api.tours.get('', { params:{'non_deleted': 'true'} }).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     retreiveById(tourId) {
         return Api.tours.get(`${tourId}/`).then(
             (response)=> {

@@ -57,6 +57,7 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
             businessSerializer.save();
         
         if user.role == User.GUIDE:
+            print(request.data)
             guideSerializer = GuideSerializer(data=request.data)
             guideSerializer.is_valid(raise_exception=True)
             guide = guideSerializer.save()

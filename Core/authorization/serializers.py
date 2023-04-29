@@ -101,6 +101,10 @@ class GuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guide
         fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
 
 class GuideSpecializationSerializer(serializers.ModelSerializer):
 

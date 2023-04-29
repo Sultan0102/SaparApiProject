@@ -10,5 +10,7 @@ export default {
     PAYMENTS_API_URL: 'http://localhost:8000/api/payment/',
     ROUTES_API_URL: 'http://localhost:8000/api/routes/',
     TOURS_API_URL: 'http://localhost:8000/api/tours/',
+    GUIDES_API_URL: 'http://localhost:8000/api/guides/',
+    APPLICATIONS_API_URL: 'http://localhost:8000/api/applications/',
 
 }

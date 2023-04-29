@@ -11,6 +11,22 @@ class UserService {
         })
     }
 
+    retreiveGuides() {
+        return Api.guides.get().then(
+            (response) => {
+                return response.data;
+            }
+        )
+    }
+
+    retreiveGuide(id) {
+        return Api.guides.get(`${id}/`).then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
     update(user) {
         return Api.users.put(`${user.id}/`, {
             email: user.email,

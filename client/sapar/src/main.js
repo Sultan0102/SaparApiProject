@@ -21,17 +21,21 @@ import '@vuepic/vue-datepicker/dist/main.css'
 // axios.defaults.withCredentials = true
 
 // setting up interceptors
-[Api.auth, 
-Api.users, 
-Api.tickets, 
-Api.schedules, 
-Api.orders, 
-Api.cachedTicketPersons, 
-Api.ticketPersons, 
-Api.passportTypes, 
-Api.payments, 
-Api.routes,
-Api.tours].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
+[
+    Api.auth, 
+    Api.users, 
+    Api.tickets, 
+    Api.schedules, 
+    Api.orders, 
+    Api.cachedTicketPersons, 
+    Api.ticketPersons, 
+    Api.passportTypes, 
+    Api.payments, 
+    Api.routes,
+    Api.tours,
+    Api.guides,
+    Api.applications
+].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
 
 
 const saparApp = createApp(App);
