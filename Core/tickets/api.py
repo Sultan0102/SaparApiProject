@@ -1,20 +1,24 @@
 import time
 
 import django_filters
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import *
 from .serializers import RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, \
-    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
+    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, \
+    TicketPersonSerializer, ScheduleSerializer, ScheduleListSerializer, ScheduleDriverSerializer, ApplicationSerializer, \
+    ApplicationSerializerRetrieve, DocumentsViewSetSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsAuthorOrReadOnly
 from ..authorization.models import User
+from ..exceptions import InvalidPassportNumberException
+from ..validators import validate_passport_identation, validate_passport_kz_passport
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -124,6 +128,17 @@ class OrderViewSet(viewsets.ModelViewSet):
     #     if self.action in ("create",):
     #         self.permission_classes = (permissions.IsAuthenticated,)
 
+class TicketPersonViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = TicketPerson.objects.all()
+    serializer_class = TicketPersonSerializer
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        # try:
+        #     serializer.is_valid(raise_exception=True)
+        # except:
+        #     raise InvalidPassportNumberException()
+        return Response(validate_passport_kz_passport("A128812191"), status=status.HTTP_200_OK)
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
 
@@ -151,3 +166,62 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
 
+class ScheduleViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated, ]
+    queryset = Schedule.objects.all()
+
+    def list(self, request):
+        # driver = request.data['driver_id']
+        # queryset = Schedule.objects.filter(driver= driver)
+        queryset = Schedule.objects.all()
+        serializer = ScheduleDriverSerializer(queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        queryset = Schedule.objects.filter(driver=pk)
+        language_id = kwargs.get('lang_id')
+        for instance in queryset:
+            if language_id is not None:
+                source_value = ResourceValue.objects.get(language_id=language_id,code=instance.route.source.nameCode)
+                destination_value = ResourceValue.objects.get(language_id=language_id,code=instance.route.destination.nameCode)
+                instance.route.source.nameCode.defaultValue = source_value.value
+                instance.route.destination.nameCode.defaultValue = destination_value.value
+        serializer = ScheduleDriverSerializer(queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = ScheduleListSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            fromDate = serializer.validated_data['fromDate']
+            toDate = serializer.validated_data['toDate']
+            lanugage_id = serializer.validated_data['language_id']
+
+            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate),
+                                                 scheduleType__id=serializer.validated_data['scheduleType'])
+
+            result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
+
+            return Response(result.data, status=status.HTTP_200_OK)
+        # print(serialized_data)
+        return Response('No data', status=status.HTTP_204_NO_CONTENT)
+
+class ApplicationViewSet(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        queryset = Application.objects.filter(user=pk)
+        serializer = ApplicationSerializerRetrieve(queryset,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    # def create(self, request):
+    #     applicationData = request.data['applicationData']
+    #     application = Application.objects.create(applicationData=applicationData)
+    #     application.save()
+    #     serializer = ApplicationSerializer(application)
+    #     return Response(serializer.data)
+class DocumentsViewSet(viewsets.ModelViewSet):
+    queryset = Documents.objects.all()
+    serializer_class = DocumentsViewSetSerializer

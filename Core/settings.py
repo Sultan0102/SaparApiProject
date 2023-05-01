@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-a%e4&vla21o201&4=4*d%b#_@62mx@=3ky+a&*a12^2@6!$y+2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '192.168.1.8', '192.168.43.58']
 
 
 # Application definition
@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'Core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'saparapi',
+        'NAME': 'SaparAPI',
         'USER': 'postgres',
-        'PASSWORD': 'anuar123',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -152,8 +152,10 @@ REST_FRAMEWORK = {
 }
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
+    "http://192.168.1.5:8000",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "http://localhost:55335"
 ]
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),

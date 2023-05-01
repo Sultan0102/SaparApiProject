@@ -2,8 +2,10 @@ from xml.etree.ElementInclude import include
 from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from django.urls import path,include
-from .routers import router, detRouter, reviewRouter, orderRouter
-from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet
+from .routers import router, detRouter, reviewRouter, orderRouter, ticketPersonRouter, scheduleRouter, \
+    applicationRouter, documentsRouter
+from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
+    ScheduleViewSet, ApplicationViewSet
 from .authorization.views import forgot_password,change_password
 
 urlpatterns = [
@@ -17,6 +19,11 @@ urlpatterns = [
     path('forgot-password/', forgot_password),
     path('change-password/<int:user_id>/', change_password),
     path('api/', include(orderRouter.urls)),
+    path('api/', include(ticketPersonRouter.urls)),
     # path('api/showtickets/<int:pk>', TicketView.as_view())
-    path('api/getloc', LocationView.as_view())
+    path('api/getloc', LocationView.as_view()),
+    path('api/', include(applicationRouter.urls)),
+    path('api/schedules/<int:pk>/<int:lang_id>/', ScheduleViewSet.as_view({'get': 'retrieve'})),
+    path('api/applications/<int:pk>/', ApplicationViewSet.as_view({'get': 'retrieve'})),
+    path('api/',include(documentsRouter.urls))
 ]

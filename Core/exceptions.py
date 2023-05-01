@@ -64,3 +64,7 @@ class InvalidTokenException(APIException):
 class RefreshTokenInvalidException(InvalidTokenException):
     default_code = "refresh_token_invalid"
     default_detail = "Refresh token is invalid or expired!"
+
+class InvalidPassportNumberException(ValidationAPIException):
+    default_code = "invalid_passportNumber"
+    default_detail = "Wrong document number format"

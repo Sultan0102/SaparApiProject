@@ -2,7 +2,8 @@ from rest_framework.routers import SimpleRouter, DefaultRouter
 from Core.users.views import UserViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
 from Core.tickets.api import RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
-    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet
+    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, TicketPersonViewSet, ScheduleViewSet, ApplicationViewSet, \
+    DocumentsViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 
 # AUTHENTICATION
@@ -32,4 +33,18 @@ urlpatterns = [
 ]
 # Order
 orderRouter = DefaultRouter()
-reviewRouter.register('order',OrderViewSet,basename= 'order')
+orderRouter.register('order',OrderViewSet,basename= 'order')
+
+#TickerPerson
+ticketPersonRouter = DefaultRouter()
+ticketPersonRouter.register('ticketperson',TicketPersonViewSet,basename= 'ticketperson')
+
+# Schedule
+scheduleRouter = DefaultRouter()
+scheduleRouter.register("schedules", ScheduleViewSet, basename="schedule")
+# Application
+applicationRouter = DefaultRouter()
+applicationRouter.register("applications", ApplicationViewSet, basename="applications")
+# Documents
+documentsRouter = DefaultRouter()
+documentsRouter.register("documents",DocumentsViewSet,basename="documents")
