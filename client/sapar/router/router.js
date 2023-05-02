@@ -217,10 +217,10 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/applications", 
+    path: "/profile/applications", 
     component: Applications, 
-    name: "Applications",
-    meta: { requiresAuth: true },
+    name: "ProfileApplications",
+    meta: { requiresAuth: true }
   },
   {
     path: "/tour/:tourId/guide-hire/:guideId", 

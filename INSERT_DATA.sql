@@ -156,7 +156,7 @@ VALUES	(1, 'HireGuide'),
 
 
 INSERT INTO "ApplicationStatus"
-VALUES	(1, 'Created'),
+VALUES	(1, 'Pending'),
 		(2, 'Approved'),
 		(3, 'Rejected');
 	-- INSERT INTO "TouristTrip"(id,"titleNameCode_id","descriptionNameCode_id","owner_id","price","deletedDate","guide_id","schedule_id")

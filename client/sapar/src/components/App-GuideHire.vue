@@ -155,6 +155,7 @@
                     firstName: this.application.firstName,
                     lastName: this.application.lastName,
                     effectiveFrom: this.application.effectiveFromDate.toISOString(),
+                    tour: this.tourId
                 }
 
                 const applicationRequest = {

@@ -10,6 +10,14 @@ class ApplicationService{
         );
     }
 
+    getApplications(criteria) {
+        return Api.applications.post('user/', criteria).then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
 }
 
 export default new ApplicationService()
