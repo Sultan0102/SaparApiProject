@@ -2,10 +2,19 @@
     <div class="container-fluid py-5 mt-5">
         <div class="col-xxl-8 col-10 mx-auto mb-3">
             <div class="input-group mx-auto">
-                <input type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
-                <input type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
-                <div class="form-control"><VueDatePicker  v-model="date" model-auto range position="right"/></div>
-                <button class="btn search" type="button"><i class="bi bi-search"></i></button>
+                <input v-model="filters.source" type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
+                <input v-model="filters.destination" type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
+                <div class="form-control">
+                    <VueDatePicker 
+                    v-model="filters.dateRange" 
+                    model-auto 
+                    range 
+                    :min-date="new Date()"
+                    position="right"
+                    :format="formatDateRange"
+                    hide-input-icon />
+                </div>
+                <button class="btn search" type="button" @click="filterSchedules"><i class="bi bi-search"></i></button>
             </div>
         </div>
         <div class="container table-responsive">
@@ -42,6 +51,7 @@ import ScheduleService from "@/services/ScheduleService";
 
 
 export default{
+    props: ['scheduleType'],
     name: "Tickets",
     components: {
         AppBus
@@ -50,14 +60,18 @@ export default{
         return {
             schedules: null,
             filters: {
-                beginDate: new Date(2023,0, 16),
-                endDate: new Date(2023, 1, 11)
+                source: null,
+                destination: null,
+                beginDate: new Date(),
+                endDate: null,
+                dateRange: new Date()
             },
             locales: {
                 'en': 3,
                 'ru': 1,
                 'kz': 2
-            }
+            },
+            scheduleType: 1
         };
     },
     computed: {
@@ -87,20 +101,45 @@ export default{
       },
       formattedEndDateString: function() {
         let endDate = this.filters.endDate;
-        return endDate.toISOString().split('T')[0]
+
+        return endDate != null
+               ? endDate.toISOString().split('T')[0]
+               : null;
       } 
     },
     methods: {
         
+        formatDateRange(dates) {
+            let dateStrings = []
+            dates.forEach((date) => {
+
+                if(date) {
+                    const day = date.getDate();
+                    const month = date.getMonth();
+                    const year = date.getFullYear();
+    
+                    dateStrings.push(`${day}.${month}.${year}`)
+                }
+            })
+            
+            
+            return dateStrings.join(' - ');
+        },
 
         getSchedules() {
             let langId = this.currentLanguageId;
-            console.log(`Lang ID: ${langId}`) 
-            console.log(`Dates`)
-            console.log(this.formattedBeginDateString)
-            console.log(this.formattedEndDateString)
 
-            ScheduleService.getSchedules(this.formattedBeginDateString, this.formattedEndDateString, langId, 1).then((schedules)=> {
+            const criteria = {
+                source: this.source,
+                destination: this.destination,
+                fromDate: this.formattedBeginDateString,
+                toDate: this.formattedEndDateString,
+                language_id: langId,
+                scheduleTypeId: this.scheduleType,
+                isActive: true
+            }
+
+            ScheduleService.getSchedules(criteria).then((schedules)=> {
                 this.schedules = schedules;
             },
             (error)=> {
@@ -108,17 +147,34 @@ export default{
             })
         },
 
+        filterSchedules() {
+            if(this.filters.dateRange == null) {
+                this.filters.beginDate = new Date();
+                this.filters.endDate = null
+            } else {
+                if(Array.isArray(this.filters.dateRange)) {
+                    this.filters.beginDate = this.filters.dateRange[0]
+                    this.filters.endDate = this.filters.dateRange[1]
+                } else {
+                    this.filters.beginDate = this.filters.dateRange;
+                    this.filters.endDate = null;
+                }
+            }
+
+            console.log(this.filters)
+            this.getSchedules()
+        },
+
         concatenatedSourceAndDestination: function (schedule) {
             return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
         },
         concatenatedBeginDateAndEndDate: function(schedule) {
-            return schedule.beginDate.split('T')[1] + ' ' + schedule.endDate.split('T')[1]
+            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
       },
     },
     mounted() {
         this.getSchedules();
     },
-    components: { AppBus }
 }
 </script>
 
@@ -126,7 +182,7 @@ export default{
 *{
 	color: #1C5E3C;
 }
- th{
+th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }

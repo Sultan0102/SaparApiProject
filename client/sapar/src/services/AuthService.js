@@ -26,12 +26,36 @@ class AuthService {
     }
 
     register(user) {
-        // TODO: Get rid of required 'username' field
         return Api.auth.post('register/', {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             password: user.password,
+            role: user.roleId
+        });
+    }
+
+    registerBusinessPerson(user) {
+        return Api.auth.post('register/', {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            role: user.roleId,
+            companyName: user.companyName,
+            binNumber: user.binNumber,
+            legalAddress: user.legalAddress,
+        });
+    }
+
+    registerGuide(user) {
+        return Api.auth.post('register/', {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            role: user.roleId,
+            specializations: user.specializations
         });
     }
     

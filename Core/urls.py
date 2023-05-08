@@ -8,7 +8,7 @@ from .authorization.views import forgot_password,change_password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include(router.urls)),
+    path('api/',include(router.urls)),
     path('api/', include(('Core.routers', 'Core'), namespace='core-api')),
     path('api/ticket/<int:pk>/<int:lang_id>/',DetailPostTicketViewSet.as_view({'get' : 'retrieve'})),
     path('api/ticket/<int:lang_id>/', DetailPostTicketViewSet.as_view({'get': 'list'})),

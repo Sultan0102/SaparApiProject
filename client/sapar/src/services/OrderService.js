@@ -17,6 +17,14 @@ class OrderService{
             return response.data;
         })
     }
+
+    getUserOrders(depth=0) {
+        return Api.orders.get('?depth='+depth).then(
+            (response)=> {
+                return response.data;
+            }
+        )
+    }
 }
 
 export default new OrderService()

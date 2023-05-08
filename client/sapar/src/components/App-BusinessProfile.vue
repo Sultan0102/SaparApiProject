@@ -91,7 +91,7 @@ export default {
             })
             return;
         }
-        debugger;
+        
         const id = TokenService.getUser().id;
         const user = {
             id,

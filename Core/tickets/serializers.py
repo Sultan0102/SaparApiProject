@@ -4,18 +4,52 @@ from Core.validators import validate_passportType
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.transaction import atomic
+from Core.authorization.serializers import UserSerializer
+
+class ResourceValueByLanguageSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        langId = self.context.get('languageId', 0)
+
+        if langId != 0:
+            data = data.filter(language__id=langId)
+
+        return super(ResourceValueByLanguageSerializer, self).to_representation(data)
+
+class ResourceValueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ResourceValue
+        list_serializer_class=ResourceValueByLanguageSerializer
+        fields = '__all__'
+ 
+class ResourceCodeSerializer(serializers.ModelSerializer):
+    codeResourceValues = ResourceValueSerializer(many=True)
+
+    class Meta:
+        model = ResourceCode
+        fields = ['id', 'defaultValue', 'codeResourceValues']
+    
+    def create(self, validated_data):
+        resourceValues_data = validated_data.pop('codeResourceValues')
+        code = ResourceCode.objects.create(**validated_data)
+        for resourceValue in resourceValues_data:
+            ResourceValue.objects.create(code=code, **resourceValue)
+        return code
+
+    
 
 class LocationSerializer(serializers.ModelSerializer):
+    nameCode = ResourceCodeSerializer()
+
     class Meta:
         model = Location
-        fields = ['id','coordinates', 'nameCode']
-
-    def __init__(self,*args,**kwargs):
-        super(LocationSerializer, self).__init__(*args,**kwargs)
-        self.Meta.depth = 1
+        fields = ['id','coordinates', 'nameCode', 'type']
 
 
 class RouteSerializer(serializers.ModelSerializer):
+    source = LocationSerializer()
+    destination = LocationSerializer()
+
     class Meta:
         model = Route
         fields = ['id','destination','source','duration','distance']
@@ -72,24 +106,17 @@ class WriteReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'author', 'tour', 'text', 'created_date')
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    class Meta:
-        model = Order
-        fields = ('id','user','schedule','totalPrice','creationDate','isPaid')
+class RouteQuerySerializer(serializers.Serializer):
+    route = RouteSerializer()
+
 
 
 class ScheduleListSerializer(serializers.Serializer):
     fromDate = serializers.DateTimeField()
-    toDate = serializers.DateTimeField()
+    toDate = serializers.DateTimeField(allow_null=True)
     language_id = serializers.IntegerField(min_value=1, max_value=3)
     scheduleType = serializers.IntegerField(min_value=1)
 
-class ResourceValueSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ResourceValue
-        fields = ['id', 'value', 'code', 'language']
 
 class ScheduleRouteSerializer(serializers.ModelSerializer):
     destinationName = serializers.SerializerMethodField('get_destination_name')
@@ -123,7 +150,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
     tickets = serializers.SerializerMethodField()
 
     def get_tickets(self, obj):
-        print(obj.id)
         tickets = ScheduleTicketSerializer(data=Ticket.objects.filter(schedule=obj.id).order_by('seatNumber'), many=True)
         tickets.is_valid()
 
@@ -131,7 +157,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Schedule
-        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets']
+        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets', 'tours']
         read_only_fields = ('language_id', )
         depth=2
 
@@ -196,11 +222,12 @@ class TicketPersonSerializer(serializers.ModelSerializer):
         return validated_data
 
 class CachedTicketPersonSerializer(serializers.ModelSerializer):
+    cachedPersonId = serializers.IntegerField(min_value=0, write_only=True)
 
     class Meta:
         model = CachedTicketPerson
-        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user']
-        read_only_fields = ['id']
+        fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user', 'cachedPersonId']
+        read_only_fields= ['id']
         extra_kwargs = {
             'user': {'write_only': True},  
         }
@@ -212,22 +239,22 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         return obj
 
     def save(self):
-        print(self.validated_data['user'].id)
-        cachedTicketPersons = CachedTicketPerson.objects.filter(user__id=self.validated_data['user'].id)
-        if len(cachedTicketPersons) < 4:
-            #create new
-            return self.create(self.validated_data)
+    
+        if self.validated_data['cachedPersonId'] != 0:
+            #update
+            person = CachedTicketPerson.objects.get(id=self.validated_data['cachedPersonId'])
+            person.firstName = self.validated_data['firstName']
+            person.lastName = self.validated_data['lastName']
+            person.secondName = self.validated_data['secondName']
+            person.passportNumberType = self.validated_data['passportNumberType']
+            person.passportNumber = self.validated_data['passportNumber']
+            person.save();
         else:
-            oldestCachedPerson = CachedTicketPerson.objects.order_by('creationDate')[0]
-            oldestCachedPerson.firstName = self.validated_data['firstName']
-            oldestCachedPerson.lastName = self.validated_data['lastName']
-            oldestCachedPerson.secondName = self.validated_data['secondName']
-            oldestCachedPerson.passportNumberType = self.validated_data['passportNumberType']
-            oldestCachedPerson.passportNumber = self.validated_data['passportNumber']
-            oldestCachedPerson.save();
+            self._validated_data.pop('cachedPersonId')
+            return self.create(self.validated_data)
+        
 
         return self.validated_data
-            #update with creation date - oldes
         
         
         
@@ -239,16 +266,18 @@ class OrderTicketSerializer(serializers.ModelSerializer):
         depth=0
     
 
-
 class OrderSerializer(serializers.ModelSerializer):
     ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     tickets = serializers.SerializerMethodField('get_tickets')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
 
     def get_tickets(self, obj):
         if obj.id is None:
             return []
 
-        print(obj.id)
         serializer = OrderTicketSerializer(data=Ticket.objects.filter(order__id = obj.id), many=True)
         serializer.is_valid()
 
@@ -320,3 +349,38 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
         return ticket
 
 
+class GuideSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Guide
+        fields = ['id', 'user', 'serviceRating']
+        read_only_fields=['id']
+
+class TourScheduleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Schedule
+
+class TouristTourSerializer(serializers.ModelSerializer):
+    schedules = ScheduleSerializer(read_only=True, many=True)
+    guides = GuideSerializer(read_only=True, many=True)
+    description = serializers.SerializerMethodField()
+    
+    def get_description(self, obj):
+        if self.context.get('description', None):
+            return self.context.get('description')
+
+        return None
+
+    class Meta:
+        model = TouristTour
+        fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner', 'id', 'description', 'deletedDate']
+        read_only_fields = ['id', 'deletedDate']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
+    
+    
+    

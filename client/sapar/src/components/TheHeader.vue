@@ -11,10 +11,13 @@
 						<router-link class="nav-link" aria-current="page" to="/tickets">{{ $t('Tickets') }}</router-link>
 					</li>
 					<li class="ms-lg-5">
-						<router-link class="nav-link" aria-current="page" to="/tickets">{{ $t('Tours') }}</router-link>
+						<router-link class="nav-link" aria-current="page" to="/tour-tickets">{{ $t('Tours') }}</router-link>
 					</li>
 					<li class="ms-lg-5">
 						<router-link class="nav-link" aria-current="page" to="/about">{{ $t('About us') }}</router-link>
+					</li>
+					<li class="ms-lg-5" v-if="getUserRole == 3">
+						<router-link class="nav-link" aria-current="page" to="/">{{ $t('Vacancies') }}</router-link>
 					</li>
 					<li class="ms-lg-auto" v-if="isLoggedIn">
 						<router-link class="nav-link" to="/profile">{{ $t('hello') }}, {{ getUserEmail }}<i class="ms-1 bi bi-person-circle"></i></router-link>
@@ -42,7 +45,14 @@ export default {
 		getUserEmail: function() {
             let email = this.$store.getters.getUser.email;
             return email;
-        }
+        },
+		getUserRole: function() {
+			let user = this.$store.getters.getUser;
+			let role = 0
+			if (user)
+				role = user.role
+			return role;
+		}
     },
     methods: {
         

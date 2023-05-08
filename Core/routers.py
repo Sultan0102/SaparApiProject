@@ -1,9 +1,12 @@
 from rest_framework.routers import SimpleRouter, DefaultRouter
-from Core.users.views import UserViewSet
+from Core.users.views import UserViewSet, GuideViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
 from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
-    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet
+    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet, TouristTourViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
+from Core.payment.api import PaymentViewSet
+from Core.applications.api import DocumentViewSet, ApplicationViewSet
+
 
 # AUTHENTICATION
 routes = SimpleRouter()
@@ -20,14 +23,15 @@ router = DefaultRouter()
 detRouter = DefaultRouter()
 router.register('routes',RouteViewSet,basename='routes')
 router.register('location',LocationViewSet, basename='location')
-router.register('ticket',PostTicketViewSet,basename='ticket')
 detRouter.register('routes',DetailRouteViewSet,basename='routes')
-detRouter.register('ticket',DetailPostTicketViewSet,basename='ticket')
+detRouter.register('tickets', TicketViewSet, basename="tickets")
+detRouter.register('tours', TouristTourViewSet, basename='tour')
+detRouter.register('docs', DocumentViewSet, basename='doc')
+detRouter.register('applications', ApplicationViewSet, basename='application')
+detRouter.register('guides', GuideViewSet, basename='guide')
 
 # Ticket Person
 ticketRouter = DefaultRouter()
-ticketRouter.register('tickets', TicketViewSet, basename="tickets")
-
 #PassportNumber
 ticketRouter.register('passportTypes',PassportNumberTypeViewSet,basename='passportTypes')
 
@@ -53,4 +57,5 @@ urlpatterns = [
 ]
 # Order
 orderRouter = DefaultRouter()
-reviewRouter.register('orders',OrderViewSet,basename= 'orders')
+orderRouter.register('orders', OrderViewSet,basename= 'orders')
+orderRouter.register('payment', PaymentViewSet, basename='payment')

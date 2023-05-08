@@ -1,4 +1,6 @@
 import time
+import datetime
+import pytz
 from rest_framework import status
 import django_filters
 from rest_framework import viewsets, generics, permissions
@@ -7,17 +9,24 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from .models import *
+from .models import Location, Schedule, Ticket, Route, Order, Review, ResourceCode, \
+ResourceValue, TicketPerson, CachedTicketPerson, PassportNumberType, TouristTour 
+from Core.exceptions import ValidationAPIException
+
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
-    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer
+    WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer, \
+    TouristTourSerializer, ScheduleRouteSerializer, ResourceCodeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthorOrReadOnly
 from ..authorization.models import User
+from rest_framework.decorators import action
+import Core.validators
+from django.db.transaction import atomic
 
 
 class LocationViewSet(viewsets.ModelViewSet):
@@ -52,17 +61,43 @@ class TicketFilter(filters.FilterSet):
 
 class RouteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoutesFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = RoutesFilter
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        langId = self.request.data.get('languageId', None)
+        if langId:
+            context.update({"languageId": self.request.data['languageId']})
+        return context
+    
+    
+    @action(detail=False, methods=['post'], url_path='order/(?P<order_pk>[^/.]+)')
+    def getRoutesByOrder(self, request, order_pk):
+        if order_pk is None or Core.validators.validate_any(order_pk, '^[0-9]+$') == False:
+            print('Error')
+            return Response('Error', status=status.HTTP_400_BAD_REQUEST)
+        
+        order = Order.objects.get(id=order_pk)
+        print(order.schedule.route.id)
+        serializer = self.get_serializer(order.schedule.route)
+        # serializer.is_valid(raise_exception=True);
+        print(serializer.data)
+        
+        
+
+        return Response(serializer.data, status=status.HTTP_200_OK);
+    
+    
 
 class DetailRouteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoutesFilter
     queryset = Route.objects.all()
-    serializer_class = DetailRouteSerializer
+    # serializer_class = DetailRouteSerializer
 
 class LocationView(generics.RetrieveAPIView):
     queryset = Location.objects.all()
@@ -76,6 +111,7 @@ class LocationView(generics.RetrieveAPIView):
             "location_id" : location.id,
             "locationName" : location_value.value
         })
+    
 class PostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
@@ -119,6 +155,24 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        depth = 0
+        try:
+            depth = int(self.request.query_params.get('depth', 0))
+        except ValueError:
+            pass # Ignore non-numeric parameters and keep default 0 depth
+        
+        context['depth'] = depth
+
+        return context
+    
+    def get_queryset(self):
+        query_set = super().get_queryset();
+        if self.request.user:
+            query_set = Order.objects.filter(user=self.request.user)
+        return query_set 
+    
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
 
@@ -128,7 +182,6 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
         return Response(serializer.data)
-    
     # def get_permissions(self):
     #     if self.action in ("create",):
     #         self.permission_classes = [permissions.IsAuthenticated,]
@@ -172,28 +225,55 @@ class ScheduleFilterSet(filters.FilterSet):
             'scheduleType': ['exact']
         }
 
-class ScheduleViewSet(viewsets.ViewSet):
+class ScheduleViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated,]
     queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
 
     def create(self, request, *args, **kwargs):
         print(request.data)
         serializer = ScheduleListSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            
             fromDate = serializer.validated_data['fromDate']
             toDate = serializer.validated_data['toDate']
             lanugage_id = serializer.validated_data['language_id']
+            isActive = request.data.get('isActive')
+            locationType = 1 if serializer.validated_data['scheduleType'] == 1 else 2
+            destination = request.data.get('destination')
+            source = request.data.get('source')
 
-            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate), scheduleType__id=serializer.validated_data['scheduleType'])
+
+            print(isActive)
+
+            if toDate is None:
+                toDate = '9999-12-31T00:00:00'
+
+            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate))
+            filtered_data = filtered_data.filter(scheduleType__id=serializer.validated_data['scheduleType'])
+            if isActive is not None:
+                filtered_data = filtered_data.filter(isActive=isActive)
+            
+            if destination is not None and len(destination) > 0:
+                print('Destination:', destination, sep=' ')
+                destinationResourceCodeSet = set()
+                [destinationResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=destination) ]
+                filtered_data = filtered_data.filter(route__destination__nameCode__id__in=destinationResourceCodeSet).filter(route__destination__type__id=locationType)
+            
+            if source is not None and len(source) > 0:
+                print('Source:', source, sep=' ')
+                sourceResourceCodeSet = set()
+                [sourceResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=source) ]
+                filtered_data = filtered_data.filter(route__source__nameCode__id__in=sourceResourceCodeSet).filter(route__source__type__id=locationType)
+                
 
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
-            
             
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
+
+    
 
 
 class TicketPersonViewSet(viewsets.ModelViewSet):
@@ -262,3 +342,135 @@ class PassportNumberTypeViewSet(viewsets.ModelViewSet):
     queryset = PassportNumberType.objects.all()
     serializer_class = PassportNumberTypeSerializer
     permission_classes = [IsAuthenticated, ]
+
+
+class TouristTourViewSet(viewsets.ModelViewSet):
+    queryset = TouristTour.objects.all()
+    serializer_class = TouristTourSerializer
+    permission_classes = [IsAuthenticated, ]
+    currentLanguageId = 3
+
+    def createOrGetRoute(self, sourceValue, destinationValue):
+        sourceLocation = self.createOrGetLocationByName(sourceValue)
+        destinationLocation = self.createOrGetLocationByName(destinationValue)
+
+        route = Route.objects.filter(source=sourceLocation, destination=destinationLocation).filter().first()
+        if route is None:
+            route = Route.objects.create(source=sourceLocation, destination=destinationLocation);
+        print("Route ID: ", route.id, sep=' ')
+
+        return route
+
+    def createOrGetLocationByName(self, value):
+        resourceValue = ResourceValue.objects.filter(value__icontains=value, language__id=self.currentLanguageId).first()
+        if resourceValue is None:
+            resourceCode = ResourceCode.objects.filter(defaultValue__icontains=value).first()
+
+            if resourceCode is None:
+                resourceCode = ResourceCode.objects.create(defaultValue=value)
+
+            resourceValue = ResourceValue.objects.create(value=value, language_id=self.currentLanguageId, code_id=resourceCode.id)
+
+        location = Location.objects.filter(nameCode__id=resourceValue.code.id, type__id=2).first()
+
+        if location is None:
+            location = Location.objects.create(nameCode_id=resourceValue.code.id, type_id=2) #2 - LocationType for TouristPlace
+        
+
+        return location
+    
+    def createResourceCode(self, value):
+        code = ResourceCode.objects.create(defaultValue=value)
+        ResourceValue.objects.create(value=value, code_id=code.id, language_id=self.currentLanguageId)
+        return code
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(owner_id=user.id)
+
+        non_deleted = self.request.query_params.get('non_deleted');
+        print(non_deleted)
+        
+        if non_deleted and str.upper(non_deleted)=="TRUE":
+            queryset = queryset.filter(deletedDate=None)
+
+
+        return queryset
+
+    @action(detail=False, methods=['post'], url_path='schedule')
+    def getTourByScheduleId(self, request):
+        print('Endpoint')
+        scheduleId = request.data.get('scheduleId', None)
+        if scheduleId is None:
+            raise ValidationAPIException(detail="Schedule id not supplied")
+               
+        tour = TouristTour.objects.filter(schedules__in=[scheduleId]).first()
+        # tour.schedules = tour.schedules.filter(id=scheduleId)
+        tour.schedules.set([tour.schedules.get(id=scheduleId)])
+
+        language_id = request.data.get('languageId')
+        print(request.data)
+        context = {}
+        if language_id:
+            context['language_id'] = language_id
+        
+        descriptionCodeSerializer = ResourceCodeSerializer(tour.descriptionNameCode)
+        context['description'] = descriptionCodeSerializer.data
+        serializer = TouristTourSerializer(tour, context=context)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @atomic
+    def create(self, request):
+        self.currentLanguageId = request.data['languageId']
+        destinationValue = request.data['destination']
+        sourceValue = request.data['source']
+        route = self.createOrGetRoute(sourceValue, destinationValue);
+        titleNameCode = self.createResourceCode(request.data['title'])
+        descriptionNameCode = self.createResourceCode(request.data['description'])
+
+        newTour = {
+            'titleNameCode': titleNameCode.id,
+            'descriptionNameCode': descriptionNameCode.id,
+            'price': request.data['price'],
+            'owner': request.data['owner'],
+        }
+
+        serializer = self.get_serializer(data=newTour)
+        serializer.is_valid(raise_exception=True)
+        newTour = serializer.save();
+
+
+        current_date = datetime.date.today()
+        delta = datetime.timedelta(days=1)
+        # weekDays in python: Monday is 0 and Sunday is 6
+        for i in range(1, 15):
+            current_date+=delta
+            if current_date.weekday() + 1 in request.data['weekDays']:
+                beginTime = datetime.time(*[int(j) for j in request.data['beginTime'].split(':')])
+                endTime = datetime.time(*[int(j) for j in request.data['endTime'].split(':')])
+
+                beginDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, beginTime))
+                if endTime < beginTime:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date+delta, endTime))
+                else:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, endTime))
+                
+                schedule = {
+                    'scheduleNumber': Schedule.generateScheduleNumber(),
+                    'route': route,
+                    'weekDay': current_date.weekday() + 1,
+                    'beginDate': beginDate,
+                    'endDate': endDate,
+                    'isActive': False,
+                    'scheduleType_id': 2
+                }
+                
+
+                schedule = Schedule.objects.create(**schedule)
+                newTour.schedules.add(schedule)
+        
+        newTour.save();
+        
+
+        return Response('create', status=status.HTTP_201_CREATED);

@@ -11,7 +11,7 @@ import RegistrationGuide from '@/components/App-RegistrationGuide';
 import RegistrationBusiness from '@/components/App-RegistrationBusiness';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
-import Tickets2 from '@/components/App-Tickets2';
+import TourTickets from '@/components/App-TourTickets';
 import Order from '@/components/App-Order';
 import OrderPassengerInformationList from '@/components/App-OrderPassengerInformationList';
 import OrderPayment  from '@/components/App-OrderPayment';
@@ -23,12 +23,18 @@ import TourInfo from '@/components/App-TourInfo';
 import ViewApplications from '@/components/App-ViewApplications';
 import GuideInfo from '@/components/App-GuideInfo';
 import BusinessProfile from '@/components/App-BusinessProfile';
-import BusinessGuideModify from '@/components/App-BusinessGuideModify';
+import BusinessTourList from '@/components/App-BusinessTourList';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideDeletion from '@/components/App-GuideDeletion';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
 import NewTour from '@/components/App-NewTour';
+import AppBusinessToursExample from '@/components/App-BusinessToursExample';
+import DriversAdminPanel from '@/components/App-DriversAdminPanel';
+import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
+import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
+import NewRoute from '@/components/App-NewRoute';
+import EditRoute from '@/components/App-EditRoute';
 import store from '@/store';
 
 
@@ -94,12 +100,13 @@ const routes = [
     component: Tickets, 
     name: "Tickets",
     meta: { requiresAuth: true },
+    props: { scheduleType: 1 }
   },
   { 
-    path: "/tickets2", 
-    component: Tickets2, 
-    name: "Tickets2",
-    meta: { requiresAuth: true },
+    path: "/tour-tickets", 
+    component: TourTickets, 
+    name: "TourTickets",
+    meta: { requiresAuth: true }
   },
   { 
     path: "/order/:id", 
@@ -121,13 +128,14 @@ const routes = [
     props: true
   },
   {
-    path: "/order-payment", 
+    path: "/order/:orderId/payment", 
     component: OrderPayment, 
     name: "OrderPayment",
     meta: { requiresAuth: true },
+    props: true
   },
   {
-    path: "/order-number", 
+    path: "/order/:orderId/number", 
     component: OrderNumber, 
     name: "OrderNumber",
     meta: { requiresAuth: true },
@@ -164,10 +172,11 @@ const routes = [
     name: "PageServerError"
   },
   {
-    path: "/tour-info", 
+    path: "/tour-info/:scheduleId", 
     component: TourInfo, 
     name: "TourInfo",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/view-applications", 
@@ -188,16 +197,23 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/business-guide-modify", 
-    component: BusinessGuideModify, 
-    name: "BusinessGuideModify",
+    path: "/tours", 
+    component: BusinessTourList, 
+    name: "BusinessTourList",
     meta: { requiresAuth: true },
   },
   {
-    path: "/view-available-guides", 
+    path: "/tours-example", 
+    component: AppBusinessToursExample, 
+    name: "AppBusinessToursExample",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tour/:tourId/available-guides", 
     component: ViewAvailableGuides, 
     name: "ViewAvailableGuides",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/guide-deletion", 
@@ -206,21 +222,52 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/applications", 
+    path: "/profile/applications", 
     component: Applications, 
-    name: "Applications",
-    meta: { requiresAuth: true },
+    name: "ProfileApplications",
+    meta: { requiresAuth: true }
   },
   {
-    path: "/guide-hire", 
+    path: "/tour/:tourId/guide-hire/:guideId", 
     component: GuideHire, 
     name: "GuideHire",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/new-tour", 
     component: NewTour, 
     name: "NewTour",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/drivers-admin-panel", 
+    component: DriversAdminPanel, 
+    name: "DriversAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/applications-admin-panel", 
+    component: ApplicationsAdminPanel, 
+    name: "ApplicationsAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/routes-admin-panel", 
+    component: RoutesAdminPanel, 
+    name: "RoutesAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/new-route", 
+    component: NewRoute, 
+    name: "NewRoute",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/edit-route", 
+    component: EditRoute, 
+    name: "EditRoute",
     meta: { requiresAuth: true },
   }
 ]

@@ -27,5 +27,21 @@ export default {
     }),
     passportTypes: axios.create({
         baseURL: config.PASSPORT_TYPES_API_URL,
-    }) 
+    }),
+    payments: axios.create({
+        baseURL: config.PAYMENTS_API_URL,
+    }),
+    routes: axios.create({
+        baseURL: config.ROUTES_API_URL,
+    }),
+    tours: axios.create({
+        baseURL: config.TOURS_API_URL,
+    }),
+    guides: axios.create({
+        baseURL: config.GUIDES_API_URL,
+    }),
+    applications: axios.create({
+        baseURL: config.APPLICATIONS_API_URL,
+    }),
+     
 }

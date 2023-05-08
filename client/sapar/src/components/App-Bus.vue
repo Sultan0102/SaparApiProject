@@ -23,6 +23,16 @@
                             <h4 class="mb-4"><span class="colour bookedSeat me-2 py-1"></span>{{ $t('Booked') }}</h4>
                         </div>
                         <button type="button" class="btn btn-primary my-3 mx-auto col-12" @click="createOrder()">Buy</button>
+
+                        <a @click="pushToTourInfo">
+                            <h4>About this tour</h4>
+                        </a>
+                        <!-- <router-link :to="{
+                            name: 'TourInfo',
+                            params: { schedule: schedule }
+                        }">
+                            <h4>About this tour</h4>
+                        </router-link> -->
                     </div>
                 </div>        
         </div>
@@ -137,6 +147,13 @@ export default {
                         text: errorMessage || "Error creating order!",
                     })
             })
+        },
+
+        pushToTourInfo() {
+            console.log(this.schedule)
+            debugger;
+            // this.$router.push({ name: 'TourInfo', params: { schedule: this.schedule } })
+            this.$router.push({ name: 'TourInfo', params: { scheduleId: this.schedule.id } })
         }
     },
     mounted() {

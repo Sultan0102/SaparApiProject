@@ -69,3 +69,8 @@ class FailedToCreateOrder(APIException):
     status_code = 400
     default_code = "failed_to_create_order"
     default_detail = 'Failed to create order'
+
+class FailedToCreatePayment(APIException):
+    status_code = 400
+    default_code = 'failed_to_create_payment'
+    default_detail = 'The error occured during payment creation'

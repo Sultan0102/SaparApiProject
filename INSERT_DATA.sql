@@ -131,26 +131,34 @@ INSERT INTO "Users"(id, "email", "password", "firstName", "lastName", "is_superu
     </div>
 </td>');
 
-	INSERT INTO "Bus"(id,name,"type_id")
-	VALUES(1, 'Mercedes', 1),
-	      (2, 'Toyota', 1),
-	      (3, 'BMW', 1);
+INSERT INTO "Bus"(id,name,"type_id")
+VALUES(1, 'Mercedes', 1),
+		(2, 'Toyota', 1),
+		(3, 'BMW', 1);
 
-	INSERT INTO "ScheduleType"(id, "nameCode_id")
-    VALUES(1, 15), (2, 16);
+INSERT INTO "ScheduleType"(id, "nameCode_id")
+VALUES(1, 15), (2, 16);
 
-	INSERT INTO "Schedule"(id,"route_id","bus_id","driver_id","scheduleNumber",
-						   "creationDate","weekDay","beginDate","endDate",
-						   "isActive","deleteDate","scheduleType")
-	VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20', 
-		TIMESTAMP'2023-01-17 01:20',true,null,1),
-	      (2,2,2,2,'BX2551','2023-02-15',3,TIMESTAMP'2023-02-09 10:30',
-		TIMESTAMP'2023-02-10 12:30:',true,null,1),
-	      (3,3,3,3,'GH1212','2023-02-16',5,TIMESTAMP'2023-02-25 12:00:00',
-		   TIMESTAMP'2023-02-26 00:00',true,null,2);
+INSERT INTO "Schedule"(id,"route_id","bus_id","driver_id","scheduleNumber",
+						"creationDate","weekDay","beginDate","endDate",
+						"isActive","deleteDate","scheduleType")
+VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20', 
+	TIMESTAMP'2023-01-17 01:20',true,null,1),
+		(2,2,2,2,'BX2551','2023-02-15',3,TIMESTAMP'2023-02-09 10:30',
+	TIMESTAMP'2023-02-10 12:30:',true,null,1),
+		(3,3,3,3,'GH1212','2023-02-16',5,TIMESTAMP'2023-02-25 12:00:00',
+		TIMESTAMP'2023-02-26 00:00',true,null,2);
 
     
+INSERT INTO "ApplicationType"(id, "name")
+VALUES	(1, 'HireGuide'),
+		(2, 'FireGuide');
 
+
+INSERT INTO "ApplicationStatus"
+VALUES	(1, 'Pending'),
+		(2, 'Approved'),
+		(3, 'Rejected');
 	-- INSERT INTO "TouristTrip"(id,"titleNameCode_id","descriptionNameCode_id","owner_id","price","deletedDate","guide_id","schedule_id")
 	-- VALUES(1,9,10,1,12000,null,3,1),
 	--       (2,11,12,1,10000,null,3,1),

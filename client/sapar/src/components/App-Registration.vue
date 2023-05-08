@@ -50,11 +50,13 @@ export default {
     methods: {
         ...mapActions(["register"]),
         async submit() {
+            debugger;
             const user = {
                 email: this.form.email,
                 password: this.form.password,
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
+                roleId: 2 // Customer
             }
             
             let form = $("#registration-form");
@@ -73,7 +75,6 @@ export default {
                 })
                 return;
             }
-            
             this.register(user).then(
                 () => {
                     this.$router.push({ name: "VerificationCode", params: { email: this.form.email }})
