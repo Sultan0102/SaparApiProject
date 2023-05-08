@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
                     <form class="text-center mt-5 mx-auto">
-                        <h2 class="pt-3">{{ $t('New Route') }}</h2>
+                        <h2 class="py-3">ABFJHK509946</h2>
                         <div class="pb-3">
                             <select class="mx-auto form-select">
                                 <option selected disabled class="selected">{{ $t('Choose source') }}</option>
@@ -40,7 +40,7 @@
                         <div class="form-check mt-2 mx-auto text-start">
                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">
-                                Disabled
+                                {{ $t('Disabled') }}
                             </label>
                         </div>
                         <button disabled type="submit" class="btn btn-primary mt-5 mb-4">{{ $t('Apply') }}</button> <br/>

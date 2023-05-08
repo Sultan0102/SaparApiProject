@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
                     <form class="text-center mt-5 mx-auto">
-                        <h2 class="pt-3">{{ $t('New Route') }}</h2>
+                        <h2 class="py-3">{{ $t('New') }} {{ $t('Route') }}</h2>
                         <div class="pb-3">
                             <select class="mx-auto form-select">
                                 <option selected disabled class="selected">{{ $t('Choose source') }}</option>
@@ -50,10 +50,10 @@
                             </VueMultiSelect>
                         </div>
                         <div class="input-group mb-3">
-                            <div class="form-control mx-auto"><VueDatePicker v-model="time" time-picker position="left" :placeholder="$t('Start Time:')" hide-input-icon /></div>
+                            <div class="form-control mx-auto"><VueDatePicker v-model="time" time-picker position="left" :placeholder="$t('Start Time')" hide-input-icon /></div>
                         </div>
                         <div class="input-group mb-3">
-                            <div class="form-control mx-auto"><VueDatePicker v-model="time" time-picker position="left" :placeholder="$t('End Time:')" hide-input-icon /></div>
+                            <div class="form-control mx-auto"><VueDatePicker v-model="time" time-picker position="left" :placeholder="$t('End Time')" hide-input-icon /></div>
                         </div>
                         <button disabled type="submit" class="btn btn-primary mt-5 mb-5">{{ $t('Apply') }}</button>
                     </form>
