@@ -43,10 +43,10 @@ export default {
         async getUserApplications() {
             let userId = TokenService.getUser().id;
             const criteria = {
-                senderUser: userId
+                userId: userId
             }
 
-            await ApplicationService.getApplications(criteria).then(
+            await ApplicationService.getUserApplications(criteria).then(
                 (data)=> {
                     this.applications = data
                 }
