@@ -5,6 +5,7 @@ from Core.applications.serializers import DocumentSerializer, ApplicationSeriali
 from Core.applications.models import Document, Application
 from rest_framework.decorators import action
 from Core.exceptions import ValidationAPIException
+from django.db.models import Q
 
 
 
@@ -19,12 +20,12 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], url_path="user")
     def getApplicationByUser(self, request):
         print('Applications by User Endpoint')
-        senderUser = request.data.get('senderUser', None)
+        userId = request.data.get('userId', None)
 
 
         applications = Application.objects.all()
-        if senderUser:
-            applications = applications.filter(senderUser__id=senderUser)
+        if userId:
+            applications = applications.filter(Q(senderUser__id=userId) | Q(receiverUser__id=userId))
             
         serializer = ApplicationSerializer(applications, many=True)
         

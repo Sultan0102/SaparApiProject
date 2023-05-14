@@ -10,7 +10,7 @@ class ApplicationService{
         );
     }
 
-    getApplications(criteria) {
+    getUserApplications(criteria) {
         return Api.applications.post('user/', criteria).then(
             (response) => {
                 return response.data
