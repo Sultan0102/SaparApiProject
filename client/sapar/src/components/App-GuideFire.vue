@@ -142,7 +142,7 @@ export default {
                 effectiveFrom: this.application.effectiveFrom.toISOString(),
                 tour: this.tourId,
             }
-
+            debugger;
             let applicationRequest = {
                 senderUser: userId,
                 receiverUser: this.guide.user.id,
