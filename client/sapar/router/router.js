@@ -25,7 +25,7 @@ import GuideApply from '@/components/App-GuideApply';
 import BusinessProfile from '@/components/App-BusinessProfile';
 import BusinessTourList from '@/components/App-BusinessTourList';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
-import GuideDeletion from '@/components/App-GuideDeletion';
+import GuideFire from '@/components/App-GuideFire';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
 import NewTour from '@/components/App-NewTour';
@@ -212,10 +212,11 @@ const routes = [
     props: true
   },
   {
-    path: "/guide-deletion", 
-    component: GuideDeletion, 
-    name: "GuideDeletion",
+    path: "/tour/:tourId/guide-fire/:guideId", 
+    component: GuideFire, 
+    name: "GuideFire",
     meta: { requiresAuth: true },
+    props: true
   },
   {
     path: "/profile/applications", 

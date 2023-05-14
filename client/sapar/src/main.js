@@ -13,8 +13,8 @@ import setupinterceptors from './services/setupinterceptors'
 import Api from "./services/Api"
 import i18n from './i18n'
 import Notifications from '@kyvg/vue3-notification'
-
 import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 
 // axios basic configuration

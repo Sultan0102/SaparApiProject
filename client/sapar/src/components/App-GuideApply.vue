@@ -79,7 +79,7 @@ export default {
         async getGuide() {
             await UserService.retreiveGuideByUserId(this.guideId).then(
                 (data)=> {
-                    return data.id
+                    return data
                 }
             )
 

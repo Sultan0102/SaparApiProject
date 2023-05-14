@@ -43,7 +43,12 @@
                         <h3 class="my-auto"><i class="bi bi-person-circle person align-middle me-3"></i>{{guide.user.firstName}} {{ guide.user.lastName[0] }}.</h3>
                     </div>
                     <div class="col-lg-4 my-auto">
+                        <router-link :to="{
+                        name: 'GuideFire',
+                        params: {tourId: tour.id, guideId: guide.id }
+                    }">
                         <button type="button" class="btn btn-primary text-center me-auto">{{ $t('Fire') }}</button>
+                    </router-link>
                     </div>
                 </div>
             </div>
