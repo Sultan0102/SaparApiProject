@@ -17,7 +17,7 @@
 						<router-link class="nav-link" aria-current="page" to="/about">{{ $t('About us') }}</router-link>
 					</li>
 					<li class="ms-lg-5" v-if="getUserRole == 3">
-						<router-link class="nav-link" aria-current="page" to="/">{{ $t('Vacancies') }}</router-link>
+						<router-link class="nav-link" aria-current="page" to="/vacancies">{{ $t('Vacancies') }}</router-link>
 					</li>
 					<li class="ms-lg-auto" v-if="isLoggedIn">
 						<router-link class="nav-link" to="/profile">{{ $t('hello') }}, {{ getUserEmail }}<i class="ms-1 bi bi-person-circle"></i></router-link>

@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from Core.exceptions import ValidationAPIException
 
 
 # Create your views here.
@@ -63,4 +65,16 @@ class GuideViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['depth'] = 1
         return context
+
+    @action(detail=False, methods=['post'], url_path='user')
+    def getGuideByUserId(self, request):
+        userId = request.data.get('userId', None)
+        if userId is None:
+            raise ValidationAPIException(detail="Schedule id not supplied")
+
+        guide = Guide.objects.get(user_id=userId)
+        serializer = self.get_serializer(guide)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     

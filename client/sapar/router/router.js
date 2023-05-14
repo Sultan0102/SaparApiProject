@@ -17,11 +17,11 @@ import OrderPassengerInformationList from '@/components/App-OrderPassengerInform
 import OrderPayment  from '@/components/App-OrderPayment';
 import OrderNumber  from '@/components/App-OrderNumber';
 import About from '@/components/App-About';
-import GuideApply from '@/components/App-GuideApply';
+import GuideVacancies from '@/components/App-GuideVacancies';
 import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
 import TourInfo from '@/components/App-TourInfo';
 import ViewApplications from '@/components/App-ViewApplications';
-import GuideInfo from '@/components/App-GuideInfo';
+import GuideApply from '@/components/App-GuideApply';
 import BusinessProfile from '@/components/App-BusinessProfile';
 import BusinessTourList from '@/components/App-BusinessTourList';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
@@ -141,9 +141,9 @@ const routes = [
     name: "About"
   },
   {
-    path: "/guide-apply", 
-    component: GuideApply, 
-    name: "GuideApply",
+    path: "/vacancies", 
+    component: GuideVacancies, 
+    name: "GuideVacancies",
     meta: { requiresAuth: true },
   },
   {
@@ -180,10 +180,11 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/guide-info", 
-    component: GuideInfo, 
-    name: "GuideInfo",
+    path: "/vacancies/apply/tour/:tourId", 
+    component: GuideApply, 
+    name: "GuideApply",
     meta: { requiresAuth: true },
+    props: true,
   },
   {
     path: "/business-profile", 

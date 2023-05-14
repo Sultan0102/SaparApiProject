@@ -43,5 +43,8 @@ export default {
     applications: axios.create({
         baseURL: config.APPLICATIONS_API_URL,
     }),
+    documents: axios.create({
+        baseURL: config.DOCUMENTS_API_URL,
+    }),
      
 }

@@ -63,7 +63,7 @@ export default {
 
         applicationSubjectInitials: function() {
             const user = TokenService.getUser();
-            if(user.role == 4) { // if opened by business person
+            if(user.role == 4 || user.role == 3) { // if opened by business person
                 return this.application.applicationData.firstName + ' ' + this.application.applicationData.lastName.substring(0,1) + '.';
             }
 

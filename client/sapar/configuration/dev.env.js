@@ -12,5 +12,6 @@ export default {
     TOURS_API_URL: 'http://localhost:8000/api/tours/',
     GUIDES_API_URL: 'http://localhost:8000/api/guides/',
     APPLICATIONS_API_URL: 'http://localhost:8000/api/applications/',
+    DOCUMENTS_API_URL: 'http://localhost:8000/api/docs/',
 
 }

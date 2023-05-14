@@ -15,7 +15,7 @@ import i18n from './i18n'
 import Notifications from '@kyvg/vue3-notification'
 
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+
 
 // axios basic configuration
 // axios.defaults.withCredentials = true
@@ -34,7 +34,8 @@ import '@vuepic/vue-datepicker/dist/main.css'
     Api.routes,
     Api.tours,
     Api.guides,
-    Api.applications
+    Api.applications,
+    Api.documents
 ].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
 
 
