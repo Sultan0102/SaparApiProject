@@ -27,7 +27,7 @@ BEGIN
 			AND
 			NOT EXISTS(SELECT 1 FROM "Schedule" s
 				  INNER JOIN "TourSchedules" ts on s.id = ts."schedule_id" and ts."touristtour_id" = current_tour.id
-				  WHERE s."beginDate"::date = CURRENT_DATE::date
+				  WHERE s."beginDate"::date > CURRENT_DATE::date
 				  AND s."weekDay" = EXTRACT(dow from CURRENT_DATE::date)
 				  ) --current_date::date, "2023-04-21") = 0
 				   
@@ -38,7 +38,7 @@ BEGIN
 					-- current day schedule for this tour
 					SELECT * INTO schedule FROM "Schedule" s
 				  	INNER JOIN "TourSchedules" ts on s.id = ts."schedule_id" and ts."touristtour_id" = current_tour.id
-				  	WHERE s."beginDate"::date = URRENT_DATE::date
+				  	WHERE s."beginDate"::date = CURRENT_DATE::date
 				  	AND s."weekDay" = EXTRACT(dow from CURRENT_DATE::date);
 					
 					-- create Schedule for next week
