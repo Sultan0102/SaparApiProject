@@ -1,15 +1,20 @@
 from xml.etree.ElementInclude import include
+
+from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from django.urls import path,include
+
+from .applications.api import ApplicationViewSet, ApplicationDriverViewSet
 from .routers import router, detRouter, reviewRouter, orderRouter, scheduleRouter, ticketPersonRouter, cachedTicketPersonRouter, ticketRouter
-from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet
+from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
+    ScheduleDriverViewSet
 
 from . import settings
 from .routers import router, detRouter, reviewRouter, orderRouter, ticketPersonRouter, scheduleRouter, \
     applicationRouter, documentsRouter
 from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
-    ScheduleViewSet, ApplicationViewSet
+    ScheduleViewSet
 from .authorization.views import forgot_password,change_password
 
 urlpatterns = [
@@ -30,7 +35,7 @@ urlpatterns = [
     # path('api/showtickets/<int:pk>', TicketView.as_view())
     path('api/getloc', LocationView.as_view()),
     path('api/', include(applicationRouter.urls)),
-    path('api/schedules/<int:pk>/<int:lang_id>/', ScheduleViewSet.as_view({'get': 'retrieve'})),
-    path('api/applications/<int:pk>/', ApplicationViewSet.as_view({'get': 'retrieve'})),
+    path('api/schedules/<int:pk>/<int:lang_id>/', ScheduleDriverViewSet.as_view({'get': 'retrieve'})),
+    path('api/applications/<int:pk>/', ApplicationDriverViewSet.as_view({'get': 'retrieve'})),
     path('api/',include(documentsRouter.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

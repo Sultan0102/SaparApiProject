@@ -21,6 +21,9 @@ from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsAuthorOrReadOnly
+from ..applications.models import Document, Application
+from ..applications.serializers import DocumentsViewSetSerializer, ApplicationDriverSerializer, \
+    ApplicationSerializerRetrieve, ScheduleDriverSerializer
 from ..authorization.models import User
 from rest_framework.decorators import action
 import Core.validators
@@ -252,30 +255,7 @@ class ScheduleDriverViewSet(viewsets.ViewSet):
         # print(serialized_data)
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
-class ApplicationViewSet(viewsets.ModelViewSet):
-    queryset = Application.objects.all()
-    serializer_class = ApplicationSerializer
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = Application.objects.filter(user=pk)
-        serializer = ApplicationSerializerRetrieve(queryset,many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-    # def create(self, request):
-    #     applicationData = request.data['applicationData']
-    #     application = Application.objects.create(applicationData=applicationData)
-    #     application.save()
-    #     serializer = ApplicationSerializer(application)
-    #     return Response(serializer.data)
-class DocumentsViewSet(viewsets.ModelViewSet):
-    queryset = Documents.objects.all()
-    serializer_class = DocumentsViewSetSerializer
-
-    def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = Documents.objects.filter(owner=pk)
-        serializer = DocumentsViewSetSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ScheduleFilterSet(filters.FilterSet):

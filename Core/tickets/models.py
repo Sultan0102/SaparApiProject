@@ -1,11 +1,7 @@
 from django.db import models
 from Core.authorization.models import User, Guide
-import datetime
 import string
 import random
-
-
-from Core.authorization.models import User
 
 
 class TicketStatus(models.Model):
@@ -217,59 +213,6 @@ class CachedTicketPerson(models.Model):
         db_table="CachedTicketPerson"
 
 
-# Move to Application
-class Documents(models.Model):
-    id = models.AutoField(primary_key = True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.FileField(db_index=True, blank=True,null=True,upload_to='%Y/%m/%d/')
-    type = models.ForeignKey('DocumentsType',on_delete=models.CASCADE,null=True)
-    creationDate = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = "Documents"
-
-class ApplicationDocuments(models.Model):
-    id = models.AutoField(primary_key = True)
-    name = models.CharField(db_index=True, max_length=255)
-    document = models.ForeignKey('Documents',on_delete=models.CASCADE)
-    application = models.ForeignKey('Application', on_delete= models.CASCADE,default=1)
-
-    class Meta:
-        db_table = "ApplicationDocuments"
-
-class ApplicationType(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(db_index=True, max_length=255)
-
-    class Meta:
-        db_table = "ApplicationType"
-
-class Application(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.ForeignKey('ApplicationType',blank=True,on_delete=models.CASCADE)
-    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
-    status = models.ForeignKey('ApplicationStatus',blank=True, on_delete=models.CASCADE)
-    applicationData = models.TextField(db_index=True)
-
-    class Meta:
-        db_table = "Application"
-
-
-class ApplicationStatus(models.Model):
-    id= models.AutoField(primary_key = True)
-    name = models.CharField(db_index=True,blank=True, max_length=255)
-    creationDate = models.DateTimeField(auto_now_add=True,db_index=True)
-
-    class Meta:
-        db_table = "ApplicationStatus"
-
-class DocumentsType(models.Model):
-    id = models.AutoField(primary_key = True)
-    name = models.CharField(db_index=True, blank=True, max_length=255)
-    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
-
-    class Meta:
-        db_table = "DocumentsType"
 
 
