@@ -225,3 +225,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 class DocumentsViewSet(viewsets.ModelViewSet):
     queryset = Documents.objects.all()
     serializer_class = DocumentsViewSetSerializer
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        queryset = Documents.objects.filter(owner=pk)
+        serializer = DocumentsViewSetSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

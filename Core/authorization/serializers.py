@@ -52,7 +52,6 @@ class RegisterSerializer(UserSerializer):
         fields = ('__all__')
 
     def validate_password(self, value):
-        
         if validators.validate_password(value) == False:
             raise InvalidPasswordException()
         return value

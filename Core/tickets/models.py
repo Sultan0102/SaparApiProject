@@ -216,7 +216,8 @@ class CachedTicketPerson(models.Model):
 class Documents(models.Model):
     id = models.AutoField(primary_key = True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.FileField(db_index=True, blank=True,null=True,upload_to='documents/%Y/%m/%d/')
+    file = models.FileField(db_index=True, blank=True,null=True,upload_to='%Y/%m/%d/')
+    type = models.ForeignKey('DocumentsType',on_delete=models.CASCADE,null=True)
     creationDate = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -257,4 +258,12 @@ class ApplicationStatus(models.Model):
 
     class Meta:
         db_table = "ApplicationStatus"
+
+class DocumentsType(models.Model):
+    id = models.AutoField(primary_key = True)
+    name = models.CharField(db_index=True, blank=True, max_length=255)
+    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        db_table = "DocumentsType"
 
