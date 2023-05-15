@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '192.168.1.8', '192.168.43.58']
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'documents')
+MEDIA_URL = '/documents/'
 
 # Application definition
 
