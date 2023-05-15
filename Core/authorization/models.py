@@ -16,8 +16,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     ADMIN = 1
     CUSTOMER = 2
-    GUIDE =3
-    BUSINESS_PERSON =3
+    GUIDE = 3
+    BUSINESS_PERSON = 4
 
     ROLE_CHOICES = (
           (ADMIN, 'Admin'),
@@ -51,6 +51,54 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+
+class BusinessPerson(models.Model):
+    id = models.AutoField(primary_key=True)
+    companyName = models.CharField(max_length=255, blank=False)
+    binNumber = models.CharField(max_length=12)
+    legalAddress = models.CharField(max_length=255)
+    serviceRating = models.FloatField(default=0)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=False, null=False)
+
+    class Meta:
+        db_table = "BusinessPerson"
+
+class Guide(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=False, null=False)
+    serviceRating = models.FloatField(default=0)
+    
+    class Meta:
+        db_table = "Guide"
+    
+
+class GuideSpecialization(models.Model):
+    id = models.AutoField(primary_key=True)
+    guide = models.ForeignKey(Guide, on_delete=models.PROTECT, blank=False, null=False)
+    name = models.CharField(max_length=255, blank=False)
+    isMain = models.BooleanField(null=False)
+
+    class Meta:
+        db_table="GuideSpecialization"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class IsGuide(permissions.BasePermission):
     """

@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
-
 body {
 	-webkit-font-smoothing: antialiased;
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
-	font-family: 'Montserrat', sans-serif !important;
+	font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif !important;
 }
+
 .head{
 	font-weight: 400;
 	font-size: 20px;
@@ -22,7 +21,7 @@ body {
 .text-decoration-underline{
 	background-color: #1C5E3C;
 }
-h1,h2,h3,h4,h5,h6,p,a{
+h1,h2,h3,h4,h5,h6,p,a,li{
 	color: #1C5E3C !important;
 }
 i{
@@ -53,8 +52,11 @@ a{
 	color: #ECECEC !important;
 }
 form{
-	margin: auto;
 	background-color: #FFFFFF;
+	border-color: #1C5E3C !important;
+	border-left-style: solid;
+    border-left-width: 50px;
+	max-width: 600px;
 }
 .form-control,
 .form-control-plaintext
@@ -62,21 +64,29 @@ form{
 	border: none !important;
 	border-bottom: 1px solid #ECECEC !important;
 	background-color: #FFF !important;
-	width: 80% !important;
-	margin: auto;
+	max-width: 80%;
+}
+.form-select{
+	padding: .375rem .75rem !important;
+}
+.btn{
+	word-wrap: normal !important;
 }
 .btn-primary{
 	border-radius: 0 !important;
 	background-color: #1C5E3C !important;
 	border-color: #1C5E3C !important;
-	min-width: 100px;
+	width: 15vw;
+    max-width: 300px !important;
+    min-width: 150px !important;
+    font-size: 24px;
 }
-form{
-    border-color: #1C5E3C !important;
-	border-left-style: solid;
-    border-left-width: 50px;
+.btn-secondary{
+	border-radius: 18px !important;
+	background: none !important;
+	border-color: #ECECEC !important;
+	border-width: 3px;
 }
-
 :root {
 	--bs-primary: #1C5E3C !important;
 }
@@ -89,13 +99,49 @@ button{
 *:focus {
 	box-shadow: none !important;
 }
-select{
-	color: #FFF !important;
-	background-color: #1C5E3C !important;
-	border: none !important;
-	font-size: 22px !important;
-}
 .border{
 	border-radius: 10px;
 	border-width: 2px !important;
 }
+i{
+    color: #1C5E3C;
+	padding-right: .25rem !important;
+}
+@media (max-width: 767px) {
+	.swap-container {
+	flex-direction: column-reverse !important;
+	}
+}
+@media (max-width: 991px) {
+	.swap-lg-container {
+	flex-direction: column-reverse !important;
+	}
+}
+.form-select{
+	border: none !important;
+	border-bottom: 1px solid #ECECEC !important;
+	background-color: #FFF !important;
+	max-width: 80% !important;
+	border-radius: 0px;
+}
+select, option{
+    color: #1C5E3C !important;
+}
+option{
+	background-color: #FFF !important;
+}
+
+/*VueDatePicker*/
+.dp__input{
+	padding: 0px 0px !important;
+	border: none !important;
+  }
+  .dp__arrow_top{
+	display: none;
+  }
+  .dp__range_end, .dp__range_start, .dp__active_date{
+	background: #1C5E3C !important;
+  }
+  .dp__today{
+	border: 1px solid #1C5E3C !important;
+  }

@@ -1,66 +1,42 @@
 <template>  
     <div class="container-fluid py-5 mt-5">
-        <div class="col-xl-6 mx-auto mb-3">
-            <input type="search" class="form-control" placeholder="Search here" aria-label="Search">
+        <div class="col-xxl-8 col-10 mx-auto mb-3">
+            <div class="input-group mx-auto">
+                <input v-model="filters.source" type="search" class="form-control" :placeholder="$t('From')" aria-label="Search">
+                <input v-model="filters.destination" type="search" class="form-control" :placeholder="$t('To')"  aria-label="Search">
+                <div class="form-control">
+                    <VueDatePicker 
+                    v-model="filters.dateRange" 
+                    model-auto 
+                    range 
+                    :min-date="new Date()"
+                    position="right"
+                    :format="formatDateRange"
+                    hide-input-icon />
+                </div>
+                <button class="btn search" type="button" @click="filterSchedules"><i class="bi bi-search"></i></button>
+            </div>
         </div>
         <div class="container table-responsive">
             <table class="table table-hover text-center">
                 <thead>
                     <tr>
-                        <th scope="col">{{ $t('     Route    ') }}</th>
-                        <th scope="col">{{ $t('   From - To  ') }}</th>
-                        <th scope="col">{{ $t('Departure - Arrival Time') }}</th>
+                        <th scope="col">{{ $t('Route') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                        <th scope="col">{{ $t('From') }} - {{ $t('To') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                        <th scope="col">{{ $t('Departure - Arrival Time') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-bs-toggle="collapse" data-bs-target="#bus2">
-                        <th scope="row">AB4958</th>
-                        <td>Almaty - Taraz</td>
-                        <td>10:40pm - 05:30pm</td>
-                    </tr>   
-                    <td colspan="3" class="collapse " id="bus2">
-                        <div class="row align-items-center " id="bus2">
-                                    <div class="col-8 p-2 my-5 bus-seats mx-auto">
-                                        <div class="list-group list-group-horizontal flex-wrap">
-                                            <div v-for="ticket in tickets" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center">
-                                                <span>{{ ticket.seatNumber }}</span>
-                                            </div>
-                                        </div>  
-                                    </div>      
-                                    <div class="col-4 mx-auto">
-                                            <h6 class="mb-0 mb-md-3">Available</h6>
-                                            <h6 class="mb-0 mb-md-3">Occupied</h6>
-                                            <h6 class="mb-0 mb-md-3">Booked</h6>
-                                            <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
-                                    </div>        
-                        </div>
-                    </td>
+                    <template v-for="schedule in schedules">
+                        <tr data-bs-toggle="collapse" :data-bs-target="'#'+schedule.scheduleNumber">
+                            <th scope="row"><span id="schedule-number">{{ schedule.scheduleNumber }}</span></th>
+                            <td><span id="route-source-dest">{{ concatenatedSourceAndDestination(schedule) }}</span></td>
+                            <td><span id="begin-end-date">{{ concatenatedBeginDateAndEndDate(schedule) }}</span></td>
+                        </tr> 
+                        <AppBus :schedule="schedule"/>
 
-                    <!-- <tr data-bs-toggle="collapse" data-bs-target="#bus3">
-                        <th scope="row">AB4958</th>
-                        <td>Almaty - Taraz</td>
-                        <td>10:40pm</td>
-                    </tr>
-                                    
-                    <td colspan="3" class="collapse " id="bus3">
-                        <div class="row align-items-center " id="bus3">
-                                <div class="col-md-9 p-2 my-5 bus-seats mx-auto text-center">
-                                    <ul v-for="row in tickets" class="list-group list-group-horizontal">
-                                        <li v-for="ticket in row" :key="ticket.id" :class="currentStatusColor(ticket.ticketStatus)" @click="occupySeat(ticket)" class="list-group-item availableSeat m-1 mx-2 text-center flex-wrap">
-                                            <span>{{ ticket.seatNumber }}</span>
-                                        </li>
-                                    </ul>  
-                                </div>      
-                                <div class="col-md-3 mx-auto">
-                                        <h6 class="mb-3 py-3 colour mx-auto availableSeat">Available</h6>
-                                        <h6 class="mb-3 py-3 colour mx-auto occupiedSeat">Occupied</h6>
-                                        <h6 class="mb-3 py-3 colour mx-auto bookedSeat">Booked</h6>
-                                        <button type="button" class="btn btn-primary mx-auto my-3">Buy</button>
-                                </div>        
-                        </div>
-                    </td> -->
-                    
-                    <AppBus />
+                    </template>
+                                       
                 </tbody>
             </table>
         </div>
@@ -71,64 +47,167 @@
 <script>
 import TicketService from "@/services/TicketService"
 import AppBus from "@/components/App-Bus.vue";
+import ScheduleService from "@/services/ScheduleService";
+
 
 export default{
+    props: ['scheduleType'],
     name: "Tickets",
     components: {
         AppBus
     },
     data() {
         return {
-            tickets: [[{ "id": 1, "seatNumber": 1, "ticketStatus": 1 }, { "id": 2, "seatNumber": 2, "ticketStatus": 2 }, { "id": 3, "seatNumber": null, "ticketStatus": 0 }, { "id": 4, "seatNumber": 3, "ticketStatus": 2 }, { "id": 5, "seatNumber": 4, "ticketStatus": 1 }], [{ "id": 6, "seatNumber": 5, "ticketStatus": 1 }, { "id": 7, "seatNumber": 6, "ticketStatus": 2 }, { "id": 8, "seatNumber": null, "ticketStatus": 0 }, { "id": 9, "seatNumber": 7, "ticketStatus": 2 }, { "id": 10, "seatNumber": 8, "ticketStatus": 1 }], [{ "id": 11, "seatNumber": 9, "ticketStatus": 2 }, { "id": 12, "seatNumber": 10, "ticketStatus": 1 }, { "id": 13, "seatNumber": null, "ticketStatus": 0 }, { "id": 14, "seatNumber": 11, "ticketStatus": 1 }, { "id": 15, "seatNumber": 12, "ticketStatus": 2 }], [{ "id": 16, "seatNumber": 13, "ticketStatus": 1 }, { "id": 17, "seatNumber": 14, "ticketStatus": 1 }, { "id": 18, "seatNumber": null, "ticketStatus": 0 }, { "id": 19, "seatNumber": null, "ticketStatus": 0 }, { "id": 20, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 21, "seatNumber": 17, "ticketStatus": 1 }, { "id": 22, "seatNumber": 18, "ticketStatus": 2 }, { "id": 23, "seatNumber": null, "ticketStatus": 0 }, { "id": 24, "seatNumber": 19, "ticketStatus": 1 }, { "id": 25, "seatNumber": 20, "ticketStatus": 1 }], [{ "id": 26, "seatNumber": 21, "ticketStatus": 1 }, { "id": 27, "seatNumber": 22, "ticketStatus": 1 }, { "id": 28, "seatNumber": null, "ticketStatus": 0 }, { "id": 29, "seatNumber": 23, "ticketStatus": 1 }, { "id": 30, "seatNumber": 24, "ticketStatus": 1 }], [{ "id": 31, "seatNumber": 25, "ticketStatus": 1 }, { "id": 32, "seatNumber": 26, "ticketStatus": 1 }, { "id": 33, "seatNumber": null, "ticketStatus": 0 }, { "id": 34, "seatNumber": 27, "ticketStatus": 1 }, { "id": 35, "seatNumber": 28, "ticketStatus": 1 }], [{ "id": 36, "seatNumber": 29, "ticketStatus": 1 }, { "id": 37, "seatNumber": 30, "ticketStatus": 1 }, { "id": 38, "seatNumber": null, "ticketStatus": 0 }, { "id": 39, "seatNumber": null, "ticketStatus": 0 }, { "id": 40, "seatNumber": null, "ticketStatus": 0 }], [{ "id": 41, "seatNumber": 33, "ticketStatus": 1 }, { "id": 42, "seatNumber": 34, "ticketStatus": 2 }, { "id": 43, "seatNumber": null, "ticketStatus": 0 }, { "id": 44, "seatNumber": 35, "ticketStatus": 2 }, { "id": 45, "seatNumber": 36, "ticketStatus": 1 }], [{ "id": 46, "seatNumber": 37, "ticketStatus": 1 }, { "id": 47, "seatNumber": 38, "ticketStatus": 2 }, { "id": 48, "seatNumber": null, "ticketStatus": 0 }, { "id": 49, "seatNumber": 39, "ticketStatus": 2 }, { "id": 50, "seatNumber": 40, "ticketStatus": 1 }], [{ "id": 51, "seatNumber": 41, "ticketStatus": 2 }, { "id": 52, "seatNumber": 42, "ticketStatus": 1 }, { "id": 53, "seatNumber": null, "ticketStatus": 0 }, { "id": 54, "seatNumber": 43, "ticketStatus": 1 }, { "id": 55, "seatNumber": 44, "ticketStatus": 2 }]],
-            ticketsSum: 0
+            schedules: null,
+            filters: {
+                source: null,
+                destination: null,
+                beginDate: new Date(),
+                endDate: null,
+                dateRange: new Date()
+            },
+            locales: {
+                'en': 3,
+                'ru': 1,
+                'kz': 2
+            },
+            scheduleType: 1
         };
     },
-    methods: {
-        currentStatusColor(n) {
-            switch (n) {
-                case 0:
-                    return "empty-space";
-                case 1:
-                    return "availableSeat";
-                case 2:
-                    return "occupiedSeat";
-                case 3:
-                    return "bookedSeat";
-            }
-        },
-        occupySeat(ticket) {
-            if (ticket.ticketStatus == 1 && this.ticketsSum < 5) {
-                ticket.ticketStatus = 3;
-                this.ticketsSum++;
-            }
-            else if (ticket.ticketStatus == 3) {
-                ticket.ticketStatus = 1;
-                this.ticketsSum--;
-            }
-            else {
-                console.log(ticket.ticketStatus);
-            }
-            console.log(this.ticketsSum);
-            console.log(this.tickets.filter(t => t.ticketStatus == 3));
-        },
-        getTickets() {
-            TicketService.retreive().then(data => {
-                console.log(data);
-            });
+    computed: {
+      currentLanguageId: function() {
+        let currentLocale = this.$i18n.locale;
+        let langId = null;
+        switch(currentLocale) {
+            case 'en':
+                langId = 3;
+                break;
+            case 'kz':
+                langId = 2;
+                break;
+            case 'ru':
+                langId = 1;
+                break;
+            default:
+                langId = 1;
+                break;
         }
+        return langId;
+      },
+      
+      formattedBeginDateString: function() {
+        let beginDate = this.filters.beginDate;
+        return beginDate.toISOString().split('T')[0]
+      },
+      formattedEndDateString: function() {
+        let endDate = this.filters.endDate;
+
+        return endDate != null
+               ? endDate.toISOString().split('T')[0]
+               : null;
+      } 
+    },
+    methods: {
+        
+        formatDateRange(dates) {
+            let dateStrings = []
+            dates.forEach((date) => {
+
+                if(date) {
+                    const day = date.getDate();
+                    const month = date.getMonth();
+                    const year = date.getFullYear();
+    
+                    dateStrings.push(`${day}.${month}.${year}`)
+                }
+            })
+            
+            
+            return dateStrings.join(' - ');
+        },
+
+        getSchedules() {
+            let langId = this.currentLanguageId;
+
+            const criteria = {
+                source: this.source,
+                destination: this.destination,
+                fromDate: this.formattedBeginDateString,
+                toDate: this.formattedEndDateString,
+                language_id: langId,
+                scheduleTypeId: this.scheduleType,
+                isActive: true
+            }
+
+            ScheduleService.getSchedules(criteria).then((schedules)=> {
+                this.schedules = schedules;
+            },
+            (error)=> {
+                 
+            })
+        },
+
+        filterSchedules() {
+            if(this.filters.dateRange == null) {
+                this.filters.beginDate = new Date();
+                this.filters.endDate = null
+            } else {
+                if(Array.isArray(this.filters.dateRange)) {
+                    this.filters.beginDate = this.filters.dateRange[0]
+                    this.filters.endDate = this.filters.dateRange[1]
+                } else {
+                    this.filters.beginDate = this.filters.dateRange;
+                    this.filters.endDate = null;
+                }
+            }
+
+            console.log(this.filters)
+            this.getSchedules()
+        },
+
+        concatenatedSourceAndDestination: function (schedule) {
+            return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
+        },
+        concatenatedBeginDateAndEndDate: function(schedule) {
+            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
+      },
     },
     mounted() {
-        console.log("Current Lang");
-        console.log(this.$i18n.locale);
+        this.getSchedules();
     },
-    components: { AppBus }
 }
 </script>
 
 <style scoped>  
+*{
+	color: #1C5E3C;
+}
  th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }
+.form-control, .form-control-plaintext{
+    border-bottom: none !important;
+    border-radius: 15px;
+    max-width: 40% !important;
+}
 
+.collapse, .collapsing{
+    background-color: #FFF;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+.search{
+    border-bottom-right-radius: 15px !important;
+	border-top-right-radius: 15px !important;
+    background-color: #FFF !important;
+}
+.input-group{
+    max-width: 1300px;
+}
+.filter-icon{
+    width: 15px;
+}
 </style>

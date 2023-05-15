@@ -1,36 +1,51 @@
 <template>
-    <div id="profile" class="container-fluid mt-5">
-        <div class="container">
+    <div id="profile" class="container-fluid my-4 py-4">
+        <div class="container mt-lg-5 mt-0 pt-lg-5 pt-0">
             <div class="row align-items-center text-center">
-                <div class="col-md-5 mx-auto pt-5">
-                    <form id="edit-profile-form" class="text-center">
+                <div class="col-lg-5 mx-auto pt-5">
+                    <form id="edit-profile-form">
                         <h2 class="pt-3">{{ $t('Profile information') }}</h2>
-                        <div class="pb-3">
-                            <input type="email" v-model="profile.email" id="email" name="email" class=" form-control text-center" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
+                        <div class="input-group mb-3 ">
+                            <i class="bi bi-envelope my-auto ms-3 ms-sm-5"></i>
+                            <input type="email" v-model="profile.email" id="email" name="email" class=" form-control" aria-describedby="emailHelp" placeholder="email@example.com" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <div class="pb-3">
-                            <input type="text" v-model="profile.firstName" id="firstName" name="firstName" class="form-control text-center" placeholder="Vasia" :disabled="editMode" :readonly="editMode">
+                        <div class="input-group mb-3">
+                            <i class="bi bi-person-fill my-auto ms-3 ms-sm-5"></i>
+                            <input type="text" v-model="profile.firstName" id="firstName" name="firstName" class="form-control" placeholder="Vasia" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <div class="pb-3">
-                            <input type="text" v-model="profile.lastName" id="lastName" name="lastName" class="form-control text-center" placeholder="Pupkin" :disabled="editMode" :readonly="editMode">
+                        <div class="input-group mb-3">
+                            <i class="bi bi-person-fill my-auto ms-3 ms-sm-5"></i>
+                            <input type="text" v-model="profile.lastName" id="lastName" name="lastName" class="form-control" placeholder="Pupkin" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <div class="pb-3">
-                            <input type="password" class="form-control text-center" id="password" name="password" placeholder="**********" :disabled="editMode" :readonly="editMode">
+                        <div class="input-group mb-3">
+                            <i class="bi bi-eye-slash my-auto ms-3 ms-sm-5"></i>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="**********" :disabled="editMode" :readonly="editMode">
                         </div>
-                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button>
-                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button>
-                        <button @click="logout" type="submit" class="btn btn-primary mb-3 ms-5">{{ $t('Log out') }}</button>
+                        <button v-if="editMode" @click="changeMode()" type="submit" class="btn btn-primary mb-3">{{ $t('Edit') }}</button> 
+                        <button v-else @click="submit()" type="submit" class="btn btn-primary mb-3">{{ $t('Confirm') }}</button> <br>
+                        <router-link to="/tours">
+                            <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
+                        </router-link>
+                        <router-link to="/profile/applications">
+                            <button v-if="userRole == 4 || userRole == 3" type="button" class="btn btn-primary my-3 ">{{ $t('Applications') }}</button>
+                        </router-link>
+                        <button @click="logout" type="submit" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Log out') }}</button>
                     </form>
                 </div>
-                <div class="col-md-5 mx-auto pt-5">
+                <div v-if="orders.length>0" class="col-lg-5 mx-auto pt-5">
                     <div class="order-history">
-                        <h2 class="mt-2">{{ $t('Order History') }}</h2>
-                        <div class="list-group text-center">
-                            <div class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</div>
-                            <div class="list-group-item list-group-item-action">2 Nov 4:00am - 3 Nov 5:30am <br/> Taraz - Almaty</div>
-                            
-                            <button type="button" class="btn btn-primary mx-auto my-3">{{ $t('See more') }}</button>
-                        </div>
+                        <h2 class="my-3">{{ $t('Order History') }}</h2>
+                        <ul class="list-group text-start">
+                            <li v-for="order in slicedOrders"
+                            :key="order.id" 
+                            class="list-group-item list-group-item-action ps-5"
+                            >
+                            {{ getFormattedDate(order.schedule.beginDate) }} - {{ getFormattedDate(order.schedule.endDate) }}
+                            <br/>
+                            {{ getFormattedRoute(order.schedule.route) }}
+                            </li>
+                            <button type="button" class="btn btn-primary mx-auto mb-3 mt-5" @click="changeOrderVisibility">{{ $t('See more') }}</button>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -41,10 +56,12 @@
 
 
 <script>
-//import { isEmptyStatement } from '@babel/types'
 import EventBus from "../common/EventBus"
 import UserService from "@/services/UserService"
 import TokenService from "@/services/TokenService"
+import OrderService from "@/services/OrderService"
+import RouteService from "@/services/RouteService"
+
 
 export default {
     data() {
@@ -54,11 +71,24 @@ export default {
                 firstName: null,
                 lastName: null
             },
-            editMode: true
+            editMode: true,
+            showMoreOrders: false,
+            orders: []
         }
     },
 	computed : {
-      isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+        isLoggedIn : function(){ return this.$store.getters.isAuthenticated },
+        slicedOrders: function() {
+            let length = this.showMoreOrders 
+            ? 3
+            : this.orders.length;
+
+            return this.orders.slice(0, length);
+        },
+        userRole: function() {
+            let user = TokenService.getUser();
+            return user.role;
+        }
     },
 	methods: {
       logout() {
@@ -83,7 +113,6 @@ export default {
             })
             return;
         }
-        debugger;
         const id = TokenService.getUser().id;
         const user = {
             id,
@@ -108,6 +137,69 @@ export default {
         
       },
 
+      changeOrderVisibility() {
+        this.showMoreOrders = !this.showMoreOrders;
+      },
+      
+      getFormattedDate(dateStr) {
+        let date = new Date(dateStr);
+        let currentLanguage = this.$store.getters.getCurrentLanguage;
+        let formattedDate = null;
+        let formattedTime = null;
+
+        
+        switch(currentLanguage) {
+            case 'en':
+                formattedDate = date.toLocaleDateString('en-UK', { month:"short", day:"numeric", });
+                formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+                break;
+            case 'ru':
+            case 'kz':
+                formattedDate = date.toLocaleDateString('ru', { month:"short", day:"numeric", });
+                formattedTime = date.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit' });
+                break;
+            default:
+                formattedDate = date.toLocaleDateString('en-UK', { month:"short", day:"numeric", });
+                formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+                break;
+        }
+
+        return formattedDate + ' ' + formattedTime;
+      },
+
+      getFormattedRoute(route) {
+        let currentLanguage = 3;
+
+        switch(this.$store.getters.getCurrentLanguage){
+            case 'en':
+                currentLanguage = 3;
+                break;
+            case 'ru':
+                currentLanguage = 1;
+                break;
+            case 'kz':
+                currentLanguage = 2;
+                break;
+        }
+
+        let source = route.source.nameCode.codeResourceValues.filter(v => v.language == currentLanguage);
+        let destination = route.destination.nameCode.codeResourceValues.filter(v => v.language == currentLanguage);
+
+        if (source.length == 0) {
+            source = route.source.nameCode.codeResourceValues[0];
+        } else {
+            source = source[0];
+        }
+
+        if (destination.length == 0) {
+            destination = route.destination.nameCode.codeResourceValues[0];
+        } else {
+            destination = destination[0];
+        }
+
+        return source.value + ' - ' + destination.value;
+      },
+
       changeMode() {
 		if (this.editMode == null){
             this.editMode = true
@@ -116,6 +208,28 @@ export default {
             this.editMode = null
         }
 	  },
+      async getUserOrders() {
+        let orders = []
+        await OrderService.getUserOrders(2).then(
+            (data)=> {
+                orders = data
+            },
+            (error)=> {
+                
+            }
+        )
+
+        for(let i in orders) {
+            await RouteService.retreive(orders[i].schedule.route.id).then(
+                (data)=> {
+                    orders[i].schedule.route = data
+                }
+            )
+        }
+
+        this.orders = orders;
+
+      },
       enableValidation() {
         let form = $("#edit-profile-form");
         form.validate({
@@ -133,14 +247,14 @@ export default {
         });
     }
     },
-    mounted() {
+    async mounted() {
         EventBus.on("logout", () => {
             this.logout();
         });
 
         this.enableValidation();
         const id = TokenService.getUser().id;
-        UserService.retreive(id).then((user)=> {
+        await UserService.retreive(id).then((user)=> {
             this.profile.email = user.email;
             this.profile.firstName = user.firstName;
             this.profile.lastName = user.lastName; 
@@ -148,6 +262,8 @@ export default {
             this.$store.commit('updateUserFromLocalStorage');
             
         })
+        await this.getUserOrders();
+        
     },
     beforeMount() {
         EventBus.remove("logout");
@@ -169,8 +285,12 @@ p{
 }
 .list-group-item{
     border: none !important;
+    border-bottom: 1px solid #ECECEC !important;
 }
 .form-control[readonly]{
     opacity: 0.7 !important;
+}
+i{
+    font-size: 24px;
 }
 </style>

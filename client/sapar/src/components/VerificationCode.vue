@@ -1,12 +1,12 @@
 <template>
-    <div class="container-fluid py-5">
-        <div class="container">
-            <form id="verification-form" class="text-center mt-5" @submit.prevent="submit">
+    <div class="container-fluid my-5 py-5">
+        <div class="container mt-lg-5 mt-4 pt-lg-5 pt-4">
+            <form id="verification-form" class="text-center mt-5 pb-3 mx-auto" @submit.prevent="submit">
                 <h2 class="pt-3">{{ $t('Enter the code') }}</h2>    
                 <div class="mb-3">
-                <input v-model="verificationCode" id="verificationCode" name="verificationCode" class="form-control form-control-lg text-center" type="text" placeholder="XXXX">
+                <input v-model="verificationCode" id="verificationCode" name="verificationCode" class="form-control form-control-lg text-center mx-auto my-4" type="text" placeholder="XXXX">
                 </div>
-                <button type="submit" class="btn btn-primary mb-3">{{ $t('Sign in') }}</button> <br/>
+                <button type="submit" class="btn btn-primary my-4">{{ $t('Sign in') }}</button> <br/>
             </form>
             <div v-if="showError" class="alert alert-danger text-center mt-3" role="alert">
                     <p id="error" class="pt-3">{{ $t('Username or Password is incorrect') }}</p>
@@ -104,5 +104,8 @@ p{
 }
 form{
 	max-width: 600px;
+}
+input{
+    font-size: 32px;
 }
 </style>

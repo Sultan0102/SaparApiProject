@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/components/App-Home';
 import Login from '@/components/App-Login';
 import LoginForgotPassword from '@/components/App-LoginForgotPassword';
@@ -7,15 +7,29 @@ import PageNotFound from '@/components/PageNotFound';
 import PageForbidden from "@/components/PageForbidden"
 import PageServerError from "@/components/PageServerError"
 import Registration from '@/components/App-Registration';
+import RegistrationGuide from '@/components/App-RegistrationGuide';
+import RegistrationBusiness from '@/components/App-RegistrationBusiness';
 import Profile from '@/components/App-Profile';
 import Tickets from '@/components/App-Tickets';
-import Tickets2 from '@/components/App-Tickets2';
+import TourTickets from '@/components/App-TourTickets';
 import Order from '@/components/App-Order';
-import OrderPassengerInformation from '@/components/App-OrderPassengerInformation';
+import OrderPassengerInformationList from '@/components/App-OrderPassengerInformationList';
 import OrderPayment  from '@/components/App-OrderPayment';
+import OrderNumber  from '@/components/App-OrderNumber';
 import About from '@/components/App-About';
-import GuideApply from '@/components/App-GuideApply';
+import GuideVacancies from '@/components/App-GuideVacancies';
 import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
+import TourInfo from '@/components/App-TourInfo';
+import ViewApplications from '@/components/App-ViewApplications';
+import GuideApply from '@/components/App-GuideApply';
+import BusinessProfile from '@/components/App-BusinessProfile';
+import BusinessTourList from '@/components/App-BusinessTourList';
+import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
+import GuideFire from '@/components/App-GuideFire';
+import Applications from '@/components/App-Applications';
+import GuideHire from '@/components/App-GuideHire';
+import NewTour from '@/components/App-NewTour';
+import AppBusinessToursExample from '@/components/App-BusinessToursExample'
 import store from '@/store';
 
 
@@ -59,6 +73,18 @@ const routes = [
     meta: { guest: true },
   },
   { 
+    path: "/register-guide", 
+    component: RegistrationGuide, 
+    name: "RegistrationGuide",
+    meta: { guest: true },
+  },
+  { 
+    path: "/register-business", 
+    component: RegistrationBusiness, 
+    name: "RegistrationBusiness",
+    meta: { guest: true },
+  },
+  { 
     path: "/profile", 
     component: Profile, 
     name: "Profile",
@@ -69,29 +95,44 @@ const routes = [
     component: Tickets, 
     name: "Tickets",
     meta: { requiresAuth: true },
+    props: { scheduleType: 1 }
   },
   { 
-    path: "/tickets2", 
-    component: Tickets2, 
-    name: "Tickets2",
-    meta: { requiresAuth: true },
+    path: "/tour-tickets", 
+    component: TourTickets, 
+    name: "TourTickets",
+    meta: { requiresAuth: true }
   },
   { 
-    path: "/order", 
+    path: "/order/:id", 
     component: Order, 
     name: "Order",
     meta: { requiresAuth: true },
+    props: true,
+    // beforeEnter: (to, from) => {
+    //   if(from.name != 'Tickets') {
+    //     return '/'
+    //   }
+    // }
   },
   {
-    path: "/order-passenger-information", 
-    component: OrderPassengerInformation, 
+    path: "/order/:orderId/passengerInformation", 
+    component: OrderPassengerInformationList, 
     name: "OrderPassengerInformation",
     meta: { requiresAuth: true },
+    props: true
   },
   {
-    path: "/order-payment", 
+    path: "/order/:orderId/payment", 
     component: OrderPayment, 
     name: "OrderPayment",
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
+    path: "/order/:orderId/number", 
+    component: OrderNumber, 
+    name: "OrderNumber",
     meta: { requiresAuth: true },
   },
   {
@@ -100,9 +141,9 @@ const routes = [
     name: "About"
   },
   {
-    path: "/guide-apply", 
-    component: GuideApply, 
-    name: "GuideApply",
+    path: "/vacancies", 
+    component: GuideVacancies, 
+    name: "GuideVacancies",
     meta: { requiresAuth: true },
   },
   {
@@ -111,7 +152,10 @@ const routes = [
     name: "GuideVacancyInfo",
     meta: { requiresAuth: true },
   },
-  { path: "/:pathMatch(.*)*", component: PageNotFound },
+  { path: "/:pathMatch(.*)*", 
+    component: PageNotFound,
+    name: "NotFound" 
+  },
   {
     path: "/forbidden", 
     component: PageForbidden, 
@@ -122,6 +166,77 @@ const routes = [
     component: PageServerError, 
     name: "PageServerError"
   },
+  {
+    path: "/tour-info/:scheduleId", 
+    component: TourInfo, 
+    name: "TourInfo",
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
+    path: "/view-applications", 
+    component: ViewApplications, 
+    name: "ViewApplications",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/vacancies/apply/tour/:tourId", 
+    component: GuideApply, 
+    name: "GuideApply",
+    meta: { requiresAuth: true },
+    props: true,
+  },
+  {
+    path: "/business-profile", 
+    component: BusinessProfile, 
+    name: "BusinessProfile",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tours", 
+    component: BusinessTourList, 
+    name: "BusinessTourList",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tours-example", 
+    component: AppBusinessToursExample, 
+    name: "AppBusinessToursExample",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tour/:tourId/available-guides", 
+    component: ViewAvailableGuides, 
+    name: "ViewAvailableGuides",
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
+    path: "/tour/:tourId/guide-fire/:guideId", 
+    component: GuideFire, 
+    name: "GuideFire",
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
+    path: "/profile/applications", 
+    component: Applications, 
+    name: "ProfileApplications",
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/tour/:tourId/guide-hire/:guideId", 
+    component: GuideHire, 
+    name: "GuideHire",
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
+    path: "/new-tour", 
+    component: NewTour, 
+    name: "NewTour",
+    meta: { requiresAuth: true },
+  }
 ]
 
 

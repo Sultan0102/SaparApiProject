@@ -14,12 +14,17 @@ def validate_password(password):
     for pattern in patterns:
         matchResult = re.search(pattern, password)
         if matchResult is not None:
-            print(matchResult)
             results.append(re.match(pattern, password))
     
-    print(len(results))
     return len(results) == len(patterns)
 
 
 def validate_verificationCode(code):
     return bool(re.search("\d{4}", code))
+
+def validate_passportType(value, format):
+    return bool(re.search(format, value))
+
+def validate_any(value, format):
+    result = re.search(format, value)
+    return bool(result)

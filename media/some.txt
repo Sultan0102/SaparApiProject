@@ -1,0 +1,1 @@
+ОШИБКА: значение NULL в столбце "id" отношения "temp_ticket_persons_to_be_deleted" нарушает ограничение NOT NULL DETAIL: Ошибочная строка содержит (null).
