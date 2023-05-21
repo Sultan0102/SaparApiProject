@@ -31,6 +31,12 @@ import GuideHire from '@/components/App-GuideHire';
 import DriverProfile from '@/components/App-DriverProfile';
 import NewTour from '@/components/App-NewTour';
 import AppBusinessToursExample from '@/components/App-BusinessToursExample'
+import AppBusinessToursExample from '@/components/App-BusinessToursExample';
+import DriversAdminPanel from '@/components/App-DriversAdminPanel';
+import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
+import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
+import NewRoute from '@/components/App-NewRoute';
+import EditRoute from '@/components/App-EditRoute';
 import store from '@/store';
 
 
@@ -245,6 +251,36 @@ const routes = [
     name: "DriverProfile",
     meta: { requiresAuth: true },
     props: true
+  },
+  {
+    path: "/drivers-admin-panel", 
+    component: DriversAdminPanel, 
+    name: "DriversAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/applications-admin-panel", 
+    component: ApplicationsAdminPanel, 
+    name: "ApplicationsAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/routes-admin-panel", 
+    component: RoutesAdminPanel, 
+    name: "RoutesAdminPanel",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/new-route", 
+    component: NewRoute, 
+    name: "NewRoute",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/edit-route", 
+    component: EditRoute, 
+    name: "EditRoute",
+    meta: { requiresAuth: true },
   }
 ]
 

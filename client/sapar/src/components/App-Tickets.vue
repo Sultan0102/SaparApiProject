@@ -182,7 +182,7 @@ export default{
 *{
 	color: #1C5E3C;
 }
- th{
+th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }
