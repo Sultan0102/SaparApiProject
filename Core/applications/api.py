@@ -27,7 +27,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         applications = Application.objects.all()
         if userId:
             applications = applications.filter(Q(senderUser__id=userId) | Q(receiverUser__id=userId))
-            
+        else:
+            return Response('No user id was provided', status=status.HTTP_400_BAD_REQUEST)
         serializer = ApplicationSerializer(applications, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)

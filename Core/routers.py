@@ -32,6 +32,8 @@ detRouter.register('applications', ApplicationViewSet, basename='application')
 detRouter.register('guides', GuideViewSet, basename='guide')
 detRouter.register('drivers', DriverViewSet, basename='driver')
 
+detRouter.register('orders', OrderViewSet,basename= 'order')
+detRouter.register('payment', PaymentViewSet, basename='payment')
 # Ticket Person
 ticketRouter = DefaultRouter()
 #PassportNumber
@@ -57,10 +59,6 @@ reviewRouter.register('reviews',ReviewViewSet, basename = 'reviews')
 urlpatterns = [
     *routes.urls
 ]
-# Order
-orderRouter = DefaultRouter()
-orderRouter.register('orders', OrderViewSet,basename= 'orders')
-orderRouter.register('payment', PaymentViewSet, basename='payment')
 #For Application
 # Schedule
 scheduleRouter = DefaultRouter()
