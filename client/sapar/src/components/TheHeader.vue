@@ -6,7 +6,7 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse row container" id="navbar">
-				<ul class="navbar-nav mb-2 mb-lg-0">
+				<ul class="navbar-nav mb-2 mb-lg-0" v-if="getUserRole != 1">
 					<li class="ms-lg-5">
 						<router-link class="nav-link" aria-current="page" to="/tickets">{{ $t('Tickets') }}</router-link>
 					</li>
@@ -27,6 +27,14 @@
 					</li>
 					<li class="my-auto nav-item">
 						<LocaleSwitcher class="nav-link" />
+					</li>
+				</ul>
+				<ul class="navbar-nav mb-2 mb-lg-0" v-else>
+					<li class="ms-lg-5">
+							<router-link class="nav-link" aria-current="page" to="/drivers-admin-panel">{{ $t('Admin Panel') }}</router-link>
+						</li>
+					<li class="ms-lg-auto" v-if="isLoggedIn">
+						<router-link class="nav-link" to="/profile">{{ $t('hello') }}, {{ getUserEmail }}<i class="ms-1 bi bi-person-circle"></i></router-link>
 					</li>
 				</ul>
 			</div>
