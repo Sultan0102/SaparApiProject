@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from Core.users.serializers import UserUpdateSerializer
+from Core.users.serializers import DriverSerializer, UserUpdateSerializer
 from Core.authorization.serializers import GuideSerializer
-from Core.authorization.models import IsAdmin, IsGuide, User, Guide
+from Core.authorization.models import Driver, IsAdmin, IsGuide, User, Guide
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from Core.exceptions import ValidationAPIException
+from django.db.transaction import atomic 
 
 
 # Create your views here.
@@ -77,4 +78,43 @@ class GuideViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    
+
+class DriverViewSet(viewsets.ModelViewSet):
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    @atomic
+    def update(self, request, pk, *args, **kwargs):
+        driverData = {
+            "id": pk,
+            "yearExperience": request.data['yearExperience'],
+            "phoneNumber": request.data['phoneNumber']
+        }
+
+        userData = {
+            "email": request.data['user']['email'],
+            "firstName": request.data['user']['firstName'],
+            "lastName": request.data['user']['lastName'],
+        }
+
+        driver = Driver.objects.get(id=pk)
+        driver.phoneNumber = driverData['phoneNumber']
+        driver.yearExperience = driverData['yearExperience']
+        driver.save()
+
+        userData['id'] = driver.user.id
+        
+        updateUserSerializer = UserUpdateSerializer(data=userData)
+        if updateUserSerializer.is_valid():
+            upd_user = updateUserSerializer.validated_data
+            user = User.objects.get(id=upd_user['id'])
+            user.email = upd_user['email'];
+            user.firstName = upd_user['firstName'];
+            user.lastName = upd_user['lastName'];
+            
+            user.save();
+
+        driverSerializer = self.get_serializer(driver)
+
+        return Response(driverSerializer.data, status=status.HTTP_202_ACCEPTED)

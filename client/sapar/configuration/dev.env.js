@@ -13,5 +13,6 @@ export default {
     GUIDES_API_URL: 'http://localhost:8000/api/guides/',
     APPLICATIONS_API_URL: 'http://localhost:8000/api/applications/',
     DOCUMENTS_API_URL: 'http://localhost:8000/api/docs/',
+    DRIVERS_API_URL: 'http://localhost:8000/api/drivers/',
 
 }

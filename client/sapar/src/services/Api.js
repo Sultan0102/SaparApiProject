@@ -46,5 +46,8 @@ export default {
     documents: axios.create({
         baseURL: config.DOCUMENTS_API_URL,
     }),
+    drivers: axios.create({
+        baseURL: config.DRIVERS_API_URL,
+    }),
      
 }

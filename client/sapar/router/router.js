@@ -28,6 +28,7 @@ import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideFire from '@/components/App-GuideFire';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
+import DriverProfile from '@/components/App-DriverProfile';
 import NewTour from '@/components/App-NewTour';
 import AppBusinessToursExample from '@/components/App-BusinessToursExample'
 import store from '@/store';
@@ -236,6 +237,14 @@ const routes = [
     component: NewTour, 
     name: "NewTour",
     meta: { requiresAuth: true },
+  },
+  // Admin Panel Components
+  {
+    path: "/driver/:driverId",
+    component: DriverProfile,
+    name: "DriverProfile",
+    meta: { requiresAuth: true },
+    props: true
   }
 ]
 

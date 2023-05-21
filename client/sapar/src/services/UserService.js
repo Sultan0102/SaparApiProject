@@ -27,6 +27,22 @@ class UserService {
         )
     }
 
+    retreiveDriverByUserId(id) {
+        return Api.drivers.get(`${id}/`).then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
+    retreiveDriverById(id) {
+        return Api.drivers.get(`${id}/`).then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
     retreiveGuideByUserId(userId) {
         return Api.guides.post(`user/`, {
             userId
@@ -45,6 +61,13 @@ class UserService {
         })
     }
 
+    updateDriver(driver) {
+        return Api.drivers.put(`${driver.id}/`, driver).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
     updateLocalUser(user) {
         let currentUser = TokenService.getUser();
         currentUser.email = user.email;

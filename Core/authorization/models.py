@@ -18,12 +18,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     CUSTOMER = 2
     GUIDE = 3
     BUSINESS_PERSON = 4
+    DRIVER = 5
 
     ROLE_CHOICES = (
           (ADMIN, 'Admin'),
           (CUSTOMER, 'Customer'),
           (GUIDE, 'Guide'),
           (BUSINESS_PERSON, 'Business Person'), 
+          (DRIVER, 'Driver'), 
       )
 
     id = models.AutoField(primary_key=True)
@@ -84,7 +86,14 @@ class GuideSpecialization(models.Model):
         db_table="GuideSpecialization"
 
 
+class Driver(models.Model):
+    yearExperience = models.IntegerField()
+    phoneNumber = models.CharField(max_length=20)
+    photo = models.FileField(null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=False, null=False)
 
+    class Meta:
+        db_table = "Driver"
 
 
 
