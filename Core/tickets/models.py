@@ -1,22 +1,24 @@
 from django.db import models
 from Core.authorization.models import User, Guide
-import datetime
 import string
 import random
 
 
 class TicketStatus(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(db_index=True,max_length=255)
+    name = models.CharField(db_index=True, max_length=255)
+
     class Meta:
         db_table = "TicketStatus"
-        
+
 class PassportNumberType(models.Model):
     id = models.AutoField(primary_key=True)
-    typeName = models.CharField(db_index=True,max_length=255)
-    format = models.CharField(db_index=True,max_length=255)
+    typeName = models.CharField(db_index=True, max_length=255)
+    format = models.CharField(db_index=True, max_length=255)
+
     class Meta:
         db_table = "PassportNumberType"
+
 
 class TicketPerson(models.Model):
     id = models.AutoField(primary_key=True)
@@ -25,14 +27,15 @@ class TicketPerson(models.Model):
     secondName = models.CharField(db_index=True, max_length=255, blank=False, null=False)
     passportNumber= models.CharField(db_index=True, max_length=255, blank=False, null=False)
     passportNumberType = models.ForeignKey('PassportNumberType', on_delete=models.PROTECT, blank=True)
+
     class Meta:
         db_table = "TicketPerson"
 
 class Route(models.Model):
     id = models.AutoField(primary_key=True)
-    destination = models.ForeignKey('Location', on_delete=models.PROTECT, related_name='destination')
-    source = models.ForeignKey('Location', on_delete=models.PROTECT, related_name='source')
-    duration = models.CharField(db_index=True,max_length=255, null=True)
+    destination = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='destination')
+    source = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='source')
+    duration = models.CharField(db_index=True, max_length=255)
     distance = models.FloatField(null=True)
 
     class Meta:
@@ -47,7 +50,7 @@ class ResourceCode(models.Model):
 
 class Language(models.Model):
     id = models.AutoField(primary_key=True)
-    resourcecode = models.ForeignKey('ResourceCode', on_delete=models.PROTECT,blank=True)
+    resourcecode = models.ForeignKey('ResourceCode', on_delete=models.PROTECT, blank=True)
     nativeName = models.CharField(db_index=True, max_length=255)
 
     class Meta:
@@ -65,11 +68,10 @@ class ResourceValue(models.Model):
 
 class LocationType(models.Model):
     id = models.AutoField(primary_key=True)
-    nameCode = models.ForeignKey('ResourceCode',on_delete=models.PROTECT,blank=True)
+    nameCode = models.ForeignKey('ResourceCode', on_delete=models.PROTECT, blank=True)
 
     class Meta:
         db_table = "LocationType"
-
 
 class Location(models.Model):
     id = models.AutoField(primary_key=True)
@@ -81,6 +83,7 @@ class Location(models.Model):
     class Meta:
         db_table = "Location"
 
+
 class BusType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(db_index=True, max_length=255)
@@ -89,18 +92,15 @@ class BusType(models.Model):
 
     class Meta:
         db_table = "BusType"
-    
-    def __str__(self) -> str:
-        return f"Capacity: {self.capacity}, Template: {self.template}"
 
 class Bus(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(db_index=True, max_length=255)
-    type = models.ForeignKey('BusType', on_delete=models.PROTECT,blank=True)
+    type = models.ForeignKey('BusType', on_delete=models.PROTECT, blank=True)
 
     class Meta:
         db_table = "Bus"
-        
+
 
 class Schedule(models.Model):
     id = models.AutoField(primary_key=True)
@@ -109,7 +109,7 @@ class Schedule(models.Model):
     driver = models.ForeignKey(User,on_delete=models.PROTECT, null=True, related_name='schedules')
     scheduleNumber = models.CharField(db_index=True, null=True, max_length=6)
     creationDate = models.DateField(auto_now_add=True)
-    weekDay = models.IntegerField(db_index=True,blank=True)
+    weekDay = models.IntegerField(db_index=True, blank=True)
     beginDate = models.DateTimeField(db_index=True)
     endDate = models.DateTimeField(db_index=True)
     isActive = models.BooleanField(default=False)
@@ -124,17 +124,14 @@ class Schedule(models.Model):
         while(True):
             randomNumber = ''.join([str(random.randint(0, 9)) for i in range(4)])
             newScheduleNumber = random.choice(string.ascii_uppercase) + random.choice(string.ascii_uppercase) + randomNumber;
-            
+
             if newScheduleNumber not in scheduleNumbers:
                 break
-        
+
         return newScheduleNumber;
 
     class Meta:
         db_table = "Schedule"
-    
-    def __str__(self) -> str:
-        return f"ID: {self.id}, Route: {self.route}, Bus: {self.bus}, Driver: {self.driver}, Schedule Number: {self.scheduleNumber}"
 
 class ScheduleType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -143,13 +140,14 @@ class ScheduleType(models.Model):
     class Meta:
         db_table = "ScheduleType"
 
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User,on_delete=models.PROTECT, blank=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     schedule = models.ForeignKey('Schedule', on_delete=models.PROTECT, blank=True)
-    totalPrice = models.IntegerField(db_index=True,blank=True)
+    totalPrice = models.IntegerField(db_index=True, blank=True)
     creationDate = models.DateTimeField(auto_now_add=True)
-    isPaid = models.BooleanField(db_index=True,blank=True,default=False)
+    isPaid = models.BooleanField(db_index=True, blank=True, default=False)
 
     class Meta:
         db_table = "Order"
@@ -169,10 +167,11 @@ class TouristTour(models.Model):
 
 class TicketType(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(db_index=True,max_length=255)
-    
+    name = models.CharField(db_index=True, max_length=255)
+
     class Meta:
         db_table = "TicketType"
+
 
 class Ticket(models.Model):
     id = models.AutoField(primary_key=True)
@@ -187,6 +186,7 @@ class Ticket(models.Model):
 
     class Meta:
         db_table = "Ticket"
+
 
 class Review(models.Model):
     id = models.AutoField(primary_key = True)

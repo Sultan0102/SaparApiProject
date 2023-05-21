@@ -32,6 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if user:
             userResponse = {
+                'id' : user_id,
                 'firstName': user.firstName,
                 'lastName': user.lastName,
                 'email': user.email

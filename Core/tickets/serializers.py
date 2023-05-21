@@ -21,14 +21,14 @@ class ResourceValueSerializer(serializers.ModelSerializer):
         model = ResourceValue
         list_serializer_class=ResourceValueByLanguageSerializer
         fields = '__all__'
- 
+
 class ResourceCodeSerializer(serializers.ModelSerializer):
     codeResourceValues = ResourceValueSerializer(many=True)
 
     class Meta:
         model = ResourceCode
         fields = ['id', 'defaultValue', 'codeResourceValues']
-    
+
     def create(self, validated_data):
         resourceValues_data = validated_data.pop('codeResourceValues')
         code = ResourceCode.objects.create(**validated_data)
@@ -36,7 +36,7 @@ class ResourceCodeSerializer(serializers.ModelSerializer):
             ResourceValue.objects.create(code=code, **resourceValue)
         return code
 
-    
+
 
 class LocationSerializer(serializers.ModelSerializer):
     nameCode = ResourceCodeSerializer()
@@ -44,6 +44,10 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ['id','coordinates', 'nameCode', 'type']
+
+    def __init__(self,*args,**kwargs):
+        super(LocationSerializer, self).__init__(*args,**kwargs)
+        self.Meta.depth = 1
 
 
 class RouteSerializer(serializers.ModelSerializer):
@@ -165,7 +169,7 @@ class PassportNumberTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PassportNumberType
-        fields = '__all__' 
+        fields = '__all__'
 
 class TicketPersonSerializer(serializers.ModelSerializer):
 
@@ -175,7 +179,7 @@ class TicketPersonSerializer(serializers.ModelSerializer):
         model = TicketPerson
         fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'ticketId']
         read_only_fields = ['id']
-    
+
 
     def validate(self, data):
         try:
@@ -191,7 +195,7 @@ class TicketPersonSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         try:
-            
+
             ticketPerson = TicketPerson(
                 firstName=validated_data['firstName'],
                 lastName=validated_data['lastName'],
@@ -205,7 +209,7 @@ class TicketPersonSerializer(serializers.ModelSerializer):
         except Exception as e:
             print("Error Creating Ticket Person")
             raise e
-        
+
         try:
             ticketId = validated_data['ticketId']
             print(ticketId)
@@ -229,7 +233,7 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         fields = ['id', 'firstName', 'lastName', 'secondName', 'passportNumber', 'passportNumberType', 'user', 'cachedPersonId']
         read_only_fields= ['id']
         extra_kwargs = {
-            'user': {'write_only': True},  
+            'user': {'write_only': True},
         }
 
     def validate(self, obj):
@@ -239,7 +243,7 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         return obj
 
     def save(self):
-    
+
         if self.validated_data['cachedPersonId'] != 0:
             #update
             person = CachedTicketPerson.objects.get(id=self.validated_data['cachedPersonId'])
@@ -252,19 +256,19 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         else:
             self._validated_data.pop('cachedPersonId')
             return self.create(self.validated_data)
-        
+
 
         return self.validated_data
-        
-        
-        
+
+
+
 
 class OrderTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = '__all__'
         depth=0
-    
+
 
 class OrderSerializer(serializers.ModelSerializer):
     ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
@@ -282,22 +286,22 @@ class OrderSerializer(serializers.ModelSerializer):
         serializer.is_valid()
 
         return serializer.data
-             
-        
+
+
 
     class Meta:
         model = Order
         fields = ['id', 'user', 'schedule', 'totalPrice', 'ticket_ids', 'isPaid', 'tickets']
         read_only_fields=['id', 'totalPrice', 'isPaid', 'tickets']
         depth=0
-    
+
     def validate_ticket_ids(self, value):
-        
+
         if len(value) == 0:
             raise ValidationAPIException("cannot create order without ticket ids!")
 
         return value
-    
+
     @atomic
     def create(self, validated_data):
         tickets = Ticket.objects.filter(id__in=validated_data['ticket_ids'])
@@ -309,7 +313,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'isPaid': False
         }
 
-        try: 
+        try:
             order = Order.objects.create(**order_data);
             print(order_data)
             tickets.update(status_id=1, order_id=order.id)
@@ -319,7 +323,7 @@ class OrderSerializer(serializers.ModelSerializer):
             raise FailedToCreateOrder()
 
         return order
-    
+
 
 class UpdateTicketSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
@@ -327,7 +331,7 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ['id', 'person']
-    
+
     #update
     def save(self):
         print(self.validated_data)
@@ -345,7 +349,7 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
             ticket.save()
         except Exception as e:
             print("Error updating ticket person")
-        
+
         return ticket
 
 
@@ -366,7 +370,7 @@ class TouristTourSerializer(serializers.ModelSerializer):
     schedules = ScheduleSerializer(read_only=True, many=True)
     guides = GuideSerializer(read_only=True, many=True)
     description = serializers.SerializerMethodField()
-    
+
     def get_description(self, obj):
         if self.context.get('description', None):
             return self.context.get('description')
@@ -377,10 +381,9 @@ class TouristTourSerializer(serializers.ModelSerializer):
         model = TouristTour
         fields = ['schedules', 'guides', 'price', 'titleNameCode', 'descriptionNameCode', 'owner', 'id', 'description', 'deletedDate']
         read_only_fields = ['id', 'deletedDate']
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.Meta.depth = self.context.get('depth', 0)
-    
-    
-    
+    # For apllication
+

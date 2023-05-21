@@ -1,16 +1,14 @@
 import time
 import datetime
 import pytz
-from rest_framework import status
 import django_filters
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets, generics, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from .models import Location, Schedule, Ticket, Route, Order, Review, ResourceCode, \
-ResourceValue, TicketPerson, CachedTicketPerson, PassportNumberType, TouristTour 
+from .models import *
 from Core.exceptions import ValidationAPIException
 
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
@@ -21,8 +19,11 @@ from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSeriali
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsAuthorOrReadOnly
+from ..applications.models import Document, Application
+from ..applications.serializers import DocumentsViewSetSerializer, ApplicationDriverSerializer, \
+    ApplicationSerializerRetrieve, ScheduleDriverSerializer
 from ..authorization.models import User
 from rest_framework.decorators import action
 import Core.validators
@@ -72,25 +73,25 @@ class RouteViewSet(viewsets.ModelViewSet):
         if langId:
             context.update({"languageId": self.request.data['languageId']})
         return context
-    
-    
+
+
     @action(detail=False, methods=['post'], url_path='order/(?P<order_pk>[^/.]+)')
     def getRoutesByOrder(self, request, order_pk):
         if order_pk is None or Core.validators.validate_any(order_pk, '^[0-9]+$') == False:
             print('Error')
             return Response('Error', status=status.HTTP_400_BAD_REQUEST)
-        
+
         order = Order.objects.get(id=order_pk)
         print(order.schedule.route.id)
         serializer = self.get_serializer(order.schedule.route)
         # serializer.is_valid(raise_exception=True);
         print(serializer.data)
-        
-        
+
+
 
         return Response(serializer.data, status=status.HTTP_200_OK);
-    
-    
+
+
 
 class DetailRouteViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
@@ -111,7 +112,7 @@ class LocationView(generics.RetrieveAPIView):
             "location_id" : location.id,
             "locationName" : location_value.value
         })
-    
+
 class PostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
@@ -137,7 +138,7 @@ class DetailPostTicketViewSet(viewsets.ModelViewSet):
             instance.schedule.route.destination.nameCode.value = destination_value.value
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-    
+
     def list(self, request, *args, **kwargs):
        queryset = self.filter_queryset(self.get_queryset())
        language_id = kwargs.get('lang_id')
@@ -162,17 +163,17 @@ class OrderViewSet(viewsets.ModelViewSet):
             depth = int(self.request.query_params.get('depth', 0))
         except ValueError:
             pass # Ignore non-numeric parameters and keep default 0 depth
-        
+
         context['depth'] = depth
 
         return context
-    
+
     def get_queryset(self):
         query_set = super().get_queryset();
         if self.request.user:
             query_set = Order.objects.filter(user=self.request.user)
-        return query_set 
-    
+        return query_set
+
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
 
@@ -202,7 +203,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if self.action in ("create", "update", "partial_update", "destroy"):
             return WriteReviewSerializer
         return ReadReviewSerializer
-    
+
     def get_permissions(self):
         if self.action in ("create",):
             self.permission_classes = (permissions.IsAuthenticated,)
@@ -212,6 +213,47 @@ class ReviewViewSet(viewsets.ModelViewSet):
             self.permission_classes = (permissions.AllowAny,)
 
         return super().get_permissions()
+
+
+class ScheduleDriverViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated, ]
+    queryset = Schedule.objects.all()
+
+    def list(self, request):
+        # driver = request.data['driver_id']
+        # queryset = Schedule.objects.filter(driver= driver)
+        queryset = Schedule.objects.all()
+        serializer = ScheduleDriverSerializer(queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        queryset = Schedule.objects.filter(driver=pk)
+        language_id = kwargs.get('lang_id')
+        for instance in queryset:
+            if language_id is not None:
+                source_value = ResourceValue.objects.get(language_id=language_id,code=instance.route.source.nameCode)
+                destination_value = ResourceValue.objects.get(language_id=language_id,code=instance.route.destination.nameCode)
+                instance.route.source.nameCode.defaultValue = source_value.value
+                instance.route.destination.nameCode.defaultValue = destination_value.value
+        serializer = ScheduleDriverSerializer(queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = ScheduleListSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            fromDate = serializer.validated_data['fromDate']
+            toDate = serializer.validated_data['toDate']
+            lanugage_id = serializer.validated_data['language_id']
+
+            filtered_data = self.queryset.filter(beginDate__range=(fromDate, toDate),
+                                                 scheduleType__id=serializer.validated_data['scheduleType'])
+
+            result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
+
+            return Response(result.data, status=status.HTTP_200_OK)
+        # print(serialized_data)
+        return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -252,28 +294,28 @@ class ScheduleViewSet(viewsets.ModelViewSet):
             filtered_data = filtered_data.filter(scheduleType__id=serializer.validated_data['scheduleType'])
             if isActive is not None:
                 filtered_data = filtered_data.filter(isActive=isActive)
-            
+
             if destination is not None and len(destination) > 0:
                 print('Destination:', destination, sep=' ')
                 destinationResourceCodeSet = set()
                 [destinationResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=destination) ]
                 filtered_data = filtered_data.filter(route__destination__nameCode__id__in=destinationResourceCodeSet).filter(route__destination__type__id=locationType)
-            
+
             if source is not None and len(source) > 0:
                 print('Source:', source, sep=' ')
                 sourceResourceCodeSet = set()
                 [sourceResourceCodeSet.add(i.code.id) for i in ResourceValue.objects.filter(value__icontains=source) ]
                 filtered_data = filtered_data.filter(route__source__nameCode__id__in=sourceResourceCodeSet).filter(route__source__type__id=locationType)
-                
+
 
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
-            
+
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
-    
+
 
 
 class TicketPersonViewSet(viewsets.ModelViewSet):
@@ -288,7 +330,7 @@ class TicketPersonViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             result = serializer.save()
             result['passportNumberType'] = result['passportNumberType'].id
-            
+
             return Response(result, status=status.HTTP_201_CREATED)
 
         return Response('Validation Error', status=status.HTTP_400_BAD_REQUEST)
@@ -306,13 +348,13 @@ class CachedTicketPersonViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
+
         return Response("Validation error", status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
         print(args)
         print(kwargs)
-        
+
         userId = request.GET['userId']
         if userId:
             # self.queryset = self.get_queryset().filter(userId == userId)
@@ -375,15 +417,15 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
         if location is None:
             location = Location.objects.create(nameCode_id=resourceValue.code.id, type_id=2) #2 - LocationType for TouristPlace
-        
+
 
         return location
-    
+
     def createResourceCode(self, value):
         code = ResourceCode.objects.create(defaultValue=value)
         ResourceValue.objects.create(value=value, code_id=code.id, language_id=self.currentLanguageId)
         return code
-    
+
     def get_queryset(self):
         user = self.request.user
         queryset = super().get_queryset()
@@ -392,7 +434,7 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
         non_deleted = self.request.query_params.get('non_deleted');
         print(non_deleted)
-        
+
         if non_deleted and str.upper(non_deleted)=="TRUE":
             queryset = queryset.filter(deletedDate=None)
 
@@ -405,7 +447,7 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         scheduleId = request.data.get('scheduleId', None)
         if scheduleId is None:
             raise ValidationAPIException(detail="Schedule id not supplied")
-               
+
         tour = TouristTour.objects.filter(schedules__in=[scheduleId]).first()
         # tour.schedules = tour.schedules.filter(id=scheduleId)
         tour.schedules.set([tour.schedules.get(id=scheduleId)])
@@ -415,7 +457,7 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         context = {}
         if language_id:
             context['language_id'] = language_id
-        
+
         descriptionCodeSerializer = ResourceCodeSerializer(tour.descriptionNameCode)
         context['description'] = descriptionCodeSerializer.data
         serializer = TouristTourSerializer(tour, context=context)
@@ -457,7 +499,7 @@ class TouristTourViewSet(viewsets.ModelViewSet):
                     endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date+delta, endTime))
                 else:
                     endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, endTime))
-                
+
                 schedule = {
                     'scheduleNumber': Schedule.generateScheduleNumber(),
                     'route': route,
@@ -467,12 +509,12 @@ class TouristTourViewSet(viewsets.ModelViewSet):
                     'isActive': False,
                     'scheduleType_id': 2
                 }
-                
+
 
                 schedule = Schedule.objects.create(**schedule)
                 newTour.schedules.add(schedule)
-        
+
         newTour.save();
-        
+
 
         return Response('create', status=status.HTTP_201_CREATED);

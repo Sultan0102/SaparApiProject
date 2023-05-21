@@ -76,3 +76,7 @@ class FailedToCreatePayment(APIException):
     status_code = 400
     default_code = 'failed_to_create_payment'
     default_detail = 'The error occured during payment creation'
+
+class InvalidPassportNumberException(ValidationAPIException):
+    default_code = "invalid_passportNumber"
+    default_detail = "Wrong document number format"

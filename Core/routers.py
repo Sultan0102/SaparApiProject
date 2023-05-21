@@ -1,12 +1,13 @@
 from rest_framework.routers import SimpleRouter, DefaultRouter
 from Core.users.views import DriverViewSet, UserViewSet, GuideViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
-from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, PostTicketViewSet, DetailRouteViewSet, \
-    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet, TouristTourViewSet
+from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, \
+    PostTicketViewSet, DetailRouteViewSet, \
+    DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet, \
+    TouristTourViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 from Core.payment.api import PaymentViewSet
-from Core.applications.api import DocumentViewSet, ApplicationViewSet
-
+from Core.applications.api import DocumentViewSet, ApplicationViewSet, DocumentsViewSet, ApplicationDriverViewSet
 
 # AUTHENTICATION
 routes = SimpleRouter()
@@ -60,3 +61,13 @@ urlpatterns = [
 orderRouter = DefaultRouter()
 orderRouter.register('orders', OrderViewSet,basename= 'orders')
 orderRouter.register('payment', PaymentViewSet, basename='payment')
+#For Application
+# Schedule
+scheduleRouter = DefaultRouter()
+scheduleRouter.register("schedules", ScheduleViewSet, basename="schedule")
+# Application
+applicationRouter = DefaultRouter()
+applicationRouter.register("driver/applications", ApplicationDriverViewSet, basename="applications")
+# Documents
+documentsRouter = DefaultRouter()
+documentsRouter.register("documents",DocumentsViewSet,basename="documents")
