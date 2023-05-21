@@ -107,8 +107,6 @@ export default {
         }
         await UserService.updateDriver(driver).then(
             (data)=> {
-                UserService.updateLocalUser(data.user);
-                this.$store.commit('updateUserFromLocalStorage');
                 this.$notify({
                     type: 'success',
                     title: "Update",

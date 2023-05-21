@@ -152,8 +152,11 @@ VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20',
     
 INSERT INTO "ApplicationType"(id, "name")
 VALUES	(1, 'HireGuide'),
-		(2, 'FireGuide');
+		(2, 'FireGuide'),
+		(3, "Vacation");
 
+INSERT INTO "DocumentType"(id, "name") -- gotta define with Sultan
+VALUES	(1, '');
 
 INSERT INTO "ApplicationStatus"
 VALUES	(1, 'Pending'),

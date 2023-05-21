@@ -31,7 +31,6 @@ import GuideHire from '@/components/App-GuideHire';
 import DriverProfile from '@/components/App-DriverProfile';
 import NewTour from '@/components/App-NewTour';
 import AppBusinessToursExample from '@/components/App-BusinessToursExample'
-import AppBusinessToursExample from '@/components/App-BusinessToursExample';
 import DriversAdminPanel from '@/components/App-DriversAdminPanel';
 import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
 import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
