@@ -6,16 +6,17 @@
                 <div class="col-xl-9">
                     <div class="mx-auto mb-3 ms-5 mt-4">
                         <div class="input-group">
-                            <input type="search" class="form-control" :placeholder="$t('By id:')" aria-label="Search">
-                            <button class="btn search" type="button"><i class="bi bi-search"></i></button>
+                            <input v-model="filters.id" type="search" class="form-control" :placeholder="$t('By id:')" aria-label="Search">
+                            <button class="btn search" type="button" @click="searchDriverById"><i class="bi bi-search"></i></button>
                         </div>
                         <div class="input-group mt-4">
-                            <input type="search" class="form-control" :placeholder="$t('By name:')" aria-label="Search">
-                            <button class="btn search" type="button"><i class="bi bi-search"></i></button>
+                            <input v-model="filters.name" type="search" class="form-control" :placeholder="$t('By name:')" aria-label="Search">
+                            <button class="btn search" type="button" @click="searchDriverByName"><i class="bi bi-search"></i></button>
                         </div>
-                        <div class="input-group mt-4">
-                            <div class="form-control">298392 / Vasya Pupkin / 2 years</div>
-                            <button class="btn search" type="button"><i class="bi bi-pencil-square"></i></button>
+                        <div v-for="driver in drivers" 
+                        class="input-group mt-4">
+                            <div class="form-control">{{ getFormattedDriver(driver) }}</div>
+                            <button class="btn search" type="button" @click="editDriverClick(driver.id)"><i class="bi bi-pencil-square"></i></button>
                         </div>
                     </div>
                     <div class="container table-responsive">
@@ -55,11 +56,111 @@
 
 <script>
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
+import UserService from "@/services/UserService";
 
 export default{
     components: {
         Navigation
+    },
+    data() {
+        return {
+            drivers: [],
+            filters: {
+                id: null,
+                name: null
+            },
+            applications: null
+        }
+    },
+    computed: {
+       
+    },
+    methods: {
+        getFormattedDriver(driver) {
+            if (driver == null)
+                return ''
+            
+            return `${driver.id} / ${driver.user.firstName} ${driver.user.lastName} / ${driver.yearExperience}`
+        },
+        async searchDriverById() {
+            const id = this.filters.id
+            if(id==null || id.length == 0)
+                return;
+            
+            this.filters.name = null
+            await UserService.retreiveDriverById(id).then(
+                (data)=> {
+                    if (this.drivers.every(d => d.id != data.id))
+                        this.drivers.push(data);
+                    else {
+                        this.drivers = [data]
+                    }
+                },
+                (error)=>{
+                    if(error.response.status == 404) {
+                        this.$notify({
+                            type: "warning",
+                            title: "Not Found",
+                            text: "No driver with such Id!"
+                        })
+                    } else {
+                        this.$notify({
+                            type: "error",
+                            title: "Error",
+                            text: error.message
+                        })
+                    }
+                }
+            )
+        },
+        async searchDriverByName() {
+            const name = this.filters.name
+            if(name==null || name.length == 0)
+                return;
+            
+            this.filters.id = null
+            await UserService.retreiveDriverByName(name).then(
+                (data)=> {
+                    this.drivers = data;
+                },
+                (error)=>{
+                    if(error.response.status == 404) {
+                        this.$notify({
+                            type: "warning",
+                            title: "Not Found",
+                            text: "No driver with such Id!"
+                        })
+                    } else {
+                        this.$notify({
+                            type: "error",
+                            title: "Error",
+                            text: error.message
+                        })
+                    }
+                }
+            )
+        },
+        editDriverClick(id) {
+            if (id == null) {
+                this.$notify({
+                    type: "error",
+                    title: "Error",
+                    text: "You cannot edit without picking driver!"
+                })
+                return;
+            }
+
+            this.$router.push({
+                name: "DriverProfile",
+                params: { driverId: id }
+            })
+        }
+    },
+
+    mounted() {
+        // this.getDriverApplication()
     }
+
 }
 </script>
 

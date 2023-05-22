@@ -5,10 +5,19 @@ values
 (3, 'Guide'),
 (4, 'BusinessPerson');
 
-INSERT INTO "Users"(id, "email", "password", "firstName", "lastName", "is_superuser", "is_staff", "isDeleted", "isVerified", "creationDate", "verificationCode")
-	VALUES(1, 'anuar@mail.ru', 'anuar123', 'Anuar', 'Bora', true, true, false, true, '20230101 00:00', '123');
+INSERT INTO "Users"(id, "email", "password", "firstName", "lastName", "is_superuser", "is_staff", "isDeleted", "isVerified", "creationDate", "verificationCode", "role")
+	VALUES	(1, 'anuar@mail.ru', 'pbkdf2_sha256$390000$BkmrquE1FSW9Vl6Z1Z334j$hVVRBLFJ9rFUC40KIVV1UD+AkMsnKfA6jPrkpC6X1CU=', 'anuar123', 'Anuar', 'Bora', true, true, false, true, '20230101 00:00', '123', 1),
+			(10, 'anuarDriver@gmail.com', 'pbkdf2_sha256$390000$BkmrquE1FSW9Vl6Z1Z334j$hVVRBLFJ9rFUC40KIVV1UD+AkMsnKfA6jPrkpC6X1CU=','Anuar', 'Bora', false, false, false, true, '20230522', '123', 5),
+			(11, 'anuarDriver2@gmail.com', 'pbkdf2_sha256$390000$BkmrquE1FSW9Vl6Z1Z334j$hVVRBLFJ9rFUC40KIVV1UD+AkMsnKfA6jPrkpC6X1CU=','Anuar', 'Bora', false, false, false, true, '20230522', '123', 5),
+			(12, 'anuarDriver3@gmail.com', 'pbkdf2_sha256$390000$BkmrquE1FSW9Vl6Z1Z334j$hVVRBLFJ9rFUC40KIVV1UD+AkMsnKfA6jPrkpC6X1CU=','Anuar', 'Bora', false, false, false, true, '20230522', '123', 5),
+			(13, 'anuarDriver4@gmail.com', 'pbkdf2_sha256$390000$BkmrquE1FSW9Vl6Z1Z334j$hVVRBLFJ9rFUC40KIVV1UD+AkMsnKfA6jPrkpC6X1CU=','Anuar', 'Bora', false, false, false, true, '20230522', '123', 5);
 
 
+INSERT INTO "Driver"("yearExperience", "phoneNumber", "user_id")
+VALUES	(2, '8707999888777', 10),
+		(3, '8707999888777', 11),
+		(5, '8701777666555', 12),
+		(4, '8707999888777', 13);
 
 	INSERT INTO "TicketStatus"(id,name) 
 	VALUES(1,'Occupied'),
@@ -153,20 +162,17 @@ VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20',
 INSERT INTO "ApplicationType"(id, "name")
 VALUES	(1, 'HireGuide'),
 		(2, 'FireGuide'),
-		(3, "Vacation");
+		(3, 'DriverVacation');
 
-INSERT INTO "DocumentType"(id, "name") -- gotta define with Sultan
-VALUES	(1, '');
+INSERT INTO "DocumentsType"(id, "name", "creationDate") -- gotta define with Sultan
+VALUES	(1, 'CV/Resume', '2023/05/22'),
+		(2, 'ID', '2023/05/22'),
+		(3, 'Enquiry', '2023/05/22');
 
 INSERT INTO "ApplicationStatus"
 VALUES	(1, 'Pending'),
 		(2, 'Approved'),
 		(3, 'Rejected');
-	-- INSERT INTO "TouristTrip"(id,"titleNameCode_id","descriptionNameCode_id","owner_id","price","deletedDate","guide_id","schedule_id")
-	-- VALUES(1,9,10,1,12000,null,3,1),
-	--       (2,11,12,1,10000,null,3,1),
-	--       (3,13,14,1,9000,null,3,2);
--- 	INSERT INTO "Order"(id,user_id,"schedule_id",,"totalPrice")
--- 	VALUES(1,1,1,1,5000),
--- 	      (2,2,2,3,7000),
--- 	      (3,1,3,3,5000);
+	
+-- Populate Drivers
+

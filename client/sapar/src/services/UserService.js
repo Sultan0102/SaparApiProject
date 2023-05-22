@@ -43,6 +43,16 @@ class UserService {
         )
     }
 
+    retreiveDriverByName(name) {
+        return Api.drivers.post('name/', {
+            name
+        }).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     retreiveGuideByUserId(userId) {
         return Api.guides.post(`user/`, {
             userId

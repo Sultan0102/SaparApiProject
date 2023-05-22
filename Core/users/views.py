@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from Core.exceptions import ValidationAPIException
 from django.db.transaction import atomic 
+from django.db.models import Q
+
 
 
 # Create your views here.
@@ -72,7 +74,7 @@ class GuideViewSet(viewsets.ModelViewSet):
     def getGuideByUserId(self, request):
         userId = request.data.get('userId', None)
         if userId is None:
-            raise ValidationAPIException(detail="Schedule id not supplied")
+            raise ValidationAPIException(detail="User id not supplied")
 
         guide = Guide.objects.get(user_id=userId)
         serializer = self.get_serializer(guide)
@@ -119,3 +121,16 @@ class DriverViewSet(viewsets.ModelViewSet):
         driverSerializer = self.get_serializer(driver)
 
         return Response(driverSerializer.data, status=status.HTTP_202_ACCEPTED)
+
+    @action(detail=False, methods=['post'],url_path='name')
+    def getDriversByName(self, request):
+        name = request.data.get('name', None)
+        if name is None:
+            raise ValidationAPIException(detail="Driver Name was not supplied!")
+        
+        driverUsers = User.objects.filter(role=5).filter(Q(firstName__icontains=name) | Q(lastName__icontains=name))
+        print(driverUsers)
+        drivers = Driver.objects.filter(user_id__in=[i.id for i in driverUsers])
+        serializer = self.get_serializer(drivers, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK);
