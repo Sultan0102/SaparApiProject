@@ -17,6 +17,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         fields = ['id', 'senderUser', 'receiverUser', 'status', 'type', 'creationDate', 'applicationData', 'documents']
         read_only_fields = ['id']
+    
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
 
 
 class ScheduleDriverSerializer(serializers.ModelSerializer):

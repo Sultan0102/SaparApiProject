@@ -57,6 +57,8 @@
 <script>
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
 import UserService from "@/services/UserService";
+import ApplicationService from "@/services/ApplicationService"
+
 
 export default{
     components: {
@@ -76,12 +78,22 @@ export default{
        
     },
     methods: {
+
+        async getApplications() {
+            await ApplicationService.getDriverApplications().then(
+                (data)=> {
+                    this.applications = data;
+                }
+            )
+        },
+
         getFormattedDriver(driver) {
             if (driver == null)
                 return ''
             
             return `${driver.id} / ${driver.user.firstName} ${driver.user.lastName} / ${driver.yearExperience}`
         },
+
         async searchDriverById() {
             const id = this.filters.id
             if(id==null || id.length == 0)

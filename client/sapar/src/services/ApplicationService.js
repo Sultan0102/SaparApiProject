@@ -18,6 +18,14 @@ class ApplicationService{
         )
     }
 
+    getDriverApplications() {
+        return Api.applications.post('driver/').then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
 }
 
 export default new ApplicationService()

@@ -32,6 +32,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         serializer = ApplicationSerializer(applications, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['post'], url_path='driver/all')
+    def getDriverApplications(self, request):
+        applications = Application.objects.filter(type_id__in=[])
+        serializer = ApplicationSerializer(applications, many=True, context={'depth': 2})
+
+        return Response(serializer.data, status=status.HTTP_200_OK);
         
     # def create(self, request, *args, **kwargs):
     #     print(request.data)
