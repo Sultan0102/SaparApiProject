@@ -10,6 +10,14 @@ class ApplicationService{
         );
     }
 
+    retreive(id) {
+        return Api.applications.get(`${id}/`).then(
+            (response) => {
+                return response.data
+            }
+        );
+    }
+
     getUserApplications(criteria) {
         return Api.applications.post('user/', criteria).then(
             (response) => {

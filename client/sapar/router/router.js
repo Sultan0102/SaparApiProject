@@ -35,6 +35,7 @@ import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
 import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
 import NewRoute from '@/components/App-NewRoute';
 import EditRoute from '@/components/App-EditRoute';
+import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -246,7 +247,14 @@ const routes = [
     path: "/profile/applications", 
     component: Applications, 
     name: "ProfileApplications",
-    meta: { requiresAuth: true, isForBusinessPerson: true, isforGuide: true }
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true }
+  },
+  {
+    path: "/profile/applications/:applicationId/fire", 
+    component: ViewGuideFireApplication, 
+    name: "ViewGuideFireApplication",
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
+    props: true
   },
   {
     path: "/tour/:tourId/guide-hire/:guideId", 
@@ -317,7 +325,6 @@ const vueRouter = createRouter({
 // control access to pages
 vueRouter.beforeEach((to, from, next) => {
   const user = TokenService.getUser();
-
   if(store.getters.isAuthenticated) {
     if(user.role == 1 && to.matched.every(record => record.meta.isForAdmin || record.meta.isForEveryone)) {
       next();

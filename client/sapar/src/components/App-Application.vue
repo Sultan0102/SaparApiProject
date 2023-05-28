@@ -49,7 +49,7 @@ export default {
 
         applicationStatus: function() {
             let statusText = ""
-            switch(this.application.type) {
+            switch(this.application.status) {
                 case 1: statusText = "Active" //Pending
                 break;
                 case 2: statusText = "Approved"
