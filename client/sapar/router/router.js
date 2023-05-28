@@ -36,6 +36,7 @@ import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
 import NewRoute from '@/components/App-NewRoute';
 import EditRoute from '@/components/App-EditRoute';
 import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
+import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication';
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -253,6 +254,13 @@ const routes = [
     path: "/profile/applications/:applicationId/fire", 
     component: ViewGuideFireApplication, 
     name: "ViewGuideFireApplication",
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
+    props: true
+  },
+  {
+    path: "/profile/applications/:applicationId/hire", 
+    component: ViewGuideHireApplication, 
+    name: "ViewGuideHireApplication",
     meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
     props: true
   },

@@ -48,6 +48,14 @@ export default {
                     name: 'ViewGuideFireApplication',
                     params: { applicationId: application.id }
                 })
+                return;
+            }
+
+            if(application.type == 1) {
+                this.$router.push({
+                    name: 'ViewGuideHireApplication',
+                    params: { applicationId: application.id }
+                })
             }
         },
         async getUserApplications() {
