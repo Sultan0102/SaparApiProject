@@ -19,7 +19,7 @@ class ApplicationService{
     }
 
     getDriverApplications() {
-        return Api.applications.post('driver/').then(
+        return Api.applications.post('drivers/').then(
             (response) => {
                 return response.data
             }

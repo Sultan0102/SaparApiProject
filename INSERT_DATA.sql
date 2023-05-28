@@ -162,12 +162,16 @@ VALUES(1,1,1,1,'AB4958','2023-01-16',1,TIMESTAMP'2023-01-16 22:20',
 INSERT INTO "ApplicationType"(id, "name")
 VALUES	(1, 'HireGuide'),
 		(2, 'FireGuide'),
-		(3, 'DriverVacation');
+		(3, 'DriverVacation'),
+		(4, 'Sabbatical'),
+		(5, 'SickLeave'),
+		(6, 'NewRoute'),
+		(7, 'RemoveRoute');
 
 INSERT INTO "DocumentsType"(id, "name", "creationDate") -- gotta define with Sultan
 VALUES	(1, 'CV/Resume', '2023/05/22'),
 		(2, 'ID', '2023/05/22'),
-		(3, 'Enquiry', '2023/05/22');
+		(3, 'TechnicalPassport', '2023/05/22');
 
 INSERT INTO "ApplicationStatus"
 VALUES	(1, 'Pending'),

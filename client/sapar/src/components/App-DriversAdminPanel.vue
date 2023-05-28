@@ -29,20 +29,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>20.04.2023</td>
-                                </tr>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>20.04.2023</td>
-                                </tr>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>20.04.2023</td>
+                                <tr v-for="application in applications"
+                                >
+                                    <th>{{ application.type.name }}</th>
+                                    <td>{{ `${application.senderUser.firstName} ${application.senderUser.lastName}` }}</td>
+                                    <td>{{ getFormattedApplicationDate(application.creationDate) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -85,6 +76,12 @@ export default{
                     this.applications = data;
                 }
             )
+        },
+
+        getFormattedApplicationDate(dateIsoStr) {
+            let date = new Date(dateIsoStr)
+
+            return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
         },
 
         getFormattedDriver(driver) {
@@ -170,7 +167,7 @@ export default{
     },
 
     mounted() {
-        // this.getDriverApplication()
+        this.getApplications()
     }
 
 }

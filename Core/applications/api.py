@@ -33,9 +33,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    @action(detail=False, methods=['post'], url_path='driver/all')
+    @action(detail=False, methods=['post'], url_path='drivers')
     def getDriverApplications(self, request):
-        applications = Application.objects.filter(type_id__in=[])
+        applications = Application.objects.filter(type_id__in=[3, 4, 5, 6])
         serializer = ApplicationSerializer(applications, many=True, context={'depth': 2})
 
         return Response(serializer.data, status=status.HTTP_200_OK);
