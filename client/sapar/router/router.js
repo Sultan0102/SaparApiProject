@@ -37,6 +37,7 @@ import NewRoute from '@/components/App-NewRoute';
 import EditRoute from '@/components/App-EditRoute';
 import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
 import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication';
+import ViewNewRouteApplication from '@/components/App-ViewNewRouteApplication';
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -262,6 +263,13 @@ const routes = [
     component: ViewGuideHireApplication, 
     name: "ViewGuideHireApplication",
     meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/:applicationId", 
+    component: ViewNewRouteApplication, 
+    name: "ViewNewRouteApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
     props: true
   },
   {

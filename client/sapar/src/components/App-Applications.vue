@@ -56,6 +56,7 @@ export default {
                     name: 'ViewGuideHireApplication',
                     params: { applicationId: application.id }
                 })
+                return
             }
         },
         async getUserApplications() {

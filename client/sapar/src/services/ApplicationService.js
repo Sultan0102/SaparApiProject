@@ -34,6 +34,14 @@ class ApplicationService{
         )
     }
 
+    updateApplicationStatus(criteria) {
+        return Api.applications.patch('status/', criteria).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
 }
 
 export default new ApplicationService()

@@ -30,6 +30,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="application in applications"
+                                    @click="viewApplication(application)"
                                 >
                                     <th>{{ application.type.name }}</th>
                                     <td>{{ `${application.senderUser.firstName} ${application.senderUser.lastName}` }}</td>
@@ -69,6 +70,13 @@ export default{
        
     },
     methods: {
+
+        viewApplication(application) {
+            if(application.type.id == 5) {
+                this.$router.push({ name: 'ViewNewRouteApplication', params: { applicationId: application.id }})
+                return;
+            }
+        },
 
         async getApplications() {
             await ApplicationService.getDriverApplications().then(

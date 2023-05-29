@@ -17,6 +17,32 @@ class DocumentViewSet(viewsets.ModelViewSet):
 class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
+    # http_method_names=['post', 'get', 'patch']
+
+    @action(detail=False, methods=['patch'], url_path='status')
+    def updateApplicationStatus(self, request):
+        applicationId = request.data.get('applicationId', None)
+
+        if applicationId is None:
+            return Response('No applicationId id was provided', status=status.HTTP_400_BAD_REQUEST)
+        
+        statusId = request.data.get('status', None)
+
+        if statusId is None:
+            return Response('No status was provided', status=status.HTTP_400_BAD_REQUEST)
+
+        application = Application.objects.get(id=applicationId)
+
+        # if statusId < application.status.id:
+        #     return Response('Status cannot be changed backwards!', status=status.HTTP_400_BAD_REQUEST)
+
+        application.status_id = statusId
+        application.save();
+
+        serializer = ApplicationSerializer(application)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     @action(detail=False, methods=['post'], url_path="user")
     def getApplicationByUser(self, request):
@@ -39,6 +65,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         serializer = ApplicationSerializer(applications, many=True, context={'depth': 2})
 
         return Response(serializer.data, status=status.HTTP_200_OK);
+
         
     # def create(self, request, *args, **kwargs):
     #     print(request.data)
