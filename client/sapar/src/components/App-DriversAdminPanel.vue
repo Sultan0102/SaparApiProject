@@ -76,6 +76,21 @@ export default{
                 this.$router.push({ name: 'ViewNewRouteApplication', params: { applicationId: application.id }})
                 return;
             }
+
+            if(application.type.id == 3) {
+                this.$router.push({ name: 'ViewSabbaticalApplication', params: { applicationId: application.id }})
+                return;
+            }
+
+            if(application.type.id == 6) {
+                this.$router.push({ name: 'ViewRemoveRouteApplication', params: { applicationId: application.id }})
+                return;
+            }
+
+            if(application.type.id == 4) {
+                this.$router.push({ name: 'ViewSickLeaveApplication', params: { applicationId: application.id }})
+                return;
+            }
         },
 
         async getApplications() {

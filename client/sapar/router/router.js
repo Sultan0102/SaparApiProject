@@ -38,6 +38,9 @@ import EditRoute from '@/components/App-EditRoute';
 import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
 import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication';
 import ViewNewRouteApplication from '@/components/App-ViewNewRouteApplication';
+import ViewSabbaticalApplication from '@/components/App-ViewSabbaticalApplication';
+import ViewRemoveRouteApplication from '@/components/App-ViewRemoveRouteApplication';
+import ViewSickLeaveApplication from '@/components/App-ViewSickLeaveApplication';
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -266,9 +269,30 @@ const routes = [
     props: true
   },
   {
-    path: "/drivers-admin-panel/applications/:applicationId", 
+    path: "/drivers-admin-panel/applications/newRoute/:applicationId", 
     component: ViewNewRouteApplication, 
     name: "ViewNewRouteApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/sabbatical/:applicationId", 
+    component: ViewSabbaticalApplication, 
+    name: "ViewSabbaticalApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/removeRoute/:applicationId", 
+    component: ViewRemoveRouteApplication, 
+    name: "ViewRemoveRouteApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/sickLeave/:applicationId", 
+    component: ViewSickLeaveApplication, 
+    name: "ViewSickLeaveApplication",
     meta: { requiresAuth: true, isForAdmin: true },
     props: true
   },
