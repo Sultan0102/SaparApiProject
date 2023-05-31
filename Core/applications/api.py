@@ -1,10 +1,14 @@
+from django.http import Http404
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, generics, permissions
 from Core.applications.serializers import DocumentSerializer, ApplicationSerializer, ApplicationDriverSerializer, \
-    ApplicationSerializerRetrieve, DocumentsViewSetSerializer
+    ApplicationSerializerRetrieve, DocumentsViewSetSerializer, DriverSerializer
 from Core.applications.models import Document, Application
 from rest_framework.decorators import action
+
+from Core.authorization.models import Driver
 from Core.exceptions import ValidationAPIException
 from django.db.models import Q
 
@@ -41,7 +45,7 @@ class ApplicationDriverViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationDriverSerializer
 
     def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = Application.objects.filter(user=pk)
+        queryset = Application.objects.filter(senderUser=pk)
         serializer = ApplicationSerializerRetrieve(queryset,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -60,3 +64,27 @@ class DocumentsViewSet(viewsets.ModelViewSet):
         queryset = Document.objects.filter(owner=pk)
         serializer = DocumentsViewSetSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DriverViewSet(viewsets.ModelViewSet):
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
+    def retrieve(self, request, pk=None, *args, **kwargs):
+            queryset = self.get_queryset().filter(user__pk=pk)
+            instance = queryset.first()
+            if instance:
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['patch'])
+    def update_photo(self, request, pk=None):
+        driver = self.get_object()
+        photo = request.FILES.get('photo')
+
+        if photo:
+            driver.photo = photo
+            driver.save()
+            return Response({'message': 'Photo updated successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'No photo provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+

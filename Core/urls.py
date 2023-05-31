@@ -6,7 +6,8 @@ from django.contrib import admin
 from django.urls import path,include
 
 from .applications.api import ApplicationViewSet, ApplicationDriverViewSet
-from .routers import router, detRouter, reviewRouter, orderRouter, scheduleRouter, ticketPersonRouter, cachedTicketPersonRouter, ticketRouter
+from .routers import router, detRouter, reviewRouter, orderRouter, scheduleRouter, ticketPersonRouter, \
+    cachedTicketPersonRouter, ticketRouter, driverRouter
 from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
     ScheduleDriverViewSet
 
@@ -37,5 +38,6 @@ urlpatterns = [
     path('api/', include(applicationRouter.urls)),
     path('api/schedules/<int:pk>/<int:lang_id>/', ScheduleDriverViewSet.as_view({'get': 'retrieve'})),
     path('api/applications/<int:pk>/', ApplicationDriverViewSet.as_view({'get': 'retrieve'})),
-    path('api/',include(documentsRouter.urls))
+    path('api/',include(documentsRouter.urls)),
+    path('api/',include(driverRouter.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

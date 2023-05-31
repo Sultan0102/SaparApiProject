@@ -7,7 +7,8 @@ from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSe
     TouristTourViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 from Core.payment.api import PaymentViewSet
-from Core.applications.api import DocumentViewSet, ApplicationViewSet, DocumentsViewSet, ApplicationDriverViewSet
+from Core.applications.api import DocumentViewSet, ApplicationViewSet, DocumentsViewSet, ApplicationDriverViewSet, \
+    DriverViewSet
 
 # AUTHENTICATION
 routes = SimpleRouter()
@@ -70,3 +71,6 @@ applicationRouter.register("driver/applications", ApplicationDriverViewSet, base
 # Documents
 documentsRouter = DefaultRouter()
 documentsRouter.register("documents",DocumentsViewSet,basename="documents")
+#Driver
+driverRouter = DefaultRouter()
+driverRouter.register("driver",DriverViewSet,basename="driver")
