@@ -135,3 +135,4 @@ dmypy.json
 /Core/applications/migrations/
 /client/sapar/node_modules/
 */node_modules/*
+/documents/

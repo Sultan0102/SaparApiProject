@@ -26,9 +26,11 @@
                         <router-link to="/tours">
                             <button v-if="userRole == 4" type="button" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Tours') }}</button>
                         </router-link>
+                        <br>
                         <router-link to="/profile/applications">
                             <button v-if="userRole == 4 || userRole == 3" type="button" class="btn btn-primary my-3 ">{{ $t('Applications') }}</button>
                         </router-link>
+                        <br>
                         <button @click="logout" type="submit" class="btn btn-primary my-3 ms-0 ms-md-3 ms-lg-0">{{ $t('Log out') }}</button>
                     </form>
                 </div>
