@@ -115,7 +115,7 @@ export default{
 
                 if(date) {
                     const day = date.getDate();
-                    const month = date.getMonth();
+                    const month = date.getMonth()+1;
                     const year = date.getFullYear();
     
                     dateStrings.push(`${day}.${month}.${year}`)
@@ -182,7 +182,7 @@ export default{
 *{
 	color: #1C5E3C;
 }
- th{
+th{
     padding-bottom: 1rem !important;
     min-width: 33.3% !important;
 }

@@ -21,21 +21,18 @@ class ResourceValueSerializer(serializers.ModelSerializer):
         model = ResourceValue
         list_serializer_class=ResourceValueByLanguageSerializer
         fields = '__all__'
-
 class ResourceCodeSerializer(serializers.ModelSerializer):
     codeResourceValues = ResourceValueSerializer(many=True)
 
     class Meta:
         model = ResourceCode
         fields = ['id', 'defaultValue', 'codeResourceValues']
-
     def create(self, validated_data):
         resourceValues_data = validated_data.pop('codeResourceValues')
         code = ResourceCode.objects.create(**validated_data)
         for resourceValue in resourceValues_data:
             ResourceValue.objects.create(code=code, **resourceValue)
         return code
-
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -243,7 +240,6 @@ class CachedTicketPersonSerializer(serializers.ModelSerializer):
         return obj
 
     def save(self):
-
         if self.validated_data['cachedPersonId'] != 0:
             #update
             person = CachedTicketPerson.objects.get(id=self.validated_data['cachedPersonId'])
@@ -268,7 +264,6 @@ class OrderTicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = '__all__'
         depth=0
-
 
 class OrderSerializer(serializers.ModelSerializer):
     ticket_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
@@ -370,7 +365,6 @@ class TouristTourSerializer(serializers.ModelSerializer):
     schedules = ScheduleSerializer(read_only=True, many=True)
     guides = GuideSerializer(read_only=True, many=True)
     description = serializers.SerializerMethodField()
-
     def get_description(self, obj):
         if self.context.get('description', None):
             return self.context.get('description')

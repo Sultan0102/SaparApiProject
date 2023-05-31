@@ -3,6 +3,7 @@ body {
 	-webkit-overflow-scrolling: touch;
 	background-color: #ECECEC !important;
 	font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif !important;
+	color: #1C5E3C;
 }
 
 .head{
@@ -130,7 +131,30 @@ select, option{
 option{
 	background-color: #FFF !important;
 }
+.form-check-input:checked {
+	background-color: #1C5E3C !important;
+	border-color: #1C5E3C !important;
+}
 
+
+.multiselect__tags {
+	padding: 6px 12px 0 12px;
+	border: none;
+	border-radius: 0;
+	border-bottom: 1px solid #ECECEC !important;
+	font-size: 1rem;
+}
+.multiselect__placeholder {
+	padding-top: 0 !important;
+	color: #1C5E3C !important;
+	margin: 0;
+}
+.multiselect__input, .multiselect__single {
+	margin-bottom: 0 !important;
+}
+.multiselect, .multiselect__input, .multiselect__single{
+	padding: 0 !important;
+}
 /*VueDatePicker*/
 .dp__input{
 	padding: 0px 0px !important;

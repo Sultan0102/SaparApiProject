@@ -80,7 +80,6 @@ class RouteViewSet(viewsets.ModelViewSet):
         if order_pk is None or Core.validators.validate_any(order_pk, '^[0-9]+$') == False:
             print('Error')
             return Response('Error', status=status.HTTP_400_BAD_REQUEST)
-
         order = Order.objects.get(id=order_pk)
         print(order.schedule.route.id)
         serializer = self.get_serializer(order.schedule.route)
@@ -112,7 +111,6 @@ class LocationView(generics.RetrieveAPIView):
             "location_id" : location.id,
             "locationName" : location_value.value
         })
-
 class PostTicketViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = (DjangoFilterBackend,)
@@ -315,6 +313,8 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
 
+    
+
 
 
 
@@ -447,7 +447,6 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         scheduleId = request.data.get('scheduleId', None)
         if scheduleId is None:
             raise ValidationAPIException(detail="Schedule id not supplied")
-
         tour = TouristTour.objects.filter(schedules__in=[scheduleId]).first()
         # tour.schedules = tour.schedules.filter(id=scheduleId)
         tour.schedules.set([tour.schedules.get(id=scheduleId)])
@@ -457,7 +456,6 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         context = {}
         if language_id:
             context['language_id'] = language_id
-
         descriptionCodeSerializer = ResourceCodeSerializer(tour.descriptionNameCode)
         context['description'] = descriptionCodeSerializer.data
         serializer = TouristTourSerializer(tour, context=context)
@@ -499,7 +497,6 @@ class TouristTourViewSet(viewsets.ModelViewSet):
                     endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date+delta, endTime))
                 else:
                     endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, endTime))
-
                 schedule = {
                     'scheduleNumber': Schedule.generateScheduleNumber(),
                     'route': route,

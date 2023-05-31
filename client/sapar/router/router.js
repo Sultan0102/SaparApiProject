@@ -22,30 +22,51 @@ import GuideVacancyInfo from '@/components/App-GuideVacancyInfo';
 import TourInfo from '@/components/App-TourInfo';
 import ViewApplications from '@/components/App-ViewApplications';
 import GuideApply from '@/components/App-GuideApply';
-import BusinessProfile from '@/components/App-BusinessProfile';
 import BusinessTourList from '@/components/App-BusinessTourList';
 import ViewAvailableGuides from '@/components/App-ViewAvailableGuides';
 import GuideFire from '@/components/App-GuideFire';
 import Applications from '@/components/App-Applications';
 import GuideHire from '@/components/App-GuideHire';
+import DriverProfile from '@/components/App-DriverProfile';
 import NewTour from '@/components/App-NewTour';
 import AppBusinessToursExample from '@/components/App-BusinessToursExample'
+import DriversAdminPanel from '@/components/App-DriversAdminPanel';
+import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
+import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
+import NewRoute from '@/components/App-NewRoute';
+import EditRoute from '@/components/App-EditRoute';
+import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
+import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication';
+import ViewNewRouteApplication from '@/components/App-ViewNewRouteApplication';
+import ViewSabbaticalApplication from '@/components/App-ViewSabbaticalApplication';
+import ViewRemoveRouteApplication from '@/components/App-ViewRemoveRouteApplication';
+import ViewSickLeaveApplication from '@/components/App-ViewSickLeaveApplication';
 import store from '@/store';
+import TokenService from '@/services/TokenService';
 
 
 const routes = [
   { 
     path: "/", 
-    redirect: '/home'
+    redirect: '/home',
+    meta: { 
+      isForEveryone: true
+    }
   }, 
   { 
     path: "", 
-    redirect: '/home'
+    redirect: '/home',
+    meta: { 
+      isForEveryone: true
+    }
   }, 
   { 
     path: "/home", 
     component: Home, 
-    name: "Home" 
+    name: "Home",
+    meta: { 
+      isForEveryone: true
+    }
   },
   { 
     path: "/login", 
@@ -89,25 +110,28 @@ const routes = [
     component: Profile, 
     name: "Profile",
     meta: { requiresAuth: true },
+    meta: { 
+      isForEveryone: true
+    }
   },
   { 
     path: "/tickets", 
     component: Tickets, 
     name: "Tickets",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
     props: { scheduleType: 1 }
   },
   { 
     path: "/tour-tickets", 
     component: TourTickets, 
     name: "TourTickets",
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, isForEveryone: true }
   },
   { 
     path: "/order/:id", 
     component: Order, 
     name: "Order",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
     props: true,
     // beforeEnter: (to, from) => {
     //   if(from.name != 'Tickets') {
@@ -119,32 +143,35 @@ const routes = [
     path: "/order/:orderId/passengerInformation", 
     component: OrderPassengerInformationList, 
     name: "OrderPassengerInformation",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
     props: true
   },
   {
     path: "/order/:orderId/payment", 
     component: OrderPayment, 
     name: "OrderPayment",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
     props: true
   },
   {
     path: "/order/:orderId/number", 
     component: OrderNumber, 
     name: "OrderNumber",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
   },
   {
     path: "/about", 
     component: About, 
-    name: "About"
+    name: "About",
+    meta: {
+      isForEveryone: true
+    }
   },
   {
     path: "/vacancies", 
     component: GuideVacancies, 
     name: "GuideVacancies",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForGuide: true },
   },
   {
     path: "/guide-vacancy-info", 
@@ -154,88 +181,177 @@ const routes = [
   },
   { path: "/:pathMatch(.*)*", 
     component: PageNotFound,
-    name: "NotFound" 
+    name: "NotFound",
+    meta: {
+      isForEveryone: true
+    }
   },
   {
     path: "/forbidden", 
     component: PageForbidden, 
-    name: "Forbidden"
+    name: "Forbidden",
+    meta: {
+      isForEveryone: true
+    }
   },
   {
     path: "/serverError", 
     component: PageServerError, 
-    name: "PageServerError"
+    name: "PageServerError",
+    meta: {
+      isForEveryone: true
+    }
   },
   {
     path: "/tour-info/:scheduleId", 
     component: TourInfo, 
     name: "TourInfo",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
     props: true
   },
   {
     path: "/view-applications", 
     component: ViewApplications, 
     name: "ViewApplications",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForAdmin: true },
   },
   {
     path: "/vacancies/apply/tour/:tourId", 
     component: GuideApply, 
     name: "GuideApply",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForGuide: true },
     props: true,
-  },
-  {
-    path: "/business-profile", 
-    component: BusinessProfile, 
-    name: "BusinessProfile",
-    meta: { requiresAuth: true },
   },
   {
     path: "/tours", 
     component: BusinessTourList, 
     name: "BusinessTourList",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForBusinessPerson: true },
   },
   {
     path: "/tours-example", 
     component: AppBusinessToursExample, 
     name: "AppBusinessToursExample",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForEveryone: true },
   },
   {
     path: "/tour/:tourId/available-guides", 
     component: ViewAvailableGuides, 
     name: "ViewAvailableGuides",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForBusinessPerson: true },
     props: true
   },
   {
     path: "/tour/:tourId/guide-fire/:guideId", 
     component: GuideFire, 
     name: "GuideFire",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForBusinessPerson: true },
     props: true
   },
   {
     path: "/profile/applications", 
     component: Applications, 
     name: "ProfileApplications",
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true }
+  },
+  {
+    path: "/profile/applications/:applicationId/fire", 
+    component: ViewGuideFireApplication, 
+    name: "ViewGuideFireApplication",
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
+    props: true
+  },
+  {
+    path: "/profile/applications/:applicationId/hire", 
+    component: ViewGuideHireApplication, 
+    name: "ViewGuideHireApplication",
+    meta: { requiresAuth: true, isForBusinessPerson: true, isForGuide: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/newRoute/:applicationId", 
+    component: ViewNewRouteApplication, 
+    name: "ViewNewRouteApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/sabbatical/:applicationId", 
+    component: ViewSabbaticalApplication, 
+    name: "ViewSabbaticalApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/removeRoute/:applicationId", 
+    component: ViewRemoveRouteApplication, 
+    name: "ViewRemoveRouteApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel/applications/sickLeave/:applicationId", 
+    component: ViewSickLeaveApplication, 
+    name: "ViewSickLeaveApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
   },
   {
     path: "/tour/:tourId/guide-hire/:guideId", 
     component: GuideHire, 
     name: "GuideHire",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForBusinessPerson: true },
     props: true
   },
   {
     path: "/new-tour", 
     component: NewTour, 
     name: "NewTour",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, isForBusinessPerson: true },
+  },
+  // Admin Panel Components
+  {
+    path: "/driver/:driverId",
+    component: DriverProfile,
+    name: "DriverProfile",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true
+  },
+  {
+    path: "/drivers-admin-panel", 
+    component: DriversAdminPanel, 
+    name: "DriversAdminPanel",
+    meta: { 
+      requiresAuth: true,
+      isForAdmin: true
+    },
+  },
+  {
+    path: "/applications-admin-panel", 
+    component: ApplicationsAdminPanel, 
+    name: "ApplicationsAdminPanel",
+    meta: { 
+      requiresAuth: true,
+      isForAdmin: true
+    },
+  },
+  {
+    path: "/routes-admin-panel", 
+    component: RoutesAdminPanel, 
+    name: "RoutesAdminPanel",
+    meta: { requiresAuth: true, isForAdmin: true },
+  },
+  {
+    path: "/new-route", 
+    component: NewRoute, 
+    name: "NewRoute",
+    meta: { requiresAuth: true, isForAdmin: true },
+  },
+  {
+    path: "/edit-route", 
+    component: EditRoute, 
+    name: "EditRoute",
+    meta: { requiresAuth: true, isForAdmin: true },
   }
 ]
 
@@ -245,6 +361,28 @@ const vueRouter = createRouter({
   routes,
 })
 
+
+// control access to pages
+vueRouter.beforeEach((to, from, next) => {
+  const user = TokenService.getUser();
+  if(store.getters.isAuthenticated) {
+    if(user.role == 1 && to.matched.every(record => record.meta.isForAdmin || record.meta.isForEveryone)) {
+      next();
+    } else if(user.role == 2 && to.matched.every(record => record.meta.isForEveryone)) {
+      next();
+    } else if(user.role == 3 && to.matched.every(record => record.meta.isForGuide || record.meta.isForEveryone)) {
+      next();
+    } else if(user.role == 4 && to.matched.every(record => record.meta.isForBusinessPerson || record.meta.isForEveryone)) {
+      next();
+    }
+    else {
+      next('/forbidden')
+    }
+  } else {
+    next();
+  }
+
+});
 
 // do not let unauthorized users access auth pages
 vueRouter.beforeEach((to, from, next) => {

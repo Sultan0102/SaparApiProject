@@ -1,5 +1,5 @@
 from rest_framework.routers import SimpleRouter, DefaultRouter
-from Core.users.views import UserViewSet, GuideViewSet
+from Core.users.views import DriverViewSet, UserViewSet, GuideViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet
 from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, \
     PostTicketViewSet, DetailRouteViewSet, \
@@ -31,7 +31,10 @@ detRouter.register('tours', TouristTourViewSet, basename='tour')
 detRouter.register('docs', DocumentViewSet, basename='doc')
 detRouter.register('applications', ApplicationViewSet, basename='application')
 detRouter.register('guides', GuideViewSet, basename='guide')
+detRouter.register('drivers', DriverViewSet, basename='driver')
 
+detRouter.register('orders', OrderViewSet,basename= 'order')
+detRouter.register('payment', PaymentViewSet, basename='payment')
 # Ticket Person
 ticketRouter = DefaultRouter()
 #PassportNumber
@@ -57,10 +60,6 @@ reviewRouter.register('reviews',ReviewViewSet, basename = 'reviews')
 urlpatterns = [
     *routes.urls
 ]
-# Order
-orderRouter = DefaultRouter()
-orderRouter.register('orders', OrderViewSet,basename= 'orders')
-orderRouter.register('payment', PaymentViewSet, basename='payment')
 #For Application
 # Schedule
 scheduleRouter = DefaultRouter()

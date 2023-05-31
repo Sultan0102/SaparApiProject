@@ -9,11 +9,13 @@ def custom_exception_handler(ex, context):
 
     print(type(ex))
     if response is not None:
-        response.data = {
-                'status_code': response.status_code,
-                'detail': ex.detail,
-                'error_code': ex.default_code
-            }
+        if response.status_code != 404:
+            response.data = {
+                    'status_code': response.status_code,
+                    'detail': ex.detail,
+                    'error_code': ex.default_code
+                }
+        
     
     return response
     

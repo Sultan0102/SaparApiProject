@@ -6,13 +6,12 @@ from django.contrib import admin
 from django.urls import path,include
 
 from .applications.api import ApplicationViewSet, ApplicationDriverViewSet
-from .routers import router, detRouter, reviewRouter, orderRouter, scheduleRouter, ticketPersonRouter, \
-    cachedTicketPersonRouter, ticketRouter, driverRouter
+from .routers import router, detRouter, reviewRouter, scheduleRouter, ticketPersonRouter, cachedTicketPersonRouter, ticketRouter, driverRouter
 from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
     ScheduleDriverViewSet
 
 from . import settings
-from .routers import router, detRouter, reviewRouter, orderRouter, ticketPersonRouter, scheduleRouter, \
+from .routers import router, detRouter, reviewRouter, ticketPersonRouter, scheduleRouter, \
     applicationRouter, documentsRouter
 from .tickets.api import PostTicketViewSet, RouteViewSet, LocationViewSet, LocationView, DetailPostTicketViewSet, \
     ScheduleViewSet
@@ -32,7 +31,6 @@ urlpatterns = [
     path('api/', include(cachedTicketPersonRouter.urls)),
     path('forgot-password/', forgot_password),
     path('change-password/<int:user_id>/', change_password),
-    path('api/', include(orderRouter.urls)),
     # path('api/showtickets/<int:pk>', TicketView.as_view())
     path('api/getloc', LocationView.as_view()),
     path('api/', include(applicationRouter.urls)),

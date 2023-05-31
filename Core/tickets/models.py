@@ -73,6 +73,7 @@ class LocationType(models.Model):
     class Meta:
         db_table = "LocationType"
 
+
 class Location(models.Model):
     id = models.AutoField(primary_key=True)
     coordinates = models.CharField(db_index=True, max_length=255)

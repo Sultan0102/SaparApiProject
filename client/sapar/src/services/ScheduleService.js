@@ -14,6 +14,14 @@ class ScheduleService{
             return response.data;
         })
     }
+
+    retreive(scheduleId) {
+        return Api.schedules.get(`${scheduleId}/`).then(
+            (response) => {
+                return response.data;
+            }
+        )
+    }
 }
 
 export default new ScheduleService()

@@ -8,6 +8,7 @@
                         <ul class="list-group text-start">
                             <li v-for="application in applications"
                             class="list-group-item list-group-item-action ps-5 "
+                            @click="viewApplication(application)"
                             >
                                 <AppApplication 
                                 :application="application"
@@ -40,6 +41,24 @@ export default {
         }
     },
     methods: {
+        viewApplication(application) {
+            if(application.type == 2)
+            {
+                this.$router.push({
+                    name: 'ViewGuideFireApplication',
+                    params: { applicationId: application.id }
+                })
+                return;
+            }
+
+            if(application.type == 1) {
+                this.$router.push({
+                    name: 'ViewGuideHireApplication',
+                    params: { applicationId: application.id }
+                })
+                return
+            }
+        },
         async getUserApplications() {
             let userId = TokenService.getUser().id;
             const criteria = {

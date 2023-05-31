@@ -11,7 +11,7 @@ class ApplicationType(models.Model):
 
 class ApplicationStatus(models.Model):
     name = models.CharField(max_length=250)
-    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
+    creationDate = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
 
     class Meta:
         db_table='ApplicationStatus'

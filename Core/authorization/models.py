@@ -24,8 +24,8 @@ class User(AbstractBaseUser, PermissionsMixin):
           (ADMIN, 'Admin'),
           (CUSTOMER, 'Customer'),
           (GUIDE, 'Guide'),
-          (BUSINESS_PERSON, 'Business Person'),
-          (DRIVER,'Driver')
+          (BUSINESS_PERSON, 'Business Person'), 
+          (DRIVER, 'Driver'), 
       )
 
     id = models.AutoField(primary_key=True)
@@ -93,7 +93,6 @@ class Driver(models.Model):
 
     class Meta:
         db_table = "Driver"
-
 
 
 
