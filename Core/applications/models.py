@@ -16,18 +16,26 @@ class ApplicationStatus(models.Model):
     class Meta:
         db_table='ApplicationStatus'
 
+class DocumentsType(models.Model):
+    id = models.AutoField(primary_key = True)
+    name = models.CharField(db_index=True, blank=True, max_length=255)
+    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        db_table = "DocumentsType"
+
 class Document(models.Model):
     owner = models.ForeignKey(User, on_delete=models.PROTECT, related_name='documents')
     creationDate = models.DateTimeField(auto_now_add=True)
     deleteDate = models.DateTimeField(null=True)
-    type = models.ForeignKey('DocumentsType',on_delete=models.CASCADE,null=True)
+    type = models.ForeignKey(DocumentsType,on_delete=models.CASCADE,null=True)
     file = models.FileField(db_index=True, blank=True, null=True, upload_to='%Y/%m/%d/')
 
     class Meta:
         db_table='Document'
 
 class Application(models.Model):
-    senderUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name='sent_applications',)
+    senderUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name='sent_applications')
     receiverUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name='received_applications',null=True)
     status = models.ForeignKey(ApplicationStatus, on_delete=models.PROTECT)
     type = models.ForeignKey(ApplicationType, on_delete=models.PROTECT)
@@ -49,10 +57,4 @@ class Application(models.Model):
 #         db_table = "ApplicationDocuments"
 
 
-class DocumentsType(models.Model):
-    id = models.AutoField(primary_key = True)
-    name = models.CharField(db_index=True, blank=True, max_length=255)
-    creationDate = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    class Meta:
-        db_table = "DocumentsType"

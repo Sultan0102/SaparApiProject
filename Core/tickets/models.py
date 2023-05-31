@@ -35,7 +35,7 @@ class Route(models.Model):
     id = models.AutoField(primary_key=True)
     destination = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='destination')
     source = models.ForeignKey('Location', on_delete=models.PROTECT, blank=True, related_name='source')
-    duration = models.CharField(db_index=True, max_length=255)
+    duration = models.CharField(db_index=True, max_length=255,null=True)
     distance = models.FloatField(null=True)
 
     class Meta:

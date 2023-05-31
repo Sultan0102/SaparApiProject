@@ -82,7 +82,7 @@ class GuideViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-class DriverViewSet(viewsets.ModelViewSet):
+class DriversViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriversSerializer
     permission_classes = [IsAuthenticated, ]
