@@ -72,7 +72,7 @@ export default{
     methods: {
 
         viewApplication(application) {
-            if(application.type.id == 5) {
+            if(application.type.id == 4) {
                 this.$router.push({ name: 'ViewNewRouteApplication', params: { applicationId: application.id }})
                 return;
             }
@@ -82,15 +82,11 @@ export default{
                 return;
             }
 
-            if(application.type.id == 6) {
+            if(application.type.id == 5) {
                 this.$router.push({ name: 'ViewRemoveRouteApplication', params: { applicationId: application.id }})
                 return;
             }
 
-            if(application.type.id == 4) {
-                this.$router.push({ name: 'ViewSickLeaveApplication', params: { applicationId: application.id }})
-                return;
-            }
         },
 
         async getApplications() {
@@ -103,8 +99,14 @@ export default{
 
         getFormattedApplicationDate(dateIsoStr) {
             let date = new Date(dateIsoStr)
+            let day = date.getDay()
+            let month = date.getMonth()
+            
+            if (day < 10) day = '0'+day
+            if (month < 10) month = '0'+month
+            
 
-            return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
+            return `${day}.${month}.${date.getFullYear()}`
         },
 
         getFormattedDriver(driver) {

@@ -342,7 +342,7 @@ const routes = [
     meta: { requiresAuth: true, isForAdmin: true },
   },
   {
-    path: "/new-route", 
+    path: "/routes-admin-panel/new-route", 
     component: NewRoute, 
     name: "NewRoute",
     meta: { requiresAuth: true, isForAdmin: true },

@@ -36,7 +36,9 @@ import '@vuepic/vue-datepicker/dist/main.css'
     Api.guides,
     Api.applications,
     Api.documents,
-    Api.drivers
+    Api.drivers,
+    Api.locations,
+    Api.buses
 ].forEach(axiosInstance => setupinterceptors(store, router, axiosInstance))
 
 

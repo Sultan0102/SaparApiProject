@@ -381,3 +381,8 @@ class TouristTourSerializer(serializers.ModelSerializer):
         self.Meta.depth = self.context.get('depth', 0)
     # For apllication
 
+class BusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bus
+        fields = '__all__'

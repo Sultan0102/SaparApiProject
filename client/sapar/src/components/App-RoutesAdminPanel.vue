@@ -1,5 +1,5 @@
 <template>  
-    <div class="container-fluid py-5 mt-5">
+    <div v-if="schedules" class="container-fluid py-5 mt-5">
         <div class="container">
             <div class="row">
                 <Navigation/>
@@ -20,26 +20,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>AB4958</th>
-                                    <td>Almaty - Taraz</td>
-                                    <td>10:40pm - 05:30pm</td>
-                                </tr>
-                                <tr>
-                                    <th>AB4958</th>
-                                    <td>Almaty - Taraz</td>
-                                    <td>10:40pm - 05:30pm</td>
-                                </tr>
-                                <tr>
-                                    <th>AB4958</th>
-                                    <td>Almaty - Taraz</td>
-                                    <td>10:40pm - 05:30pm</td>
+                                <tr v-for="schedule in schedules"
+                                :key="schedule.id"
+                                >
+                                    <th>{{ schedule.scheduleNumber }}</th>
+                                    <th>{{ `${schedule.route.sourceName} - ${schedule.route.destinationName}` }}</th>
+                                    <th>{{ formattedScheduleDate(schedule) }}</th>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     
-                    <router-link class="nav-link" to="/new-route"><button type="submit" class="btn btn-primary mt-5">{{ $t('New') }}</button></router-link>
+                    <router-link class="nav-link" :to="{name: 'NewRoute'}"><button type="submit" class="btn btn-primary mt-5">{{ $t('New') }}</button></router-link>
                 </div>
             </div>
         </div>
@@ -49,10 +41,68 @@
 
 <script>
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
+import ScheduleService from "@/services/ScheduleService";
 
 export default{
     components: {
         Navigation
+    },
+    data() {
+        return {
+            schedules: [],
+            scheduleType: 1
+        }
+    },
+    computed: {
+        currentLanguageId: function() {
+            let currentLocale = this.$i18n.locale;
+            let langId = null;
+            switch(currentLocale) {
+                case 'en':
+                    langId = 3;
+                    break;
+                case 'kz':
+                    langId = 2;
+                    break;
+                case 'ru':
+                    langId = 1;
+                    break;
+                default:
+                    langId = 1;
+                    break;
+            }
+            return langId;
+        },
+    },
+    methods: {
+        formattedDateString(date) {
+
+            return date != null
+                ? date.toISOString().split('T')[0]
+                : null;
+        }, 
+        formattedScheduleDate(schedule) {
+            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
+        },
+        async getSchedules() {
+            let langId = this.currentLanguageId;
+
+            const criteria = {
+                language_id: langId,
+                scheduleTypeId: this.scheduleType,
+                fromDate: this.formattedDateString(new Date(2023, 1, 1)),
+                toDate: this.formattedDateString(new Date(2023, 11, 30))
+            }
+            await ScheduleService.getSchedules(criteria).then(
+                (data)=> {
+                    this.schedules = data
+                }
+            )
+        }
+    },
+    async mounted() {
+        await this.getSchedules()
+        console.log(this.schedules);
     }
 }
 </script>

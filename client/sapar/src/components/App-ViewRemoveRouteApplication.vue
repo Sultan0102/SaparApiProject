@@ -67,10 +67,16 @@ export default {
 
         getFormattedDateTime(dateTimeIsoStr) {
             let dateTime = new Date(dateTimeIsoStr);
+
+            let day = dateTime.getDay()
+            let month = dateTime.getMonth()
+            
+            if (day < 10) day = '0'+day
+            if (month < 10) month = '0'+month
             
             if (dateTime == null) return '';
 
-            return `${dateTime.getDay()}.${dateTime.getMonth()}.${dateTime.getFullYear()}`
+            return `${day}.${month}.${dateTime.getFullYear()}`
         },
 
         async getApplication() {
@@ -79,8 +85,8 @@ export default {
                     this.application = data
                     console.log(this.application);
 
-                    this.getDriver(this.application.receiverUser);
-                    this.getSchedule(this.application.applicationData.routeId)
+                    this.getDriver(this.application.senderUser);
+                    this.getSchedule(this.application.applicationData['Schedule id'])
                 }
             )
 

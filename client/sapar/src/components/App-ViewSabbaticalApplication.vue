@@ -19,7 +19,7 @@
                         </div>
                         <div class="input-group mb-3">
                             <i class="bi bi-currency-dollar my-auto ms-4 ms-sm-5"></i>
-                            <input :value="application.applicationData.sabbaticalType" type="text" class="form-control" readonly disabled>
+                            <input :value="application.applicationData['Sabbatical type']" type="text" class="form-control" readonly disabled>
                         </div>
                         <div class="input-group mb-3">
                             <i class="bi bi-calendar my-auto ms-4 ms-sm-5"></i>
@@ -60,7 +60,7 @@ export default {
                     this.application = data
                     console.log(this.application);
 
-                    this.getDriver(this.application.receiverUser);
+                    this.getDriver(this.application.senderUser);
                 }
             )
 
@@ -126,6 +126,7 @@ export default {
     },
     async mounted() {
         await this.getApplication();
+        console.log(this.application)
     }
 }
 

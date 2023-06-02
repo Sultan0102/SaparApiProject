@@ -67,7 +67,7 @@ export default {
                     this.application = data
                     console.log(this.application);
 
-                    this.getDriver(this.application.receiverUser);
+                    this.getDriver(this.application.senderUser);
                 }
             )
 

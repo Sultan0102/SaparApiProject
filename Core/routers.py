@@ -4,7 +4,7 @@ from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshV
 from Core.tickets.api import CachedTicketPersonViewSet, PassportNumberTypeViewSet, RouteViewSet, LocationViewSet, \
     PostTicketViewSet, DetailRouteViewSet, \
     DetailPostTicketViewSet, ReviewViewSet, OrderViewSet, ScheduleViewSet, TicketPersonViewSet, TicketViewSet, \
-    TouristTourViewSet
+    TouristTourViewSet, LocationViewSet, BusViewSet
 from Core.authorization.views import LoginViewSet, RegistrationViewSet, RefreshViewSet, VerifyViewSet
 from Core.payment.api import PaymentViewSet
 from Core.applications.api import DocumentViewSet, ApplicationViewSet, DocumentsViewSet, ApplicationDriverViewSet, \
@@ -24,7 +24,7 @@ routes.register(r'users', UserViewSet, basename='users')
 router = DefaultRouter()
 detRouter = DefaultRouter()
 router.register('routes',RouteViewSet,basename='routes')
-router.register('location',LocationViewSet, basename='location')
+router.register('locations',LocationViewSet, basename='location')
 detRouter.register('routes',DetailRouteViewSet,basename='routes')
 detRouter.register('tickets', TicketViewSet, basename="tickets")
 detRouter.register('tours', TouristTourViewSet, basename='tour')
@@ -32,6 +32,7 @@ detRouter.register('docs', DocumentViewSet, basename='doc')
 detRouter.register('applications', ApplicationViewSet, basename='application')
 detRouter.register('guides', GuideViewSet, basename='guide')
 detRouter.register('drivers', DriversViewSet, basename='driver')
+detRouter.register('buses', BusViewSet, basename='bus')
 
 detRouter.register('orders', OrderViewSet,basename= 'order')
 detRouter.register('payment', PaymentViewSet, basename='payment')

@@ -27,6 +27,14 @@ class UserService {
         )
     }
 
+    retreiveDrivers() {
+        return Api.drivers.get().then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     retreiveDriverByUserId(id) {
         return Api.drivers.post('user/', {
             userId: id

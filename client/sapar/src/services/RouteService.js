@@ -22,6 +22,22 @@ class RouteService{
         )
     }
 
+    retreiveLocations() {
+        return Api.locations.get().then(
+            (response)=>{
+                return response.data
+            }
+        )
+    }
+
+    retreiveBuses() {
+        return Api.buses.get().then(
+            (response) => {
+                return response.data
+            }
+        )
+    }
+
 }
 
 export default new RouteService()

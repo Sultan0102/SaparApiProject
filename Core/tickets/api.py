@@ -9,13 +9,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from .models import *
+from Core.authorization.models import Driver
 from Core.exceptions import ValidationAPIException
 
 from .serializers import CachedTicketPersonSerializer, PassportNumberTypeSerializer, \
     RouteSerializer, LocationSerializer, DetailRouteSerializer, LocationSer, ScheduleListSerializer, \
     ScheduleSerializer, TicketPersonSerializer, UpdateTicketSerializer, \
     WriteReviewSerializer, ReadReviewSerializer, TicketsSerializer, DetailTicketsSerializer, OrderSerializer, RouteQuerySerializer, \
-    TouristTourSerializer, ScheduleRouteSerializer, ResourceCodeSerializer
+    TouristTourSerializer, ScheduleRouteSerializer, ResourceCodeSerializer, BusSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
@@ -34,6 +35,11 @@ class LocationViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticated]
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+
+class BusViewSet(viewsets.ModelViewSet):
+    http_method_names=['get']
+    queryset = Bus.objects.all()
+    serializer_class = BusSerializer
 
 
 class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -306,12 +312,105 @@ class ScheduleViewSet(viewsets.ModelViewSet):
                 filtered_data = filtered_data.filter(route__source__nameCode__id__in=sourceResourceCodeSet).filter(route__source__type__id=locationType)
 
 
+            print(filtered_data)
             result = ScheduleSerializer(filtered_data, many=True, context={'language_id': lanugage_id})
 
             return Response(result.data, status=status.HTTP_200_OK)
         # print(serialized_data)
 
         return Response('No data', status=status.HTTP_204_NO_CONTENT)
+    
+    def validateCreateIntercityScheduleRequest(self, schedule):
+        if schedule['weekDays'] is None or len(schedule['weekDays'])==0:
+            raise ValidationAPIException('No week days provided!')
+        
+        if schedule['source'] is None:
+            raise ValidationAPIException('No source provided!')
+        
+        if schedule['destination'] is None:
+            raise ValidationAPIException('No destination provided!')
+        
+        if schedule['beginTime'] is None:
+            raise ValidationAPIException('No begin time provided!')
+        
+        if schedule['endTime'] is None:
+            raise ValidationAPIException('No end time provided!')
+        
+        if schedule['driver'] is not None:
+            try:
+                User.objects.get(id=schedule['driver'], role=5)
+            except Driver.DoesNotExist:
+                raise ValidationAPIException('Driver with such id does not exist')
+        
+        if schedule['bus'] is not None:
+            try:
+                Bus.objects.get(id=schedule['bus'])
+            except Driver.DoesNotExist:
+                raise ValidationAPIException('Bus with such id does not exist')
+            
+
+    def createOrGetRoute(self, source, destination):
+        sourceLocation = Location.objects.get(id=source, type_id=1)
+        destinationLocation = Location.objects.get(id=destination, type_id=1)
+
+        route = Route.objects.filter(source=sourceLocation, destination=destinationLocation).filter().first()
+        if route is None:
+            route = Route.objects.create(source=sourceLocation, destination=destinationLocation);
+        print("Route ID: ", route.id, sep=' ')
+
+        return route
+    
+    @atomic
+    @action(detail=False, methods=['post'], url_path='intercity')
+    def createIntercitySchedule(self, request):
+        scheduleRequest = {
+            'weekDays': request.data.get('weekDays', None),
+            'source': request.data.get('source', None),
+            'destination': request.data.get('destination', None),
+            'driver': request.data.get('driver', None),
+            'bus': request.data.get('bus', None),
+            'beginTime': request.data.get('beginTime', None),
+            'endTime': request.data.get('endTime', None),
+        }
+
+        self.validateCreateIntercityScheduleRequest(scheduleRequest)
+        
+        route = self.createOrGetRoute(scheduleRequest['source'], scheduleRequest['destination']);
+
+        current_date = datetime.date.today()
+        delta = datetime.timedelta(days=1)
+        # weekDays in python: Monday is 0 and Sunday is 6
+        for i in range(1, 8):
+            current_date+=delta
+            if current_date.weekday() + 1 in scheduleRequest['weekDays']:
+                beginTime = datetime.time(*[int(j) for j in scheduleRequest['beginTime'].split(':')])
+                endTime = datetime.time(*[int(j) for j in scheduleRequest['endTime'].split(':')])
+
+                beginDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, beginTime))
+                if endTime < beginTime:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date+delta, endTime))
+                else:
+                    endDate = pytz.timezone('Asia/Almaty').localize(datetime.datetime.combine(current_date, endTime))
+                schedule = {
+                    'scheduleNumber': Schedule.generateScheduleNumber(),
+                    'route': route,
+                    'weekDay': current_date.weekday() + 1,
+                    'beginDate': beginDate,
+                    'endDate': endDate,
+                    'isActive': False,
+                    'scheduleType_id': 1,
+                }
+
+                if scheduleRequest['bus']:
+                    schedule['bus_id'] = scheduleRequest['bus']
+                if scheduleRequest['driver']:
+                    schedule['driver_id'] = scheduleRequest['driver']
+
+                schedule = Schedule.objects.create(**schedule)
+        
+        return Response('created', status=status.HTTP_200_OK)
+
+        
 
     
 
@@ -515,3 +614,4 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
 
         return Response('create', status=status.HTTP_201_CREATED);
+

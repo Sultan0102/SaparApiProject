@@ -36,6 +36,9 @@
 					<li class="ms-lg-auto" v-if="isLoggedIn">
 						<router-link class="nav-link" to="/profile">{{ $t('hello') }}, {{ getUserEmail }}<i class="ms-1 bi bi-person-circle"></i></router-link>
 					</li>
+					<li class="my-auto nav-item">
+						<LocaleSwitcher class="nav-link" />
+					</li>
 				</ul>
 			</div>
 		</div>

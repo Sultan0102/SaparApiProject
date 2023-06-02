@@ -136,7 +136,7 @@ class DriversViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK);
 
     @action(detail=False, methods=['post'], url_path="user")
-    def getDriverByUser(self, request):
+    def getDriverByUserId(self, request):
         userId = request.data.get('userId', None)
         if userId is None:
             raise ValidationAPIException(detail="User id was not supplied!")

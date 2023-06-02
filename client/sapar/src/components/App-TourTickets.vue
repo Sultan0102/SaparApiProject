@@ -110,15 +110,17 @@ export default{
     methods: {
         
         formatDateRange(dates) {
-            debugger;
             let dateStrings = []
             dates.forEach((date) => {
 
                 if(date) {
-                    const day = date.getDate();
-                    const month = date.getMonth()+1;
-                    const year = date.getFullYear();
-    
+                    let day = date.getDate();
+                    let month = date.getMonth()+1;
+                    let year = date.getFullYear();
+
+                    if(day.length == 0) day = '0'+day;
+                    if(month.length == 0) month = '0'+month;
+                    
                     dateStrings.push(`${day}.${month}.${year}`)
                 }
             })

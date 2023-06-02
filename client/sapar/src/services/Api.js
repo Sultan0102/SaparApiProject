@@ -49,5 +49,11 @@ export default {
     drivers: axios.create({
         baseURL: config.DRIVERS_API_URL,
     }),
+    locations: axios.create({
+        baseURL: config.LOCATIONS_API_URL,
+    }),
+    buses: axios.create({
+        baseURL: config.BUSES_API_URL,
+    }),
      
 }

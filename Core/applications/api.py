@@ -5,10 +5,11 @@ from rest_framework.response import Response
 from rest_framework import viewsets, generics, permissions
 from Core.applications.serializers import DocumentSerializer, ApplicationSerializer, ApplicationDriverSerializer, \
     ApplicationSerializerRetrieve, DocumentsViewSetSerializer, DriverSerializer
-from Core.applications.models import Document, Application
+from Core.applications.models import Document, Application, ApplicationStatus
 from rest_framework.decorators import action
-
+from django.db.transaction import atomic
 from Core.authorization.models import Driver
+from Core.tickets.models import Schedule
 from Core.exceptions import ValidationAPIException
 from django.db.models import Q
 
@@ -24,6 +25,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     # http_method_names=['post', 'get', 'patch']
 
     @action(detail=False, methods=['patch'], url_path='status')
+    @atomic
     def updateApplicationStatus(self, request):
         applicationId = request.data.get('applicationId', None)
 
@@ -36,11 +38,13 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return Response('No status was provided', status=status.HTTP_400_BAD_REQUEST)
 
         application = Application.objects.get(id=applicationId)
+        applicationStatus = ApplicationStatus.objects.get(id=statusId)
 
-        # if statusId < application.status.id:
-        #     return Response('Status cannot be changed backwards!', status=status.HTTP_400_BAD_REQUEST)
+        if applicationStatus.id == 2:
+            if application.type_id == 5:
+                self.removeDriverFromRoute(application.senderUser.id, application.applicationData['Schedule id'])
 
-        application.status_id = statusId
+        application.status_id = applicationStatus.id
         application.save();
 
         serializer = ApplicationSerializer(application)
@@ -69,6 +73,14 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         serializer = ApplicationSerializer(applications, many=True, context={'depth': 2})
 
         return Response(serializer.data, status=status.HTTP_200_OK);
+
+    def removeDriverFromRoute(self, driverUserId, scheduleId):
+        print(driverUserId, scheduleId)
+        schedule = Schedule.objects.get(id=scheduleId)
+
+        if schedule.driver.id == driverUserId:
+            schedule.driver = None
+        schedule.save();
 
         
     # def create(self, request, *args, **kwargs):
