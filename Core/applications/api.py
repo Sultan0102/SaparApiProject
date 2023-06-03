@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, generics, permissions
 from Core.applications.serializers import DocumentSerializer, ApplicationSerializer, ApplicationDriverSerializer, \
-    ApplicationSerializerRetrieve, DocumentsViewSetSerializer, DriverSerializer
-from Core.applications.models import Document, Application, ApplicationStatus
+    ApplicationSerializerRetrieve, DocumentsViewSetSerializer, DriverSerializer, ApplicationTypeSerializer
+from Core.applications.models import Document, Application, ApplicationStatus, ApplicationType
 from rest_framework.decorators import action
 from django.db.transaction import atomic
 from Core.authorization.models import Driver
@@ -23,6 +23,18 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     # http_method_names=['post', 'get', 'patch']
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        depth = self.request.query_params.get('depth', 0)
+        context['depth'] = int(depth)
+        return context
+
+    @action(detail=False, methods=['get'], url_path='types')
+    def getApplicationTypes(self, request):
+        types = ApplicationType.objects.all()
+        serializer = ApplicationTypeSerializer(types, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['patch'], url_path='status')
     @atomic

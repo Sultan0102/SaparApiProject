@@ -1,5 +1,5 @@
 <template>  
-    <div class="container-fluid py-5 mt-5">
+    <div v-if="applications && applicationTypes" class="container-fluid py-5 mt-5">
         <div class="container">
             <div class="row">
                 <Navigation/>
@@ -9,39 +9,37 @@
                             <thead>
                                 <tr>
                                     <th scope="col">
-                                    <select class="form-select mx-auto" aria-label="Default select example">
-                                        <option selected>{{ $t('Type') }}</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select></th>
-                                    <th scope="col">{{ $t('Name') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Role') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Status') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Date') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                        <select v-model="sortings.type" class="form-select mx-auto" aria-label="Default select example" @change="filterSchedules('Type')">
+                                            <option selected disabled value="0">{{ $t('Type') }}</option>
+                                            <option v-for="applicationType in applicationTypes"
+                                            :value="applicationType.id"
+                                            >
+                                                {{ applicationType.name }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th scope="col" @click="filterSchedules('Name')">{{ $t('Name') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterSchedules('Role')">{{ $t('Role') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterSchedules('Status')">{{ $t('Status') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterSchedules('Date')">{{ $t('Date') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>Driver</td>
-                                    <td><i class="bi bi-circle"></i></td>
-                                    <td>20.04.2023</td>
-                                </tr>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>Driver</td>
-                                    <td><i class="bi bi-check-circle-fill"></i></td>
-                                    <td>20.04.2023</td>
-                                </tr>
-                                <tr>
-                                    <th>Vacation Application</th>
-                                    <td>Vasya Pupkin</td>
-                                    <td>Driver</td>
-                                    <td><i class="bi bi-circle"></i></td>
-                                    <td>20.04.2023</td>
+
+                                <tr v-for="application in applications"
+                                :key="application.id"
+                                >
+                                    <th>{{ application.type.name }}</th>
+                                    <td>{{ `${application.senderUser.firstName} ${application.senderUser.lastName}` }}</td>
+                                    <td>{{ getRoleName(application.senderUser.role) }}</td>
+                                    <td>
+                                        <i v-if="application.status.id == 1" class="bi bi-circle"></i>
+                                        <i v-if="application.status.id == 2" class="bi bi-check-circle-fill"></i>
+                                        <i v-if="application.status.id == 3" class="bi bi-x-circle"></i>
+                                    </td>
+                                    <td>
+                                        {{ formattedApplicationDate(application) }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -55,10 +53,133 @@
 
 <script>
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
+import ApplicationService from "@/services/ApplicationService";
 
 export default{
     components: {
         Navigation
+    },
+    data() {
+        return {
+            applications: [],
+            applicationTypes: [],
+            sortings: {
+                type: 0,
+                name: 'asc',
+                role: 'asc',
+                status: 'asc',
+                date: 'asc'
+
+            }
+        }
+    },
+    methods: {
+        async getApplications() {
+            await ApplicationService.retreive().then(
+                (data)=> {
+                    this.applications = data
+                }
+            )
+        },
+        async getApplicationTypes() {
+            await ApplicationService.retreiveApplicationTypes().then(
+                (data)=> {
+                    this.applicationTypes = data
+                }
+            )
+        },
+        getRoleName(roleId) {
+            switch(roleId) {
+                case 1: 
+                return 'Admin';
+                case 2: 
+                return "Customer";
+                case 3: 
+                return "Guide";
+                case 4: 
+                return "Business Person";
+                case 5: 
+                return "Driver";
+                default:
+                return "Customer"
+            }
+        },
+        getTimeZonedDate(dateStr) {
+            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
+            
+            return new Date(timeZonedDateStr);
+        },
+        formattedApplicationDate(application) {
+            let timezonedDate = this.getTimeZonedDate(application.creationDate)
+            
+            return timezonedDate.toLocaleDateString('ru')
+        },
+
+        filterSchedules(sortColumn) {
+            switch(sortColumn) {
+                case 'Type':
+                    this.applications = this.applications.sort((a,b)=> {
+                        if(a.type.id != this.sortings.type && b.type.id == this.sortings.type) return 1
+                        if(a.type.id == this.sortings.type && b.type.id != this.sortings.type) return -1
+
+                        return 0
+                    })
+                    
+                break;
+
+                case 'Name':
+                    if(this.sortings.name == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.firstName > b.senderUser.firstName ? -1 : 1)
+                        this.sortings.name = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.firstName < b.senderUser.firstName ? -1 : 1)
+                        this.sortings.name = 'asc'
+                    }
+                break;
+
+                case 'Role':
+                    if(this.sortings.role == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.role > b.senderUser.role ? -1 : 1)
+                        this.sortings.role = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.role < b.senderUser.role ? -1 : 1)
+                        this.sortings.role = 'asc'
+                    }
+                break;
+
+                case 'Status':
+                    if(this.sortings.status == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.status.id > b.status.id ? -1 : 1)
+                        this.sortings.status = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.status.id < b.status.id ? -1 : 1)
+                        this.sortings.status = 'asc'
+                    }
+                break;
+
+                case 'Date':
+                    if(this.sortings.date == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.creationDate > b.creationDate ? -1 : 1)
+                        this.sortings.date = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.creationDate < b.creationDate ? -1 : 1)
+                        this.sortings.date = 'asc'
+                    }
+                break;
+                default:
+                break;
+            }
+        },
+    },
+    async mounted() {
+        await this.getApplications()
+        await this.getApplicationTypes()
+        console.log(this.applicationTypes)
+        console.log(this.applications)
     }
 }
 </script>

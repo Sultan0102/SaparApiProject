@@ -1,7 +1,7 @@
 from rest_framework import serializers, status
 from rest_framework.response import Response
 
-from Core.applications.models import Application, Document, ApplicationStatus
+from Core.applications.models import Application, Document, ApplicationStatus, ApplicationType
 from Core.authorization.models import Driver
 from Core.tickets.models import Schedule
 
@@ -38,6 +38,7 @@ class ScheduleDriverSerializer(serializers.ModelSerializer):
 
 class ApplicationTypeSerializer(serializers.ModelSerializer):
     class Meta:
+        model = ApplicationType
         fields = ('__all__')
 
 class ApplicationDriverSerializer(serializers.ModelSerializer):

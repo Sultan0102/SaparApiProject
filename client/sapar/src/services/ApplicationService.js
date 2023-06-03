@@ -18,6 +18,22 @@ class ApplicationService{
         );
     }
 
+    retreive() {
+        return Api.applications.get('', { params: {depth: 1} }).then(
+            (response) => {
+                return response.data
+            }
+        );
+    }
+
+    retreiveApplicationTypes() {
+        return Api.applications.get('types/').then(
+            (response) => {
+                return response.data
+            }
+        );
+    }
+
     getUserApplications(criteria) {
         return Api.applications.post('user/', criteria).then(
             (response) => {
