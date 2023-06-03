@@ -127,12 +127,21 @@ class ScheduleRouteSerializer(serializers.ModelSerializer):
     def get_destination_name(self, obj):
         lang_id = self.context.get('language_id') if self.context.get('language_id') is not None else 1
 
-        name = ResourceValue.objects.filter(code_id = obj.destination.nameCode.id, language_id=lang_id)[0].value
+        name = ResourceValue.objects.filter(code_id = obj.destination.nameCode.id, language_id=lang_id).first()
+        if name is None:
+            name = obj.destination.nameCode.defaultValue
+        else:
+            name = name.value
+            
         return name;
 
     def get_source_name(self, obj):
         lang_id = self.context.get('language_id') if self.context.get('language_id') is not None else 1
-        name = ResourceValue.objects.filter(code_id = obj.source.nameCode.id, language_id=lang_id)[0].value
+        name = ResourceValue.objects.filter(code_id = obj.source.nameCode.id, language_id=lang_id).first()
+        if name is None:
+            name = obj.source.nameCode.defaultValue
+        else:
+            name = name.value 
         return name;
 
     class Meta:
