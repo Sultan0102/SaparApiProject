@@ -83,8 +83,16 @@ export default{
                 ? date.toISOString().split('T')[0]
                 : null;
         }, 
+        getTimeZonedDate(dateStr) {
+            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
+            
+            return new Date(timeZonedDateStr);
+        },
         formattedScheduleDate(schedule) {
-            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
+            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
+            let timezonedEndDate = this.getTimeZonedDate(schedule.endDate)
+            
+            return `${timezonedBeginDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})} - ${timezonedEndDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})}`
         },
         editRoute(scheduleId) {
             this.$router.push({

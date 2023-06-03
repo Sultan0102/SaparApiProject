@@ -170,11 +170,20 @@ export default{
             this.getSchedules()
         },
 
-        concatenatedSourceAndDestination: function (schedule) {
+        getTimeZonedDate(dateStr) {
+            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
+            
+            return new Date(timeZonedDateStr);
+        },
+        concatenatedSourceAndDestination(schedule) {
             return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
         },
-        concatenatedBeginDateAndEndDate: function(schedule) {
-            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
+        concatenatedBeginDateAndEndDate(schedule) {
+            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
+            let timezonedEndDate = this.getTimeZonedDate(schedule.endDate)
+            
+            return `${timezonedBeginDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})} - ${timezonedEndDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})}`
+            
       },
     },
     mounted() {

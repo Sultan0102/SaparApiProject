@@ -477,8 +477,8 @@ class ScheduleViewSet(viewsets.ModelViewSet):
         schedule.bus = bus if bus is not None else schedule.bus
         schedule.driver = driver if driver is not None else schedule.driver
         schedule.route = route
-        schedule.beginDate = schedule.beginDate.replace(hour=beginTime.hour, minute=beginTime.minute)
-        schedule.endDate = schedule.endDate.replace(hour=endTime.hour, minute=endTime.minute)
+        schedule.beginDate = schedule.beginDate.astimezone(pytz.timezone('Asia/Almaty')).replace(hour=beginTime.hour, minute=beginTime.minute)
+        schedule.endDate = schedule.endDate.astimezone(pytz.timezone('Asia/Almaty')).replace(hour=endTime.hour, minute=endTime.minute)
 
         if scheduleRequest['disabled'] is False:
             tickets = Ticket.objects.filter(schedule_id=schedule.id)
