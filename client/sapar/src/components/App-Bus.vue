@@ -24,7 +24,7 @@
                         </div>
                         <button type="button" class="btn btn-primary my-3 mx-auto col-12" @click="createOrder()">Buy</button>
 
-                        <a @click="pushToTourInfo">
+                        <a v-if="schedule.scheduleType.id == 2" @click="pushToTourInfo">
                             <h4>About this tour</h4>
                         </a>
                         <!-- <router-link :to="{
@@ -78,7 +78,7 @@ export default {
 
                 subTickets.push(this.tickets[i])
             }
-
+            
             return tickets;
         },
         occupiedTickets: function() {

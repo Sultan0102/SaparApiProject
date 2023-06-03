@@ -105,8 +105,8 @@ export default {
             let formData = new FormData()
             formData.append('file', this.cv_file)
             formData.append('owner', userId)
+            formData.append('type', 1)
             
-            debugger;
             const applicationData = {
                 guide: await this.getGuide().id,
                 email: this.form.email,
