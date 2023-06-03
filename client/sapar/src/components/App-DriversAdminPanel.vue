@@ -23,9 +23,9 @@
                         <table class="table table-hover text-center">
                             <thead>
                                 <tr>
-                                    <th scope="col">{{ $t('Type') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Name') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Date') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterApplications('Type')">{{ $t('Type') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterApplications('Name')">{{ $t('Name') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterApplications('Date')">{{ $t('Date') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,7 +63,12 @@ export default{
                 id: null,
                 name: null
             },
-            applications: null
+            sortings: {
+                date: 'asc',
+                name: 'asc',
+                type: 'asc'
+            },
+            applications: []
         }
     },
     computed: {
@@ -88,6 +93,46 @@ export default{
             }
 
         },
+
+        filterApplications(sortColumn) {
+            switch(sortColumn) {
+                case 'Type':
+                    if(this.sortings.type == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.type.name > b.type.name ? -1 : 1)
+                        this.sortings.type = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.type.name < b.type.name ? -1 : 1)
+                        this.sortings.type = 'asc'
+                    }
+                break;
+
+                case 'Date':
+                    if(this.sortings.date == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.creationDate > b.creationDate ? -1 : 1)
+                        this.sortings.date = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.creationDate < b.creationDate ? -1 : 1)
+                        this.sortings.date = 'asc'
+                    }
+                break;
+
+                case 'Name':
+                    if(this.sortings.name == 'asc') {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.firstName > b.senderUser.firstName ? -1 : 1)
+                        this.sortings.name = 'desc'
+                    }
+                    else {
+                        this.applications = this.applications.sort((a,b)=> a.senderUser.firstName < b.senderUser.firstName ? -1 : 1)
+                        this.sortings.name = 'asc'
+                    }
+                break;
+                default:
+                break;
+            }
+        },
+
 
         async getApplications() {
             await ApplicationService.getDriverApplications().then(

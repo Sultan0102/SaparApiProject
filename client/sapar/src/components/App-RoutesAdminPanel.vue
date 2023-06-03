@@ -14,9 +14,10 @@
                         <table class="table table-hover text-center">
                             <thead>
                                 <tr>
-                                    <th scope="col">{{ $t('Schedule') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('From') }} - {{ $t('To') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
-                                    <th scope="col">{{ $t('Departure - Arrival Time') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterSchedules('ScheduleNumber')">{{ $t('Schedule') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col" @click="filterSchedules('Source')">{{ $t('From') }} - {{ $t('To') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col">{{ $t('Departure Date') }}</th>
+                                    <th scope="col" @click="filterSchedules('DepartureTime')">{{ $t('Departure - Arrival Time') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -27,6 +28,7 @@
                                 >
                                     <th>{{ schedule.scheduleNumber }}</th>
                                     <th>{{ `${schedule.route.sourceName} - ${schedule.route.destinationName}` }}</th>
+                                    <th>{{ formattedScheduleBeginDate(schedule) }}</th>
                                     <th>{{ formattedScheduleDate(schedule) }}</th>
                                 </tr>   
                             </tbody>
@@ -52,7 +54,12 @@ export default{
     data() {
         return {
             schedules: [],
-            scheduleType: 1
+            scheduleType: 1,
+            sortings: {
+                scheduleNumber: 'asc',
+                source: 'asc',
+                departureTime: 'asc',
+            }
         }
     },
     computed: {
@@ -94,6 +101,12 @@ export default{
             
             return `${timezonedBeginDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})} - ${timezonedEndDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})}`
         },
+
+        formattedScheduleBeginDate(schedule) {
+            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
+            
+            return timezonedBeginDate.toLocaleDateString('ru')
+        },
         editRoute(scheduleId) {
             this.$router.push({
                 name: 'NewRouteEdit',
@@ -114,7 +127,45 @@ export default{
                     this.schedules = data
                 }
             )
-        }
+        },
+        filterSchedules(sortColumn) {
+            switch(sortColumn) {
+                case 'ScheduleNumber':
+                    if(this.sortings.scheduleNumber == 'asc') {
+                        this.schedules = this.schedules.sort((a,b)=> a.scheduleNumber > b.scheduleNumber ? -1 : 1)
+                        this.sortings.scheduleNumber = 'desc'
+                    }
+                    else {
+                        this.schedules = this.schedules.sort((a,b)=> a.scheduleNumber < b.scheduleNumber ? -1 : 1)
+                        this.sortings.scheduleNumber = 'asc'
+                    }
+                break;
+
+                case 'Source':
+                    if(this.sortings.source == 'asc') {
+                        this.schedules = this.schedules.sort((a,b)=> a.route.sourceName > b.route.sourceName ? -1 : 1)
+                        this.sortings.source = 'desc'
+                    }
+                    else {
+                        this.schedules = this.schedules.sort((a,b)=> a.route.sourceName < b.route.sourceName ? -1 : 1)
+                        this.sortings.source = 'asc'
+                    }
+                break;
+
+                case 'DepartureTime':
+                    if(this.sortings.departureTime == 'asc') {
+                        this.schedules = this.schedules.sort((a,b)=> a.beginDate > b.beginDate ? -1 : 1)
+                        this.sortings.departureTime = 'desc'
+                    }
+                    else {
+                        this.schedules = this.schedules.sort((a,b)=> a.beginDate < b.beginDate ? -1 : 1)
+                        this.sortings.departureTime = 'asc'
+                    }
+                break;
+                default:
+                break;
+            }
+        },
     },
     async mounted() {
         await this.getSchedules()
