@@ -171,9 +171,15 @@ export default{
         concatenatedSourceAndDestination: function (schedule) {
             return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
         },
-        concatenatedBeginDateAndEndDate: function(schedule) {
-            return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
-      },
+        concatenatedSourceAndDestination(schedule) {
+            return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
+        },
+        concatenatedBeginDateAndEndDate(schedule) {
+            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
+            let timezonedEndDate = this.getTimeZonedDate(schedule.endDate)
+            
+            return `${timezonedBeginDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})} - ${timezonedEndDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})}`    
+        },
     },
     mounted() {
         this.getSchedules();
