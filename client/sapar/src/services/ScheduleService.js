@@ -30,6 +30,14 @@ class ScheduleService{
             }
         )
     }
+
+    updateIntercitySchedule(criteria) {
+        return Api.schedules.post('intercity/update/', criteria).then(
+            (response)=> {
+                return response.data; 
+            }
+        )
+    }
 }
 
 export default new ScheduleService()

@@ -132,7 +132,7 @@ class ScheduleRouteSerializer(serializers.ModelSerializer):
             name = obj.destination.nameCode.defaultValue
         else:
             name = name.value
-            
+
         return name;
 
     def get_source_name(self, obj):
@@ -167,8 +167,8 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Schedule
-        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets', 'tours']
-        read_only_fields = ('language_id', )
+        fields = ['id', 'scheduleNumber', 'beginDate', 'endDate', 'bus', 'driver', 'route', 'scheduleType', 'tickets', 'tours', 'isActive', 'weekDay']
+        read_only_fields = ('language_id', 'isActive', 'weekDay')
         depth=2
 
 class PassportNumberTypeSerializer(serializers.ModelSerializer):

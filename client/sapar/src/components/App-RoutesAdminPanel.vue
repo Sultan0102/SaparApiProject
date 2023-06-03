@@ -20,13 +20,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                
                                 <tr v-for="schedule in schedules"
                                 :key="schedule.id"
+                                @click="editRoute(schedule.id)"
                                 >
                                     <th>{{ schedule.scheduleNumber }}</th>
                                     <th>{{ `${schedule.route.sourceName} - ${schedule.route.destinationName}` }}</th>
                                     <th>{{ formattedScheduleDate(schedule) }}</th>
-                                </tr>
+                                </tr>   
                             </tbody>
                         </table>
                     </div>
@@ -83,6 +85,12 @@ export default{
         }, 
         formattedScheduleDate(schedule) {
             return schedule.beginDate.split('T')[1].substring(0, 8) + ' - ' + schedule.endDate.split('T')[1].substring(0, 8)
+        },
+        editRoute(scheduleId) {
+            this.$router.push({
+                name: 'NewRouteEdit',
+                params: { scheduleId: scheduleId }
+            })
         },
         async getSchedules() {
             let langId = this.currentLanguageId;

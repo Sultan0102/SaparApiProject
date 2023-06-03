@@ -409,6 +409,99 @@ class ScheduleViewSet(viewsets.ModelViewSet):
                 schedule = Schedule.objects.create(**schedule)
         
         return Response('created', status=status.HTTP_200_OK)
+    
+    def validateUpdateIntercityScheduleRequest(self, schedule):
+        if schedule['id'] is None:
+            raise ValidationAPIException('No id provided!')
+        
+        if schedule['source'] is None:
+            raise ValidationAPIException('No source provided!')
+        
+        if schedule['destination'] is None:
+            raise ValidationAPIException('No destination provided!')
+        
+        if schedule['beginTime'] is None:
+            raise ValidationAPIException('No begin time provided!')
+        
+        if schedule['endTime'] is None:
+            raise ValidationAPIException('No end time provided!')
+        
+        if schedule['disabled'] is None:
+            raise ValidationAPIException('No "disabled" flag provided!')
+        
+        if schedule['disabled'] == False:
+            if schedule['driver'] is None:
+                raise ValidationAPIException('No driver provided!')
+        
+            if schedule['bus'] is None:
+                raise ValidationAPIException('No bus provided!')
+            
+            try:
+                User.objects.get(id=schedule['driver'], role=5)
+            except Driver.DoesNotExist:
+                raise ValidationAPIException('Driver with such id does not exist')
+            
+            try:
+                Bus.objects.get(id=schedule['bus'])
+            except Driver.DoesNotExist:
+                raise ValidationAPIException('Bus with such id does not exist')
+
+    @atomic
+    @action(detail=False, methods=['post'], url_path='intercity/update')
+    def updateIntercitySchedule(self, request):
+        scheduleRequest = {
+            "id": request.data.get('scheduleId', None),
+            "source": request.data.get('source', None),
+            "destination": request.data.get('destination', None),
+            "bus": request.data.get('bus', None),
+            "driver": request.data.get('driver', None),
+            "weekDay": request.data.get('weekDay', None),
+            "beginTime": request.data.get('beginTime', None),
+            "endTime": request.data.get('endTime', None),
+            "disabled": request.data.get('disabled', None),
+        }
+
+        self.validateUpdateIntercityScheduleRequest(scheduleRequest)
+
+        route = self.createOrGetRoute(scheduleRequest['source'], scheduleRequest['destination']);
+        bus = Bus.objects.filter(id=scheduleRequest['bus']).first()
+        driver = User.objects.filter(id=scheduleRequest['driver']).first()
+        weekDay = scheduleRequest['weekDay']
+        beginTime = datetime.time(*[int(j) for j in scheduleRequest['beginTime'].split(':')])
+        endTime = datetime.time(*[int(j) for j in scheduleRequest['endTime'].split(':')])
+
+        schedule = Schedule.objects.get(id=scheduleRequest['id'])
+
+        print(driver)
+        print(bus)
+        schedule.bus = bus if bus is not None else schedule.bus
+        schedule.driver = driver if driver is not None else schedule.driver
+        schedule.route = route
+        schedule.beginDate = schedule.beginDate.replace(hour=beginTime.hour, minute=beginTime.minute)
+        schedule.endDate = schedule.endDate.replace(hour=endTime.hour, minute=endTime.minute)
+
+        if scheduleRequest['disabled'] is False:
+            tickets = Ticket.objects.filter(schedule_id=schedule.id)
+            
+            if(len(tickets) == 0):
+                #create tickets
+                for seatNumber in range(1, schedule.bus.type.capacity+1):
+                    ticket = {
+                        'seatNumber': seatNumber,
+                        'cost': 4000,
+                        'schedule_id': schedule.id,
+                        'status_id': 3,
+                        'type_id': 1
+                    }
+                    Ticket.objects.create(**ticket)
+        
+        schedule.isActive = scheduleRequest['disabled'] is False
+        schedule.save()
+        
+        return Response('success', status=status.HTTP_200_OK)
+
+
+
 
         
 

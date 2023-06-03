@@ -34,6 +34,7 @@ import DriversAdminPanel from '@/components/App-DriversAdminPanel';
 import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
 import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
 import NewRoute from '@/components/App-NewRoute';
+import NewRouteEdit from '@/components/App-NewRouteEdit';
 import EditRoute from '@/components/App-EditRoute';
 import ViewGuideFireApplication from '@/components/App-ViewGuideFireApplication';
 import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication';
@@ -346,6 +347,13 @@ const routes = [
     component: NewRoute, 
     name: "NewRoute",
     meta: { requiresAuth: true, isForAdmin: true },
+  },
+  {
+    path: "/routes-admin-panel/new-route/:scheduleId/edit", 
+    component: NewRouteEdit, 
+    name: "NewRouteEdit",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true,
   },
   {
     path: "/edit-route", 
