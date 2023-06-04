@@ -42,6 +42,8 @@ import ViewNewRouteApplication from '@/components/App-ViewNewRouteApplication';
 import ViewSabbaticalApplication from '@/components/App-ViewSabbaticalApplication';
 import ViewRemoveRouteApplication from '@/components/App-ViewRemoveRouteApplication';
 import ViewSickLeaveApplication from '@/components/App-ViewSickLeaveApplication';
+import ViewGuideHireAdminApplication from '@/components/App-ViewGuideHireAdminApplication'
+import ViewGuideFireAdminApplication from '@/components/App-ViewGuideFireAdminApplication'
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -335,6 +337,20 @@ const routes = [
       requiresAuth: true,
       isForAdmin: true
     },
+  },
+  {
+    path: "/applications-admin-panel/hireGuide/:applicationId", 
+    component: ViewGuideHireAdminApplication, 
+    name: "ViewGuideHireAdminApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true,
+  },
+  {
+    path: "/applications-admin-panel/fireGuide/:applicationId", 
+    component: ViewGuideFireAdminApplication, 
+    name: "ViewGuideFireAdminApplication",
+    meta: { requiresAuth: true, isForAdmin: true },
+    props: true,
   },
   {
     path: "/routes-admin-panel", 

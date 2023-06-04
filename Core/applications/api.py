@@ -8,8 +8,8 @@ from Core.applications.serializers import DocumentSerializer, ApplicationSeriali
 from Core.applications.models import Document, Application, ApplicationStatus, ApplicationType
 from rest_framework.decorators import action
 from django.db.transaction import atomic
-from Core.authorization.models import Driver
-from Core.tickets.models import Schedule
+from Core.authorization.models import Driver, User, Guide
+from Core.tickets.models import Schedule, TouristTour
 from Core.exceptions import ValidationAPIException
 from django.db.models import Q
 
@@ -55,6 +55,27 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if applicationStatus.id == 2:
             if application.type_id == 5:
                 self.removeDriverFromRoute(application.senderUser.id, application.applicationData['Schedule id'])
+            
+            if application.type_id == 1:
+                guide_user_id = None
+                if application.receiverUser.role == User.BUSINESS_PERSON:
+                    guide_user_id = application.senderUser.id
+                if application.receiverUser.role == User.GUIDE:
+                    guide_user_id = application.receiverUser.id
+                
+                guide = Guide.objects.get(user_id=guide_user_id)
+                tour = TouristTour.objects.get(id=application.applicationData['tour'])
+                tour.guides.add(guide)
+                tour.save();
+
+            if application.type_id == 2:
+                tour = TouristTour.objects.get(id=application.applicationData['tour'])
+                guide = Guide.objects.get(user_id=application.receiverUser.id)
+                tour.guides.remove(guide)
+                tour.save()
+
+
+        
 
         application.status_id = applicationStatus.id
         application.save();

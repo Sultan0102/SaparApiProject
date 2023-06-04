@@ -17,7 +17,7 @@
                             <i class="bi bi-person-fill my-auto ms-4 ms-sm-5"></i>
                             <input :value="application.lastName" type="text" id="lastName" name="lastName" class="form-control" readonly disabled>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group mb-3" v-if="this.application.effectiveFrom">
                             <i class="bi bi-calendar my-auto ms-4 ms-sm-5"></i>
                             <input :value="formattedEffectiveFromDate" type="text" class="form-control" readonly disabled>
                         </div>

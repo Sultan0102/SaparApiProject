@@ -28,6 +28,7 @@
 
                                 <tr v-for="application in applications"
                                 :key="application.id"
+                                @click="openApplication(application)"
                                 >
                                     <th>{{ application.type.name }}</th>
                                     <td>{{ `${application.senderUser.firstName} ${application.senderUser.lastName}` }}</td>
@@ -75,7 +76,7 @@ export default{
     },
     methods: {
         async getApplications() {
-            await ApplicationService.retreive().then(
+            await ApplicationService.retreiveWithDepth().then(
                 (data)=> {
                     this.applications = data
                 }
@@ -88,6 +89,50 @@ export default{
                 }
             )
         },
+
+        openApplication(application) {
+            if(application.type.id == 1) {
+                // go to HireGuide
+                this.$router.push({
+                    name: "ViewGuideHireAdminApplication",
+                    params: { applicationId: application.id  }
+                })
+            }
+
+            if(application.type.id == 2) {
+                // go to Fire Guide
+                this.$router.push({
+                    name: "ViewGuideFireAdminApplication",
+                    params: { applicationId: application.id  }
+                })
+            }
+
+            if(application.type.id == 3) {
+                // go to Sabbatical
+                this.$router.push({
+                    name: "ViewSabbaticalApplication",
+                    params: { applicationId: application.id  }
+                })
+            }
+
+            if(application.type.id == 4) {
+                // go to NewRoute
+                this.$router.push({
+                    name: "ViewNewRouteApplication",
+                    params: { applicationId: application.id  }
+                })
+            }
+
+            if(application.type.id == 5) {
+                // go to Remove Route
+                this.$router.push({
+                    name: "ViewRemoveRouteApplication",
+                    params: { applicationId: application.id  }
+                })
+            }
+            
+        },
+
         getRoleName(roleId) {
             switch(roleId) {
                 case 1: 

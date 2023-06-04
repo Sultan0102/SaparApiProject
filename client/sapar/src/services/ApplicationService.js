@@ -18,7 +18,7 @@ class ApplicationService{
         );
     }
 
-    retreive() {
+    retreiveWithDepth() {
         return Api.applications.get('', { params: {depth: 1} }).then(
             (response) => {
                 return response.data
