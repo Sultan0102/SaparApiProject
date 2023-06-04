@@ -15,7 +15,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="person in businessPeople"
+                                <tr v-for="person in unVerifiedBusinessPeople"
                                     @click="viewBusinessPerson(person)"
                                 >
                                     <td>{{ person.binNumber }}</td>
@@ -46,6 +46,11 @@ export default{
     data() {
         return {
             businessPeople: [],
+        }
+    },
+    computed: {
+        unVerifiedBusinessPeople: function() {
+            return this.businessPeople.filter(p => !p.isVerified);
         }
     },
     methods: {
