@@ -90,22 +90,24 @@ export default{
                 ? date.toISOString().split('T')[0]
                 : null;
         }, 
-        getTimeZonedDate(dateStr) {
-            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
+        getTimeZonedTimeStr(dateStr) {
+            let timeZonedDateStr = new Date(dateStr).toLocaleTimeString('ru', {timeZone: 'Asia/Almaty', hour: '2-digit', minute:'2-digit'})
             
-            return new Date(timeZonedDateStr);
+            return timeZonedDateStr;
         },
         formattedScheduleDate(schedule) {
-            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
-            let timezonedEndDate = this.getTimeZonedDate(schedule.endDate)
+            let timezonedBeginDate = this.getTimeZonedTimeStr(schedule.beginDate)
+            let timezonedEndDate = this.getTimeZonedTimeStr(schedule.endDate)
+            console.log(timezonedEndDate)
+            console.log(schedule)
             
-            return `${timezonedBeginDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})} - ${timezonedEndDate.toLocaleTimeString('ru', { hour: '2-digit', minute:'2-digit'})}`
+            return `${timezonedBeginDate} - ${timezonedEndDate}`
         },
 
         formattedScheduleBeginDate(schedule) {
-            let timezonedBeginDate = this.getTimeZonedDate(schedule.beginDate)
+            let timezonedBeginDate = new Date(schedule.beginDate).toLocaleDateString('ru')
             
-            return timezonedBeginDate.toLocaleDateString('ru')
+            return timezonedBeginDate
         },
         editRoute(scheduleId) {
             this.$router.push({

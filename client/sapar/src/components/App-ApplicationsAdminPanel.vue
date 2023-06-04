@@ -149,15 +149,15 @@ export default{
                 return "Customer"
             }
         },
-        getTimeZonedDate(dateStr) {
+        getTimeZonedDateStr(dateStr) {
             let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
             
-            return new Date(timeZonedDateStr);
+            return timeZonedDateStr;
         },
         formattedApplicationDate(application) {
-            let timezonedDate = this.getTimeZonedDate(application.creationDate)
+            let timezonedDate = this.getTimeZonedDateStr(application.creationDate)
             
-            return timezonedDate.toLocaleDateString('ru')
+            return timezonedDate
         },
 
         filterSchedules(sortColumn) {

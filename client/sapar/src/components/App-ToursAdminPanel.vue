@@ -100,11 +100,6 @@ export default{
                 ? date.toISOString().split('T')[0]
                 : null;
         }, 
-        getTimeZonedDate(dateStr) {
-            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
-            
-            return new Date(timeZonedDateStr);
-        },
 
         getTourName(tour) {
             return tour.titleNameCode.defaultValue;
