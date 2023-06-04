@@ -18,6 +18,14 @@ class TourService{
         })
     }
 
+    updateTourScheduleActivity(criteria) {
+        return Api.tours.post('activity/', criteria).then(
+            (response)=>{
+                return response.data
+            }
+        )
+    }
+
     retreive() {
         return Api.tours.get('').then(
             (response)=> {

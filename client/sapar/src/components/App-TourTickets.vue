@@ -167,7 +167,12 @@ export default{
             console.log(this.filters)
             this.getSchedules()
         },
-
+        getTimeZonedDate(dateStr) {
+            let timeZonedDateStr = new Date(dateStr).toLocaleString('ru', {timeZone: 'Asia/Almaty'})
+            
+            return new Date(timeZonedDateStr);
+        },
+        
         concatenatedSourceAndDestination: function (schedule) {
             return schedule.route.sourceName + ' - ' + schedule.route.destinationName;
         },

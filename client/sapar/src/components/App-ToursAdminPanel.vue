@@ -32,6 +32,11 @@
                                     <td>{{ `${getFormattedTimeStr(schedule.beginDate)} - ${getFormattedTimeStr(schedule.endDate)}` }}</td>
                                     <th>{{ getFormattedDateStr(schedule.deletedDate) }}</th>
                                     <th>
+                                        <Toggle v-model="schedule.isActive"
+                                        offLabel="Not Active"
+                                        onLabel="Active"
+                                        @click="changeActivity(tour, schedule)"
+                                        />
                                     </th>
                                 </tr>
                                 </template>
@@ -51,15 +56,19 @@
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
 import ScheduleService from "@/services/ScheduleService";
 import TourService from "@/services/TourService";
+import Toggle from '@vueform/toggle'
+
 
 export default{
     components: {
-        Navigation
+        Navigation,
+        Toggle
     },
     data() {
         return {
             tours: [],
             scheduleType: 2,
+            switchVal: true
             
         }
     },
@@ -133,6 +142,31 @@ export default{
             return "Is Disabled"
         },
 
+        async changeActivity(tour, schedule) {
+            const criteria = {
+                'tourId': tour.id,
+                'scheduleId': schedule.id,
+                'isActive': schedule.isActive
+            }
+            console.log(criteria);
+            await TourService.updateTourScheduleActivity(criteria).then(
+                (data)=> {
+                    this.$notify({
+                        type: 'success',
+                        title: 'Update Tour Schedule',
+                        text: 'Successfully updated tour schedule activity'
+                    })
+                },
+                (error)=> {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Update Tour Schedule',
+                        text: 'Error updating tour schedule activity'
+                    })
+                }
+            )
+        },
+
         editTour(tourId) {
             // this.$router.push({
             //     name: 'NewRouteEdit',
@@ -154,6 +188,8 @@ export default{
     }
 }
 </script>
+
+<style src="@vueform/toggle/themes/default.css"></style>
 
 <style scoped>  
 *{

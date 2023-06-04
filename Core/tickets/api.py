@@ -706,7 +706,8 @@ class TouristTourViewSet(viewsets.ModelViewSet):
                     'beginDate': beginDate,
                     'endDate': endDate,
                     'isActive': False,
-                    'scheduleType_id': 2
+                    'scheduleType_id': 2,
+                    'bus_id': 1
                 }
 
 
@@ -717,4 +718,47 @@ class TouristTourViewSet(viewsets.ModelViewSet):
 
 
         return Response('create', status=status.HTTP_201_CREATED);
+
+    @action(detail=False, methods=['post'], url_path='activity')
+    @atomic
+    def changeActivity(self, request):
+        tourId = request.data.get('tourId', None)
+
+        if(tourId is None):
+            raise ValidationAPIException("Tour Id was not provided!")
+        
+        scheduleId = request.data.get('scheduleId', None)
+
+        if(scheduleId is None):
+            raise ValidationAPIException("Schedule Id was not provided!")
+        
+        isActive = request.data.get('isActive', None)
+
+        if(isActive is None):
+            raise ValidationAPIException("Activity was not provided!")
+        
+        tour = TouristTour.objects.get(id=tourId)
+        schedule = Schedule.objects.get(id=scheduleId)
+
+        if schedule.isActive == isActive:
+            return Response('same value', status=status.HTTP_202_ACCEPTED)
+        
+        if isActive:
+            tickets = Ticket.objects.filter(schedule_id=schedule.id)
+            if len(tickets.all()) == 0:
+                for seatNumber in range(1, schedule.bus.type.capacity+1):
+                    ticket = {
+                        'seatNumber': seatNumber,
+                        'cost': tour.price,
+                        'schedule_id': schedule.id,
+                        'status_id': 3,
+                        'type_id': 2
+                    }
+                    Ticket.objects.create(**ticket)
+        
+        schedule.isActive = isActive
+        schedule.save();
+
+        return Response('changed activity', status=status.HTTP_200_OK)
+
 
