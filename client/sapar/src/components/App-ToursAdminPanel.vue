@@ -15,27 +15,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
-                                <tr v-for="tour in tours"
+                                <template v-for="tour in tours"
                                 :key="tour.id"
-                                @click="editTour(tour.id)"
                                 >
+                                <tr :id="'tour_'+tour.id" data-bs-toggle="collapse" :data-bs-target="'#tour_schedules_'+tour.id" >
                                     <th>{{ getTourName(tour) }}</th>
                                     <th>{{ getTourSourceAndDestination(tour) }}</th>
-                                    <th>{{ getFormattedTimeStr(tour) }}</th>
+                                    <th>{{ getFormattedTourTimeStr(tour) }}</th>
                                     <th>{{ getFormattedDateStr(tour.deletedDate) }}</th>
-                                    <!-- <th>{{  }}</th> -->
-                                </tr>   
+                                </tr>
+                                <tr v-for="schedule in tour.schedules"
+                                :id="'tour_schedules_'+tour.id" 
+                                class="collapse">
+                                    <td>{{ schedule.scheduleNumber }}</td>
+                                    <td>{{ getFormattedDateStr(schedule.beginDate) }}</td>
+                                    <td>{{ `${getFormattedTimeStr(schedule.beginDate)} - ${getFormattedTimeStr(schedule.endDate)}` }}</td>
+                                    <th>{{ getFormattedDateStr(schedule.deletedDate) }}</th>
+                                    <th>
+                                    </th>
+                                </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
 
 </template>
+
+
 
 <script>
 import Navigation from "@/components/App-NavigationAdminPanel.vue";
@@ -103,12 +113,24 @@ export default{
             return date.toLocaleDateString('ru')
         },
 
-        getFormattedTimeStr(tour) {
+        getFormattedTourTimeStr(tour) {
             let schedule = tour.schedules[0]
             let beginTimeStr = new Date(schedule.beginDate).toLocaleTimeString('ru');
             let endTimeStr = new Date(schedule.endDate).toLocaleTimeString('ru');
 
             return `${beginTimeStr} - ${endTimeStr}`
+        },
+        getFormattedTimeStr(dateStr) {
+            if (dateStr == null) return ' - '
+            let date = new Date(dateStr);
+
+            return date.toLocaleTimeString('ru')
+        },
+
+        getIsActiveStr(isActive) {
+            if(isActive) return "Is Enabled"
+
+            return "Is Disabled"
         },
 
         editTour(tourId) {

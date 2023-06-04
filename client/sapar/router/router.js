@@ -42,7 +42,6 @@ import ViewGuideHireApplication from '@/components/App-ViewGuideHireApplication'
 import ViewNewRouteApplication from '@/components/App-ViewNewRouteApplication';
 import ViewSabbaticalApplication from '@/components/App-ViewSabbaticalApplication';
 import ViewRemoveRouteApplication from '@/components/App-ViewRemoveRouteApplication';
-import ViewSickLeaveApplication from '@/components/App-ViewSickLeaveApplication';
 import ViewGuideHireAdminApplication from '@/components/App-ViewGuideHireAdminApplication'
 import ViewGuideFireAdminApplication from '@/components/App-ViewGuideFireAdminApplication'
 import store from '@/store';
@@ -290,13 +289,6 @@ const routes = [
     path: "/drivers-admin-panel/applications/removeRoute/:applicationId", 
     component: ViewRemoveRouteApplication, 
     name: "ViewRemoveRouteApplication",
-    meta: { requiresAuth: true, isForAdmin: true },
-    props: true
-  },
-  {
-    path: "/drivers-admin-panel/applications/sickLeave/:applicationId", 
-    component: ViewSickLeaveApplication, 
-    name: "ViewSickLeaveApplication",
     meta: { requiresAuth: true, isForAdmin: true },
     props: true
   },
