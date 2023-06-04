@@ -12,7 +12,9 @@ from Core.authorization.models import Driver, User, Guide
 from Core.tickets.models import Schedule, TouristTour
 from Core.exceptions import ValidationAPIException
 from django.db.models import Q
-
+import datetime
+import pytz
+import dateutil.parser
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -67,6 +69,16 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 tour = TouristTour.objects.get(id=application.applicationData['tour'])
                 tour.guides.add(guide)
                 tour.save();
+                if application.applicationData.get('effectiveFrom', False) and len(tour.schedules.all()) > 0:
+                    for schedule in tour.schedules.all():
+                        localizedBeginTime = schedule.beginDate.astimezone(pytz.timezone('Asia/Almaty'))
+                        localizedEffectiveFromDate = dateutil.parser.isoparse(application.applicationData['effectiveFrom']).astimezone(pytz.timezone('Asia/Almaty'))
+                        
+                        if(localizedBeginTime.date() == localizedEffectiveFromDate.date()):
+                            schedule.guide = guide
+                            schedule.save()
+                            break
+
 
             if application.type_id == 2:
                 tour = TouristTour.objects.get(id=application.applicationData['tour'])
@@ -74,8 +86,6 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 tour.guides.remove(guide)
                 tour.save()
 
-
-        
 
         application.status_id = applicationStatus.id
         application.save();

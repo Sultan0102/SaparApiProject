@@ -33,6 +33,7 @@ import AppBusinessToursExample from '@/components/App-BusinessToursExample'
 import DriversAdminPanel from '@/components/App-DriversAdminPanel';
 import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
 import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
+import ToursAdminPanel from '@/components/App-ToursAdminPanel';
 import NewRoute from '@/components/App-NewRoute';
 import NewRouteEdit from '@/components/App-NewRouteEdit';
 import EditRoute from '@/components/App-EditRoute';
@@ -333,6 +334,15 @@ const routes = [
     path: "/applications-admin-panel", 
     component: ApplicationsAdminPanel, 
     name: "ApplicationsAdminPanel",
+    meta: { 
+      requiresAuth: true,
+      isForAdmin: true
+    },
+  },
+  {
+    path: "/tours-admin-panel", 
+    component: ToursAdminPanel, 
+    name: "ToursAdminPanel",
     meta: { 
       requiresAuth: true,
       isForAdmin: true

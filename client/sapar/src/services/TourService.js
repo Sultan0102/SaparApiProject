@@ -26,6 +26,14 @@ class TourService{
         )
     }
 
+    retreiveWithDepth(depth) {
+        return Api.tours.get('', {params: {depth: depth }}).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     retreiveNonDeleted() {
         return Api.tours.get('', { params:{'non_deleted': 'true'} }).then(
             (response)=> {

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid mb-4 pb-4">
+    <div v-if="tour" class="container-fluid mb-4 pb-4">
         <div class="container mt-lg-4 mt-3 pt-lg-4 pt-3">
             <div class="row align-items-center text-center">
                 <div class="mx-auto pt-5">
@@ -16,6 +16,21 @@
                         <div class="input-group mb-3">
                             <i class="bi bi-person-fill my-auto ms-3 ms-sm-5"></i>
                             <input v-model="form.lastName" type="text" id="lastName" name="lastName" class="form-control" placeholder="Pupkin">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <i class="bi bi-calendar my-auto ms-4 ms-sm-5"></i>
+                            <div class="form-control">
+                                <VueDatePicker v-model="form.effectiveFromDate"
+                                hide-input-icon
+                                placeholder="Effective from"
+                                position="left"
+                                :enable-time-picker="false"
+                                ignore-time-validation
+                                :allowed-dates="allowedDates"
+                                :start-date="nearestAllowedDate"
+                                />
+                            </div>
                         </div>
 
                         <input type="file" id="actual-file-input" hidden @change="handleFileChange($event)"/>
@@ -51,6 +66,7 @@ export default {
                 email: null,
                 firstName: null,
                 lastName: null,
+                effectiveFromDate: null,
                 cv_file: null
             },
             tour: null
@@ -62,10 +78,29 @@ export default {
             form: {
                 email: { required },
                 firstName: { required },
+                effectiveFromDate: { required },
                 lastName: { required }
             }
         }
         
+    },
+    computed: {
+        allowedDates: function() {
+            console.log(this.tour)
+            console.log(this.tour.schedules)
+            let schedules = this.tour.schedules.filter(s => new Date(s.beginDate) > new Date())
+            return schedules.map(s => new Date(s.beginDate))
+        },
+        nearestAllowedDate: function() {
+            return this.allowedDates[0];
+        },
+        tourTime: function() {
+            let schedule = this.tour.schedules[0]
+            let beginTime = new Date(schedule.beginDate).toLocaleTimeString('ru')
+            let endTime = new Date(schedule.endDate).toLocaleTimeString('ru')
+
+            return beginTime + " " + endTime
+        },
     },
 
     methods: {
@@ -75,6 +110,7 @@ export default {
                     this.tour = data
                 }
             )
+            console.log(this.tour);
         },
         async getGuide() {
             await UserService.retreiveGuideByUserId(this.guideId).then(
@@ -112,7 +148,8 @@ export default {
                 email: this.form.email,
                 firstName: this.form.firstName,
                 lastName: this.form.lastName,
-                tour: this.tourId
+                tour: this.tourId,
+                effectiveFrom: this.form.effectiveFromDate.toISOString()
             }
 
             let applicationRequest = {

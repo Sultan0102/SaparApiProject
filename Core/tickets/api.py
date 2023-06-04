@@ -618,6 +618,16 @@ class TouristTourViewSet(viewsets.ModelViewSet):
         ResourceValue.objects.create(value=value, code_id=code.id, language_id=self.currentLanguageId)
         return code
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        depth = self.request.query_params.get('depth', 0)
+        print(int(depth))
+        print(type(depth))
+        context.update({"depth": int(depth)})
+
+
+        return context
+
     def get_queryset(self):
         user = self.request.user
         queryset = super().get_queryset()
