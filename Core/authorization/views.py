@@ -34,6 +34,7 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
         except TokenError as e:
             raise InvalidTokenException()
 
+
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 

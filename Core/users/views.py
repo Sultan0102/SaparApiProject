@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from Core.users.serializers import DriversSerializer, UserUpdateSerializer
-from Core.authorization.serializers import GuideSerializer
-from Core.authorization.models import Driver, IsAdmin, IsGuide, User, Guide
+from Core.authorization.serializers import GuideSerializer, BusinessPersonSerializer
+from Core.authorization.models import Driver, IsAdmin, IsGuide, User, Guide, BusinessPerson
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
@@ -146,3 +146,27 @@ class DriversViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
         
+
+class BusinessPersonViewSet(viewsets.ModelViewSet):
+    queryset = BusinessPerson.objects.all()
+    serializer_class = BusinessPersonSerializer
+    permission_classes=[IsAuthenticated, ]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['depth'] = 1
+        return context
+    
+    @action(detail=False, methods=['post'], url_path='verify')
+    def verifyBusinessPerson(self, request):
+        businessPersonId = request.data.get('businessPersonId', None)
+        if businessPersonId is None:
+            raise ValidationAPIException(detail="Business Person Id was not supplied")
+        
+        businessPerson = BusinessPerson.objects.get(id=businessPersonId)
+        businessPerson.isVerified = True
+        businessPerson.save()
+
+        return Response('success', status=status.HTTP_200_OK)
+    # http_method_names=['GET']
+

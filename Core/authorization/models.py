@@ -63,6 +63,7 @@ class BusinessPerson(models.Model):
     legalAddress = models.CharField(max_length=255)
     serviceRating = models.FloatField(default=0)
     user = models.ForeignKey(User, on_delete=models.PROTECT, blank=False, null=False)
+    isVerified = models.BooleanField(default=False)
 
     class Meta:
         db_table = "BusinessPerson"

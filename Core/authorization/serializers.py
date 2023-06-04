@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from Core.exceptions import BadCredentialsException, EmailAlreadyExistsException, \
-InvalidPasswordException, InvalidVerificationCodeException, UserIsNotVerifiedException
+InvalidPasswordException, InvalidVerificationCodeException, UserIsNotVerifiedException, ValidationAPIException
 from Core.authorization.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import update_last_login
@@ -32,6 +32,11 @@ class LoginSerializer(TokenObtainPairSerializer):
         
         if serialized_user.data['isVerified'] == False:
             raise UserIsNotVerifiedException()
+        
+        if(serialized_user.data['role'] == User.BUSINESS_PERSON):
+            businessPerson = BusinessPerson.objects.get(user_id=serialized_user.data['id'])
+            if businessPerson.isVerified == False:
+                raise ValidationAPIException("Given account is not verified or not yet checked!")
 
         data['user'] = {
             'id': str(serialized_user.data['id']),
@@ -89,6 +94,10 @@ class BusinessPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessPerson
         fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get('depth', 0)
 
 class GuideSerializer(serializers.ModelSerializer):
 

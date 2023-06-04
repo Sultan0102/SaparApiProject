@@ -34,6 +34,7 @@ import DriversAdminPanel from '@/components/App-DriversAdminPanel';
 import ApplicationsAdminPanel from '@/components/App-ApplicationsAdminPanel';
 import RoutesAdminPanel from '@/components/App-RoutesAdminPanel';
 import ToursAdminPanel from '@/components/App-ToursAdminPanel';
+import BusinessPersonAdminPanel from "@/components/App-BusinessPersonAdminPanel"
 import NewRoute from '@/components/App-NewRoute';
 import NewRouteEdit from '@/components/App-NewRouteEdit';
 import EditRoute from '@/components/App-EditRoute';
@@ -44,6 +45,7 @@ import ViewSabbaticalApplication from '@/components/App-ViewSabbaticalApplicatio
 import ViewRemoveRouteApplication from '@/components/App-ViewRemoveRouteApplication';
 import ViewGuideHireAdminApplication from '@/components/App-ViewGuideHireAdminApplication'
 import ViewGuideFireAdminApplication from '@/components/App-ViewGuideFireAdminApplication'
+import BusinessPersonVerify from "@/components/App-BusinessPersonVerify"
 import store from '@/store';
 import TokenService from '@/services/TokenService';
 
@@ -339,6 +341,25 @@ const routes = [
       requiresAuth: true,
       isForAdmin: true
     },
+  },
+  {
+    path: "/business-person-admin-panel", 
+    component: BusinessPersonAdminPanel, 
+    name: "BusinessPersonAdminPanel",
+    meta: { 
+      requiresAuth: true,
+      isForAdmin: true
+    },
+  },
+  {
+    path: "/business-person-admin-panel/verify/:businessPersonId", 
+    component: BusinessPersonVerify, 
+    name: "BusinessPersonVerify",
+    meta: { 
+      requiresAuth: true,
+      isForAdmin: true
+    },
+    props: true
   },
   {
     path: "/applications-admin-panel/hireGuide/:applicationId", 

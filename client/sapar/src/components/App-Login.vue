@@ -77,14 +77,12 @@ export default {
                         this.$router.push({ name: "VerificationCode", params: { email: this.form.email }})      
                     }
 
-                    var errorCode = this.$t(error.response.data.error_code)
-                    var errorMessage = this.$t(errorCode)
+                    var errorMessage = this.$t(error.response.data.detail)
                     this.$notify({
                         type: 'error',
                         title: "Error",
                         text: errorMessage,
                     })
-                    
                     
                     
                     this.showError = true;

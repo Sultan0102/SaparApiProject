@@ -73,6 +73,22 @@ class UserService {
         )
     }
 
+    retreiveBusinessPersons() {
+        return Api.businessPerson.get().then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
+    retreiveBusinessPersonById(id) {
+        return Api.businessPerson.get(`${id}/`).then(
+            (response)=> {
+                return response.data
+            }
+        )
+    }
+
     update(user) {
         return Api.users.put(`${user.id}/`, {
             email: user.email,
@@ -88,6 +104,7 @@ class UserService {
             }
         )
     }
+    
     updateLocalUser(user) {
         let currentUser = TokenService.getUser();
         currentUser.email = user.email;
@@ -96,7 +113,14 @@ class UserService {
 
         TokenService.setUser(currentUser);
         // store.dispatch("")
+    }
 
+    verifyBusinessPerson(businessPersonId) {
+        return Api.businessPerson.post('verify/', { businessPersonId }).then(
+            (response)=> {
+                return response.data
+            }
+        )
     }
 }
 

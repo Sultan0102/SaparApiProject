@@ -55,5 +55,8 @@ export default {
     buses: axios.create({
         baseURL: config.BUSES_API_URL,
     }),
+    businessPerson: axios.create({
+        baseURL: config.BUSINESS_PERSON_API_URL,
+    }),
      
 }
