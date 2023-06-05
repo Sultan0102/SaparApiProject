@@ -3,8 +3,8 @@
         <div class="container mt-lg-5 mt-3 pt-lg-5 pt-3">
             <div class="row align-items-center text-center">
                 <div class="mx-auto pt-5">
-                    <form class="mx-auto">
-                        <h2 class="pt-3">{{ $t('Firing Application') }}</h2>
+                    <form class="mx-auto mb-5 pb-5">
+                        <h2 class="pt-3 pb-3">{{ $t('Firing Application') }}</h2>
                         <div class="input-group mb-3 ">
                             <i class="bi bi-envelope my-auto ms-4 ms-sm-5"></i>
                             <input :value="application.email" type="email" id="email" name="email" class=" form-control" aria-describedby="emailHelp" readonly disabled>

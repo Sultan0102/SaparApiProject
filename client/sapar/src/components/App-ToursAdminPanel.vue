@@ -12,6 +12,7 @@
                                     <th scope="col">{{ $t('From') }} - {{ $t('To') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                     <th scope="col">{{ $t('Departure - Arrival Time') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                     <th scope="col">{{ $t('Is Deleted') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
+                                    <th scope="col">{{ $t('Activity') }}<img src="../assets/filter.svg" class="filter-icon ms-2"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,8 +34,8 @@
                                     <th>{{ getFormattedDateStr(schedule.deletedDate) }}</th>
                                     <th>
                                         <Toggle v-model="schedule.isActive"
-                                        offLabel="Not Active"
-                                        onLabel="Active"
+                                        offLabel="Off"
+                                        onLabel="On"
                                         @click="changeActivity(tour, schedule)"
                                         />
                                     </th>

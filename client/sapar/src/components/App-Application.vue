@@ -8,6 +8,9 @@
         <div v-else-if="application.status == 2" class="col-2 text-center my-auto">
             <i class="bi bi-check-circle-fill"></i>
         </div>
+        <div v-else-if="application.status == 3" class="col-2 text-center my-auto">
+            <i class="bi bi-x-circle-fill"></i>
+        </div>
     </div>
 
 </template>
@@ -93,6 +96,10 @@ export default {
     border-bottom: 1px solid #ECECEC !important;
 }
 .bi-check-circle-fill{
+    font-size: 2rem !important;
+}
+
+.bi-x-circle-fill{
     font-size: 2rem !important;
 }
 </style>
